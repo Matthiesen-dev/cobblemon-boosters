@@ -2,7 +2,7 @@ package dev.matthiesen.common.cobblemon_boosters.utils;
 
 import com.cobblemon.mod.common.Cobblemon;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
-import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
@@ -14,8 +14,7 @@ public class TextUtils {
     }
 
     public static Component deserialize(String text) {
-        var mcComponent = deserializeMC(text);
-        return CobblemonBoosters.INSTANCE.getAdventure().asAdventure(mcComponent);
+        return CobblemonBoosters.INSTANCE.getAdventure().asAdventure(deserializeMC(text));
     }
 
     public static String parse(String text) {
@@ -24,12 +23,12 @@ public class TextUtils {
                 .replaceAll("%base_shiny_rate%", String.valueOf(Cobblemon.config.getShinyRate()));
     }
 
-    public static String parse(String text, ShinyBoost boost) {
+    public static String parse(String text, IBoost boost) {
         text = parse(text);
         return text
-                .replaceAll("%multiplier%", String.valueOf(boost.multiplier))
-                .replaceAll("%duration%", hms(boost.duration))
-                .replaceAll("%time_remaining%", hms(boost.timeRemaining / 20L));
+                .replaceAll("%multiplier%", String.valueOf(boost.getMultiplier()))
+                .replaceAll("%duration%", hms(boost.getDuration()))
+                .replaceAll("%time_remaining%", hms(boost.getTimeRemaining() / 20L));
     }
 
     public static String hms(long raw_time) {

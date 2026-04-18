@@ -2,12 +2,14 @@ package dev.matthiesen.common.cobblemon_boosters;
 
 import com.cobblemon.mod.common.api.Priority;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
+import com.cobblemon.mod.common.api.events.pokeball.PokemonCatchRateEvent;
 import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.mojang.brigadier.CommandDispatcher;
 import dev.matthiesen.common.cobblemon_boosters.commands.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.config.ConfigManager;
 import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
+import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.TickManager;
@@ -17,21 +19,26 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class CobblemonBoosters {
+    public static CobblemonBoosters INSTANCE;
     public ModPermissions permissions;
     public ModConfig config;
     public MinecraftServer currentServer;
     private volatile MinecraftServerAudiences adventure;
-    public ShinyBoost globalBoost = null;
+
+    // Shiny Boost Variables
+    public ShinyBoost activeShinyBoost = null;
     public Queue<ShinyBoost> queuedShinyBoosts = new LinkedList<>();
     private ObservableSubscription<ShinyChanceCalculationEvent> shinySubscription = null;
 
-    public static CobblemonBoosters INSTANCE;
+    // Catch Boost Variables
+    public CatchBoost activeCatchBoost = null;
+    public Queue<CatchBoost> queuedCatchBoosts = new LinkedList<>();
+    private ObservableSubscription<PokemonCatchRateEvent> catchSubscription = null;
 
     public CobblemonBoosters() {}
 
@@ -57,8 +64,15 @@ public class CobblemonBoosters {
 
     public void onServerStarted() {
         this.shinySubscription = CobblemonEvents.SHINY_CHANCE_CALCULATION.subscribe(Priority.NORMAL, event -> {
-            if (this.globalBoost != null) {
-                event.addModificationFunction(((rate, player, pokemon) -> Math.max(rate / this.globalBoost.multiplier, 1)));
+            if (this.activeShinyBoost != null) {
+                event.addModificationFunction(((rate, player, pokemon) -> Math.max(rate / this.activeShinyBoost.multiplier, 1)));
+            }
+            return Unit.INSTANCE;
+        });
+        this.catchSubscription = CobblemonEvents.POKEMON_CATCH_RATE.subscribe(Priority.NORMAL, event -> {
+            if (this.activeCatchBoost != null) {
+                float baseCatchRate = event.getCatchRate();
+                event.setCatchRate(Math.min(baseCatchRate * this.activeCatchBoost.multiplier, 1F));
             }
             return Unit.INSTANCE;
         });
@@ -68,10 +82,15 @@ public class CobblemonBoosters {
         Constants.createInfoLog("Server stopping, shutting down");
         new ModConfig().saveGlobalBoostData();
         new ConfigManager().updateConfig(this.config);
-        this.globalBoost = null;
+        this.activeShinyBoost = null;
+        this.activeCatchBoost = null;
         this.queuedShinyBoosts.clear();
+        this.queuedCatchBoosts.clear();
         if (this.shinySubscription != null) {
             this.shinySubscription.unsubscribe();
+        }
+        if (this.catchSubscription != null) {
+            this.catchSubscription.unsubscribe();
         }
     }
 
