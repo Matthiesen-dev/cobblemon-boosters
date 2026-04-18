@@ -7,10 +7,14 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class TextUtils {
-    public static Component deserialize(String text) {
-        var mcComponent = CobblemonBoosters.INSTANCE.getAdventure().asNative(
+    public static net.minecraft.network.chat.Component deserializeMC(String text) {
+        return CobblemonBoosters.INSTANCE.getAdventure().asNative(
                 MiniMessage.miniMessage().deserialize("<!i>" + text)
         );
+    }
+
+    public static Component deserialize(String text) {
+        var mcComponent = deserializeMC(text);
         return CobblemonBoosters.INSTANCE.getAdventure().asAdventure(mcComponent);
     }
 

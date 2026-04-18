@@ -15,6 +15,8 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BoostersCommand implements ICommand {
     public BoostersCommand() {}
@@ -100,13 +102,28 @@ public class BoostersCommand implements ICommand {
         );
     }
 
+    private void _sendMessage(CommandContext<CommandSourceStack> ctx, @Nullable ServerPlayer player, String parsedMessage) {
+        if (player != null) {
+            CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(TextUtils.deserialize(parsedMessage));
+        } else {
+            ctx.getSource().sendSystemMessage(TextUtils.deserializeMC(parsedMessage));
+        }
+    }
+
+    private void sendMessage(CommandContext<CommandSourceStack> ctx, @Nullable ServerPlayer player, String rawMessage) {
+        String parsedMessage = TextUtils.parse(rawMessage);
+        _sendMessage(ctx, player, parsedMessage);
+    }
+
+    private void sendMessage(CommandContext<CommandSourceStack> ctx, @Nullable ServerPlayer player, String rawMessage, @NotNull ShinyBoost boost) {
+        String parsedMessage = TextUtils.parse(rawMessage, boost);
+        _sendMessage(ctx, player, parsedMessage);
+    }
+
     private int reload(CommandContext<CommandSourceStack> ctx) {
         CobblemonBoosters.INSTANCE.reload(true);
         ServerPlayer player = ctx.getSource().getPlayer();
-        assert player != null;
-        CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(
-                TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.commandReload))
-        );
+        sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.commandReload);
         return 1;
     }
 
@@ -126,28 +143,12 @@ public class BoostersCommand implements ICommand {
 
         if (CobblemonBoosters.INSTANCE.globalBoost == null) {
             CobblemonBoosters.INSTANCE.globalBoost = new ShinyBoost(multiplier, totalSeconds);
-            if (player != null) {
-                CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostStarted, CobblemonBoosters.INSTANCE.globalBoost))
-                );
-            } else {
-                CobblemonBoosters.INSTANCE.getAdventure().console().sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostStarted, CobblemonBoosters.INSTANCE.globalBoost))
-                );
-            }
+            sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyBoostStarted, CobblemonBoosters.INSTANCE.globalBoost);
             CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.globalBoost.bossBar);
         } else {
             ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
             CobblemonBoosters.INSTANCE.queuedShinyBoosts.add(boost);
-            if (player != null) {
-                CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostAddedToQueued, boost))
-                );
-            } else {
-                CobblemonBoosters.INSTANCE.getAdventure().console().sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostAddedToQueued, boost))
-                );
-            }
+            sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyBoostAddedToQueued, boost);
         }
         CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
 
@@ -156,15 +157,7 @@ public class BoostersCommand implements ICommand {
 
     private int shinyStopCommand(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
-        if (player != null) {
-            CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(
-                    TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostStopped, CobblemonBoosters.INSTANCE.globalBoost))
-            );
-        } else {
-            CobblemonBoosters.INSTANCE.getAdventure().console().sendMessage(
-                    TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostStopped, CobblemonBoosters.INSTANCE.globalBoost))
-            );
-        }
+        sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyBoostStopped, CobblemonBoosters.INSTANCE.globalBoost);
         CobblemonBoosters.INSTANCE.globalBoost.timeRemaining = 1;
         return 1;
     }
@@ -172,40 +165,16 @@ public class BoostersCommand implements ICommand {
     private int shinyStatusCommand(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
         if (CobblemonBoosters.INSTANCE.globalBoost != null)
-            if (player != null) {
-                CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostInfo, CobblemonBoosters.INSTANCE.globalBoost))
-                );
-            } else {
-                CobblemonBoosters.INSTANCE.getAdventure().console().sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostInfo, CobblemonBoosters.INSTANCE.globalBoost))
-                );
-            }
+            sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyBoostInfo, CobblemonBoosters.INSTANCE.globalBoost);
         else
-            if (player != null) {
-                CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.noActiveBoosts))
-                );
-            } else {
-                CobblemonBoosters.INSTANCE.getAdventure().console().sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.noActiveBoosts))
-                );
-            }
+            sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.noActiveBoosts);
         return 1;
     }
 
     private int clearQueuesCommand(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
         CobblemonBoosters.INSTANCE.queuedShinyBoosts.clear();
-        if (player != null) {
-            CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(
-                    TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostQueueCleared))
-            );
-        } else {
-            CobblemonBoosters.INSTANCE.getAdventure().console().sendMessage(
-                    TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostQueueCleared))
-            );
-        }
+        sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyBoostQueueCleared);
         CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
         return 1;
     }
@@ -213,26 +182,10 @@ public class BoostersCommand implements ICommand {
     private int checkQueuesCommand(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
         if (CobblemonBoosters.INSTANCE.queuedShinyBoosts.isEmpty()) {
-            if (player != null) {
-                CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.noQueuedBoosts))
-                );
-            } else {
-                CobblemonBoosters.INSTANCE.getAdventure().console().sendMessage(
-                        TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.noQueuedBoosts))
-                );
-            }
+            sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.noQueuedBoosts);
         } else {
             for (ShinyBoost queuedBoost : CobblemonBoosters.INSTANCE.queuedShinyBoosts) {
-                if (player != null) {
-                    CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(
-                            TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostInfo, queuedBoost))
-                    );
-                } else {
-                    CobblemonBoosters.INSTANCE.getAdventure().console().sendMessage(
-                            TextUtils.deserialize(TextUtils.parse(CobblemonBoosters.INSTANCE.config.messages.shinyBoostInfo, queuedBoost))
-                    );
-                }
+                sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyBoostInfo, queuedBoost);
             }
         }
         return 1;
