@@ -43,10 +43,10 @@ public class CobblemonBoosters {
     }
 
     public void initialize() {
+        INSTANCE = this;
         Constants.createInfoLog("Initialized");
         reload(false);
         this.permissions = new ModPermissions();
-        INSTANCE = this;
     }
 
     public void onStartup(MinecraftServer server) {
