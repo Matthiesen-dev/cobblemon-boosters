@@ -25,7 +25,7 @@ public class TextUtils {
         return text
                 .replaceAll("%multiplier%", String.valueOf(boost.multiplier))
                 .replaceAll("%duration%", hms(boost.duration))
-                .replaceAll("%time_remaining", hms(boost.timeRemaining / 20L));
+                .replaceAll("%time_remaining%", hms(boost.timeRemaining / 20L));
     }
 
     public static String hms(long raw_time) {

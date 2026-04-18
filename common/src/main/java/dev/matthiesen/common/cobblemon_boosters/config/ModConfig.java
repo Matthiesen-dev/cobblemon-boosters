@@ -60,7 +60,7 @@ public class ModConfig {
         public BossBar.Overlay shinyBarOverlay = BossBar.Overlay.PROGRESS;
 
         @SerializedName("shinyBarText")
-        public String shinyBarText = "<gold> %multiplier% Shiny Boost <gray>| <green>%time_remaining% Remaining";
+        public String shinyBarText = "<gold> %multiplier%x Shiny Boost <gray>| <green>%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
         public String noActiveBoosts = "%prefix% <green>There are currently no active Shiny Boosts!";
@@ -83,6 +83,7 @@ public class ModConfig {
         @SerializedName("shinyBoostInfo")
         public String shinyBoostInfo = "%prefix% <white><bold>Multiplier: <reset><gold>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
 
+        @SerializedName("noQueuedBoosts")
         public String noQueuedBoosts = "%prefix% <green>There are currently no Shiny Boosts in the queue!";
     }
 
