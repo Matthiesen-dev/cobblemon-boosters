@@ -21,6 +21,7 @@ public class TextUtils {
     }
 
     public static String parse(String text, ShinyBoost boost) {
+        text = parse(text);
         return text
                 .replaceAll("%multiplier%", String.valueOf(boost.multiplier))
                 .replaceAll("%duration%", hms(boost.duration))
