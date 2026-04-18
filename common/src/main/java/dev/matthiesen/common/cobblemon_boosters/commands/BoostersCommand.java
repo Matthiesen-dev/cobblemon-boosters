@@ -63,24 +63,23 @@ public class BoostersCommand implements ICommand {
                                                                                                         .executes(this::shinyStartCommand)
                                                                                         )
                                                                         )
+                                        ))
+                                        .then(
+                                                Commands.literal("stop")
+                                                        .requires(src -> ModPermissions.checkPermission(
+                                                                src,
+                                                                CobblemonBoosters.INSTANCE.permissions.SHINY_STOP_PERMISSION
+                                                        ))
+                                                        .executes(this::shinyStopCommand)
                                         )
-                                                .then(
-                                                        Commands.literal("stop")
-                                                                .requires(src -> ModPermissions.checkPermission(
-                                                                        src,
-                                                                        CobblemonBoosters.INSTANCE.permissions.SHINY_STOP_PERMISSION
-                                                                ))
-                                                                .executes(this::shinyStopCommand)
-                                                        )
+                                        .then(
+                                                Commands.literal("status")
+                                                        .requires(src -> ModPermissions.checkPermission(
+                                                                src,
+                                                                CobblemonBoosters.INSTANCE.permissions.SHINY_STATUS_PERMISSION
+                                                        ))
+                                                        .executes(this::shinyStatusCommand)
                                         )
-                                                .then(
-                                                        Commands.literal("status")
-                                                                .requires(src -> ModPermissions.checkPermission(
-                                                                        src,
-                                                                        CobblemonBoosters.INSTANCE.permissions.SHINY_STATUS_PERMISSION
-                                                                ))
-                                                                .executes(this::shinyStatusCommand)
-                                                )
                         )
                         .then(
                                 Commands.literal("clear-queues")
