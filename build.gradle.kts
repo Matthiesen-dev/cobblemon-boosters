@@ -21,6 +21,16 @@ allprojects {
     repositories {
         mavenCentral()
         maven("https://artefacts.cobblemon.com/releases/")
+        // for development builds
+        maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+            name = "sonatype-oss-snapshots1"
+            mavenContent { snapshotsOnly() }
+        }
+        maven("https://central.sonatype.com/repository/maven-snapshots/") {
+            name = "central-snapshots"
+            mavenContent { snapshotsOnly() }
+        }
+        maven("https://maven.impactdev.net/repository/development")
     }
 
     tasks {

@@ -24,10 +24,10 @@ dependencies {
     minecraft("com.mojang:minecraft:${property("minecraft_version")}")
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
-
     modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
     modImplementation(fabricApi.module("fabric-command-api-v2", property("fabric_api_version").toString()))
     modImplementation(fabricApi.module("fabric-lifecycle-events-v1", property("fabric_api_version").toString()))
+    modImplementation(fabricApi.module("fabric-networking-api-v1", property("fabric_api_version").toString()))
 
     //needed for cobblemon
     modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin")}")
@@ -39,6 +39,9 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
+
+    modImplementation(include("net.kyori:adventure-text-minimessage:4.17.0")!!)
+    modImplementation(include("net.kyori:adventure-platform-fabric:5.14.1")!!)
 }
 
 tasks {

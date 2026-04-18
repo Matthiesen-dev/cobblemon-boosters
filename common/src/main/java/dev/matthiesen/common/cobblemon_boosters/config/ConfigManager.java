@@ -1,10 +1,10 @@
-package dev.matthiesen.common.template_cobblemon_sidemod.config;
+package dev.matthiesen.common.cobblemon_boosters.config;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dev.matthiesen.common.template_cobblemon_sidemod.Constants;
-import dev.matthiesen.common.template_cobblemon_sidemod.interfaces.IConfigManager;
+import dev.matthiesen.common.cobblemon_boosters.Constants;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IConfigManager;
 
 import java.io.File;
 import java.io.FileReader;
@@ -94,6 +94,11 @@ public class ConfigManager implements IConfigManager {
         }
 
         return fileConfig;
+    }
+
+    public void updateConfig(ModConfig newConfig) {
+        config = newConfig;
+        saveConfig();
     }
 
     @Override
