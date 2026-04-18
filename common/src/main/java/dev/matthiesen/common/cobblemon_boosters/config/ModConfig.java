@@ -21,19 +21,19 @@ public class ModConfig {
         public int RELOAD_PERMISSION =
                 Constants.PERMISSION_LEVELS.ALL_COMMANDS.getLevel();
 
-        @SerializedName(".command.boosters.catch")
+        @SerializedName("command.boosters.catch")
         public int CATCH_PERMISSION =
                 Constants.PERMISSION_LEVELS.NONE.getLevel();
 
-        @SerializedName(".command.boosters.catch.start")
+        @SerializedName("command.boosters.catch.start")
         public int CATCH_START_PERMISSION =
                 Constants.PERMISSION_LEVELS.ALL_COMMANDS.getLevel();
 
-        @SerializedName(".command.boosters.catch.stop")
+        @SerializedName("command.boosters.catch.stop")
         public int CATCH_STOP_PERMISSION =
                 Constants.PERMISSION_LEVELS.ALL_COMMANDS.getLevel();
 
-        @SerializedName(".command.boosters.catch.status")
+        @SerializedName("command.boosters.catch.status")
         public int CATCH_STATUS_PERMISSION =
                 Constants.PERMISSION_LEVELS.NONE.getLevel();
 
