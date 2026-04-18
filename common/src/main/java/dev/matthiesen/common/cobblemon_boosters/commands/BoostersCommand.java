@@ -39,56 +39,50 @@ public class BoostersCommand implements ICommand {
     // '/boosters check-queues'
 
     public void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registry, Commands.CommandSelection context) {
-        dispatcher.register(
-                Commands.literal("boosters")
-                        .then(
-                                Commands.literal("reload").requires(src -> ModPermissions.checkPermission(
-                                        src,
-                                        CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION
-                                )).executes(this::reload)
+        dispatcher.register(Commands.literal("boosters")
+                .then(Commands.literal("reload")
+                        .requires(src -> ModPermissions.checkPermission(
+                            src,
+                            CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION)
                         )
-                        .then(
-                                newBoosterCommand(
-                                        "catch",
-                                        CobblemonBoosters.INSTANCE.permissions.CATCH_PERMISSION,
-                                        this::catchStartCommand,
-                                        100F,
-                                        CobblemonBoosters.INSTANCE.permissions.CATCH_START_PERMISSION,
-                                        this::catchStopCommand,
-                                        CobblemonBoosters.INSTANCE.permissions.CATCH_STOP_PERMISSION,
-                                        this::catchStatusCommand,
-                                        CobblemonBoosters.INSTANCE.permissions.CATCH_STATUS_PERMISSION
-                                )
-                        )
-                        .then(
-                                newBoosterCommand(
-                                        "shiny",
-                                        CobblemonBoosters.INSTANCE.permissions.SHINY_PERMISSION,
-                                        this::shinyStartCommand,
-                                        Cobblemon.config.getShinyRate(),
-                                        CobblemonBoosters.INSTANCE.permissions.SHINY_START_PERMISSION,
-                                        this::shinyStopCommand,
-                                        CobblemonBoosters.INSTANCE.permissions.SHINY_STOP_PERMISSION,
-                                        this::shinyStatusCommand,
-                                        CobblemonBoosters.INSTANCE.permissions.SHINY_STATUS_PERMISSION
-                                )
-                        )
-                        .then(
-                                Commands.literal("clear-queues")
-                                        .requires(src -> ModPermissions.checkPermission(
-                                                src,
-                                                CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION
-                                        ))
-                                        .executes(this::clearQueuesCommand)
-                        )
-                        .then(
-                                Commands.literal("check-queues")
-                                        .requires(src -> ModPermissions.checkPermission(
-                                                src,
-                                                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
-                                        ))
-                                        .executes(this::checkQueuesCommand)
-                        )
+                        .executes(this::reload)
+                )
+                .then(newBoosterCommand(
+                        "catch",
+                        CobblemonBoosters.INSTANCE.permissions.CATCH_PERMISSION,
+                        this::catchStartCommand,
+                        100F,
+                        CobblemonBoosters.INSTANCE.permissions.CATCH_START_PERMISSION,
+                        this::catchStopCommand,
+                        CobblemonBoosters.INSTANCE.permissions.CATCH_STOP_PERMISSION,
+                        this::catchStatusCommand,
+                        CobblemonBoosters.INSTANCE.permissions.CATCH_STATUS_PERMISSION
+                ))
+                .then(newBoosterCommand(
+                        "shiny",
+                        CobblemonBoosters.INSTANCE.permissions.SHINY_PERMISSION,
+                        this::shinyStartCommand,
+                        Cobblemon.config.getShinyRate(),
+                        CobblemonBoosters.INSTANCE.permissions.SHINY_START_PERMISSION,
+                        this::shinyStopCommand,
+                        CobblemonBoosters.INSTANCE.permissions.SHINY_STOP_PERMISSION,
+                        this::shinyStatusCommand,
+                        CobblemonBoosters.INSTANCE.permissions.SHINY_STATUS_PERMISSION
+                ))
+                .then(Commands.literal("clear-queues")
+                        .requires(src -> ModPermissions.checkPermission(
+                                 src,
+                                 CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION
+                        ))
+                        .executes(this::clearQueuesCommand)
+                )
+                .then(Commands.literal("check-queues")
+                        .requires(src -> ModPermissions.checkPermission(
+                                src,
+                                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
+                        ))
+                        .executes(this::checkQueuesCommand)
+                )
         );
     }
 
@@ -105,35 +99,30 @@ public class BoostersCommand implements ICommand {
     ) {
         return Commands.literal(rootCommandName)
                 .requires(src -> ModPermissions.checkPermission(src, rootPermission))
-                .then(
-                        Commands.literal("start")
-                                .requires(src -> ModPermissions.checkPermission(src, startPermission))
-                                .then(
-                                        Commands.argument("multiplier", FloatArgumentType.floatArg(1, maxMultiplier))
-                                                .then(
-                                                        Commands.argument("duration", IntegerArgumentType.integer(1))
-                                                                .then(
-                                                                        Commands.argument("unit", StringArgumentType.string())
-                                                                                .suggests((ctx, builder) -> {
-                                                                                    builder.suggest("seconds");
-                                                                                    builder.suggest("minutes");
-                                                                                    builder.suggest("hours");
-                                                                                    builder.suggest("days");
-                                                                                    return builder.buildFuture();
-                                                                                })
-                                                                                .executes(startCommand)
-                                                                )
-                                                )
-                                ))
-                .then(
-                        Commands.literal("stop")
-                                .requires(src -> ModPermissions.checkPermission(src, stopPermission))
-                                .executes(stopCommand)
+                .then(Commands.literal("start")
+                        .requires(src -> ModPermissions.checkPermission(src, startPermission))
+                        .then(Commands.argument("multiplier", FloatArgumentType.floatArg(1, maxMultiplier))
+                               .then(Commands.argument("duration", IntegerArgumentType.integer(1))
+                                      .then(Commands.argument("unit", StringArgumentType.string())
+                                            .suggests((ctx, builder) -> {
+                                                builder.suggest("seconds");
+                                                builder.suggest("minutes");
+                                                builder.suggest("hours");
+                                                builder.suggest("days");
+                                                return builder.buildFuture();
+                                            })
+                                            .executes(startCommand)
+                                      )
+                               )
+                        )
                 )
-                .then(
-                        Commands.literal("status")
-                                .requires(src -> ModPermissions.checkPermission(src, statusPermission))
-                                .executes(statusCommand)
+                .then(Commands.literal("stop")
+                        .requires(src -> ModPermissions.checkPermission(src, stopPermission))
+                        .executes(stopCommand)
+                )
+                .then(Commands.literal("status")
+                        .requires(src -> ModPermissions.checkPermission(src, statusPermission))
+                        .executes(statusCommand)
                 );
     }
 
