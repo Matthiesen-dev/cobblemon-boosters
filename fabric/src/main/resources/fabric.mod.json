@@ -3,7 +3,7 @@
   "id": "${mod_id}",
   "version": "${version}",
   "name": "Cobblemon Boosters",
-  "description": "",
+  "description": "Cobblemon related chance boosters",
   "authors": [
     "Adam Matthiesen"
   ],

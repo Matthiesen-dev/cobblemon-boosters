@@ -9,7 +9,7 @@ version = "${version}"
 displayName = "Cobblemon Boosters"
 authors = "Adam Matthiesen"
 description = '''
-A very cool multi-line description!
+Cobblemon related chance boosters
 '''
 #logoFile = ""
 
