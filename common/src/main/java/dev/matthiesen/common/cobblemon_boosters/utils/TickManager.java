@@ -1,32 +1,42 @@
 package dev.matthiesen.common.cobblemon_boosters.utils;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
+import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 
+import java.util.Queue;
+import java.util.function.Consumer;
+
 public class TickManager {
+    private static <T extends IBoost> void handleBoostTick(
+            T activeBoost,
+            Queue<T> queue,
+            Consumer<T> setActiveBoost
+    ) {
+        if (activeBoost == null) return;
+        decrementBoost(activeBoost);
+        if (activeBoost.getTimeRemaining() > 0) return;
+        CobblemonBoosters.INSTANCE.getAdventure().all().hideBossBar(activeBoost.getBossBar());
+        T nextBoost = queue.poll();
+        setActiveBoost.accept(nextBoost);
+        if (nextBoost != null) {
+            CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(nextBoost.getBossBar());
+        }
+        CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
+    }
+
     public static void tickBoosts() {
-        if (CobblemonBoosters.INSTANCE.activeShinyBoost != null) {
-            decrementBoost(CobblemonBoosters.INSTANCE.activeShinyBoost);
-            if (CobblemonBoosters.INSTANCE.activeShinyBoost.timeRemaining <= 0) {
-                CobblemonBoosters.INSTANCE.getAdventure().all().hideBossBar(CobblemonBoosters.INSTANCE.activeShinyBoost.getBossBar());
-                CobblemonBoosters.INSTANCE.activeShinyBoost = CobblemonBoosters.INSTANCE.queuedShinyBoosts.poll();
-                if (CobblemonBoosters.INSTANCE.activeShinyBoost != null) {
-                    CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeShinyBoost.getBossBar());
-                }
-                CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
-            }
-        }
-        if (CobblemonBoosters.INSTANCE.activeCatchBoost != null) {
-            decrementBoost(CobblemonBoosters.INSTANCE.activeCatchBoost);
-            if (CobblemonBoosters.INSTANCE.activeCatchBoost.timeRemaining <= 0) {
-                CobblemonBoosters.INSTANCE.getAdventure().all().hideBossBar(CobblemonBoosters.INSTANCE.activeCatchBoost.getBossBar());
-                CobblemonBoosters.INSTANCE.activeCatchBoost = CobblemonBoosters.INSTANCE.queuedCatchBoosts.poll();
-                if (CobblemonBoosters.INSTANCE.activeCatchBoost != null) {
-                    CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeCatchBoost.getBossBar());
-                }
-                CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
-            }
-        }
+        handleBoostTick(
+                CobblemonBoosters.INSTANCE.activeShinyBoost,
+                CobblemonBoosters.INSTANCE.queuedShinyBoosts,
+                boost -> CobblemonBoosters.INSTANCE.activeShinyBoost = boost
+        );
+        handleBoostTick(
+                CobblemonBoosters.INSTANCE.activeCatchBoost,
+                CobblemonBoosters.INSTANCE.queuedCatchBoosts,
+                boost -> CobblemonBoosters.INSTANCE.activeCatchBoost = boost
+        );
     }
 
     public static void updateBossBars() {

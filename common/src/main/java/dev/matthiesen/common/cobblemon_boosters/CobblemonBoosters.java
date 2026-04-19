@@ -27,7 +27,6 @@ public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
     public ModPermissions permissions;
     public ModConfig config;
-    public MinecraftServer currentServer;
     private volatile MinecraftServerAudiences adventure;
 
     // Shiny Boost Variables
@@ -58,7 +57,6 @@ public class CobblemonBoosters {
 
     public void onStartup(MinecraftServer server) {
         Constants.createInfoLog("Server starting, Setting up");
-        this.currentServer = server;
         this.adventure = MinecraftServerAudiences.of(server);
     }
 
