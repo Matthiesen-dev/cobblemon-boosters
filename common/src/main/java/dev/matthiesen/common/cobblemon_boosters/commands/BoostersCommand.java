@@ -8,7 +8,10 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.n1netails.n1netails.discord.exception.DiscordWebhookException;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.Constants;
+import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ICommand;
@@ -137,8 +140,9 @@ public class BoostersCommand implements ICommand {
         return totalSeconds;
     }
 
-    private void handleStopCommand(CommandContext<CommandSourceStack> ctx, ServerPlayer player, IBoost active, String message) {
+    private void handleStopCommand(CommandContext<CommandSourceStack> ctx, ServerPlayer player, IBoost active, String message, ModConfig.DiscordEmbed embed) throws DiscordWebhookException {
         active.setTimeRemaining(1);
+        CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(embed, active);
         sendMessage(ctx, player, message, active);
     }
 
@@ -200,6 +204,14 @@ public class BoostersCommand implements ICommand {
         if (CobblemonBoosters.INSTANCE.activeCatchBoost == null) {
             CobblemonBoosters.INSTANCE.activeCatchBoost = new CatchBoost(multiplier, totalSeconds);
             sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.catchBoostStarted, CobblemonBoosters.INSTANCE.activeCatchBoost);
+            try {
+                CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                        CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventStartEmbed,
+                        CobblemonBoosters.INSTANCE.activeCatchBoost
+                );
+            } catch (DiscordWebhookException e) {
+                Constants.LOGGER.error("Failed to send catch boost start webhook", e);
+            }
             CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeCatchBoost.getBossBar());
         } else {
             CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
@@ -212,12 +224,17 @@ public class BoostersCommand implements ICommand {
 
     private int catchStopCommand(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
-        handleStopCommand(
-                ctx,
-                player,
-                CobblemonBoosters.INSTANCE.activeCatchBoost,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.catchBoostStopped
-        );
+        try {
+            handleStopCommand(
+                    ctx,
+                    player,
+                    CobblemonBoosters.INSTANCE.activeCatchBoost,
+                    CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.catchBoostStopped,
+                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventEndEmbed
+            );
+        } catch (RuntimeException | DiscordWebhookException e) {
+            Constants.LOGGER.error("Failed to stop catch boost", e);
+        }
         return 1;
     }
 
@@ -243,6 +260,14 @@ public class BoostersCommand implements ICommand {
         if (CobblemonBoosters.INSTANCE.activeShinyBoost == null) {
             CobblemonBoosters.INSTANCE.activeShinyBoost = new ShinyBoost(multiplier, totalSeconds);
             sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyMessages.shinyBoostStarted, CobblemonBoosters.INSTANCE.activeShinyBoost);
+            try {
+                CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                        CobblemonBoosters.INSTANCE.config.discordWebhookConfig.shinyEventStartEmbed,
+                        CobblemonBoosters.INSTANCE.activeShinyBoost
+                );
+            } catch (DiscordWebhookException e) {
+                Constants.LOGGER.error("Failed to send shiny boost start webhook", e);
+            }
             CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeShinyBoost.getBossBar());
         } else {
             ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
@@ -255,12 +280,17 @@ public class BoostersCommand implements ICommand {
 
     private int shinyStopCommand(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
-        handleStopCommand(
-                ctx,
-                player,
-                CobblemonBoosters.INSTANCE.activeShinyBoost,
-                CobblemonBoosters.INSTANCE.config.messages.shinyMessages.shinyBoostStopped
-        );
+        try {
+            handleStopCommand(
+                    ctx,
+                    player,
+                    CobblemonBoosters.INSTANCE.activeShinyBoost,
+                    CobblemonBoosters.INSTANCE.config.messages.shinyMessages.shinyBoostStopped,
+                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.shinyEventEndEmbed
+            );
+        } catch (RuntimeException | DiscordWebhookException e) {
+            Constants.LOGGER.error("Failed to stop catch boost", e);
+        }
         return 1;
     }
 
@@ -269,9 +299,9 @@ public class BoostersCommand implements ICommand {
         handleStatusCommand(
                 ctx,
                 player,
-                CobblemonBoosters.INSTANCE.activeCatchBoost,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.catchBoostInfo,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.noActiveBoosts
+                CobblemonBoosters.INSTANCE.activeShinyBoost,
+                CobblemonBoosters.INSTANCE.config.messages.shinyMessages.shinyBoostInfo,
+                CobblemonBoosters.INSTANCE.config.messages.shinyMessages.noActiveBoosts
         );
         return 1;
     }

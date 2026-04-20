@@ -6,12 +6,14 @@ import com.cobblemon.mod.common.api.events.pokeball.PokemonCatchRateEvent;
 import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.mojang.brigadier.CommandDispatcher;
+import com.n1netails.n1netails.discord.exception.DiscordWebhookException;
 import dev.matthiesen.common.cobblemon_boosters.commands.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.config.ConfigManager;
 import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.utils.DiscordWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.utils.TickManager;
 import kotlin.Unit;
 import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
@@ -28,6 +30,7 @@ public class CobblemonBoosters {
     public ModPermissions permissions;
     public ModConfig config;
     private volatile MinecraftServerAudiences adventure;
+    public DiscordWebhookService discordWebhookService = new DiscordWebhookService();
 
     // Shiny Boost Variables
     public ShinyBoost activeShinyBoost = null;
@@ -101,7 +104,7 @@ public class CobblemonBoosters {
         try {
             TickManager.tickBoosts();
             TickManager.updateBossBars();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | DiscordWebhookException e) {
             Constants.LOGGER.error("Caught BossBar exception! ", e);
         }
     }

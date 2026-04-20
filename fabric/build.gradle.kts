@@ -37,6 +37,11 @@ dependencies {
     "developmentFabric"(project(":common", configuration = "namedElements"))
     shadowCommon(project(":common", configuration = "transformProductionFabric"))
 
+    implementation("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
+    shadowCommon("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}") {
+        isTransitive = true
+    }
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 

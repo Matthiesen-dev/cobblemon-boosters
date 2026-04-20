@@ -16,6 +16,9 @@ chances of finding Shiny Pokemon, or increases the catch rate!
 The configuration file is located at `config/cobblemon_boosters/config.json`. This file contains settings for the permission level defaults, 
 and message configurations. The configuration file is automatically generated with default values if it does not exist.
 
+This config file is also the location where you can figure how Discord webhooks are sent, and customize the messages sent to Discord when a booster is started or stopped. 
+You can also customize the in-game messages sent to players when a booster is started, stopped, or when they check the status of the active boosters.
+
 This file is also used to store and cache the active and queued boosts between server restarts, so it is important to not delete this file if you want to keep 
 your active boosts between restarts. And you **will not be able to directly edit the file while the server is running as the config file will be overwritten at server stop.**
 

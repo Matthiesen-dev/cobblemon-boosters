@@ -43,6 +43,10 @@ dependencies {
     }
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 
+    implementation("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
+    shadowBundle("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
+    forgeRuntimeLibrary("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 

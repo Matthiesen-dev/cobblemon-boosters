@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModConfig {
+
+    // --- PERMISSIONS CONFIG ---
+
     @SerializedName("permissionlevels")
     public PermissionLevels permissionLevels = new PermissionLevels();
 
@@ -61,6 +64,8 @@ public class ModConfig {
         public int CHECK_QUEUE_PERMISSION =
                 Constants.PERMISSION_LEVELS.NONE.getLevel();
     }
+
+    // --- MESSAGES CONFIG ---
 
     @SerializedName("messages")
     public MessagesConfig messages = new MessagesConfig();
@@ -142,6 +147,181 @@ public class ModConfig {
         @SerializedName("noQueuedBoosts")
         public String noQueuedBoosts = "%prefix% <green>There are currently no Catch Boosts in the queue!";
     }
+
+    // --- DISCORD WEBHOOK ---
+
+    @SerializedName("discordWebhookConfig")
+    public DiscordWebhookConfig discordWebhookConfig = new DiscordWebhookConfig();
+
+    public static class DiscordWebhookConfig {
+        @SerializedName("enabled")
+        public boolean enabled = false;
+
+        @SerializedName("webhookUrl")
+        public String webhookUrl = "DISCORD_WEBHOOK_URL_HERE";
+
+        @SerializedName("discordAuthorName")
+        public String discordAuthorName = "Cobblemon Boosters";
+
+        @SerializedName("discordAuthorIconUrl")
+        public String discordAuthorIconUrl = "https://raw.githubusercontent.com/Matthiesen-Dev/cobblemon-boosters/main/assets/logo.png";
+
+        @SerializedName("catchEventStartEmbed")
+        public DiscordEmbed catchEventStartEmbed = new DiscordEmbed().create(
+                "Catch Event Started!",
+                "A new Catch Boost event has started! Here are the details:",
+                "3066993",
+                new DiscordAuthor().create(
+                        "%discord_webhook_author_name%",
+                        null,
+                        "%discord_webhook_author_icon_url%"
+                ),
+                List.of(
+                        new DiscordEmbedField().create(
+                                "Multiplier",
+                                "%multiplier%x",
+                                true
+                        ),
+                        new DiscordEmbedField().create(
+                                "Duration",
+                                "%duration%",
+                                true
+                        )
+                ),
+                "%timestamp%"
+        );
+
+        @SerializedName("catchEventEndEmbed")
+        public DiscordEmbed catchEventEndEmbed = new DiscordEmbed().create(
+                "Catch Event Ended!",
+                "The %multiplier%x Catch Boost event has ended!",
+                "3066993",
+                new DiscordAuthor().create(
+                        "%discord_webhook_author_name%",
+                        null,
+                        "%discord_webhook_author_icon_url%"
+                ),
+                null,
+                "%timestamp%"
+        );
+
+        @SerializedName("shinyEventStartEmbed")
+        public DiscordEmbed shinyEventStartEmbed = new DiscordEmbed().create(
+                "Shiny Event Started!",
+                "A new Shiny Boost event has started! Here are the details:",
+                "15844367",
+                new DiscordAuthor().create(
+                        "%discord_webhook_author_name%",
+                        null,
+                        "%discord_webhook_author_icon_url%"
+                ),
+                List.of(
+                        new DiscordEmbedField().create(
+                                "Multiplier",
+                                "%multiplier%x",
+                                true
+                        ),
+                        new DiscordEmbedField().create(
+                                "Duration",
+                                "%duration%",
+                                true
+                        )
+                ),
+                "%timestamp%"
+        );
+
+        @SerializedName("shinyEventEndEmbed")
+        public DiscordEmbed shinyEventEndEmbed = new DiscordEmbed().create(
+                "Shiny Event Ended!",
+                "The %multiplier%x Shiny Boost event has ended!",
+                "15844367",
+                new DiscordAuthor().create(
+                        "%discord_webhook_author_name%",
+                        null,
+                        "%discord_webhook_author_icon_url%"
+                ),
+                null,
+                "%timestamp%"
+        );
+    }
+
+    public static class DiscordEmbed {
+        @SerializedName("title")
+        public String title;
+
+        @SerializedName("description")
+        public String description;
+
+        @SerializedName("color")
+        public String color;
+
+        @SerializedName("author")
+        public DiscordAuthor author;
+
+        @SerializedName("fields")
+        public List<DiscordEmbedField> fields;
+
+        @SerializedName("timestamp")
+        public String timestamp;
+
+        public DiscordEmbed create(
+                String title,
+                String description,
+                String color,
+                DiscordAuthor author,
+                List<DiscordEmbedField> fields,
+                String timestamp
+        ) {
+            DiscordEmbed embed = new DiscordEmbed();
+            embed.title = title;
+            embed.description = description;
+            embed.color = color;
+            embed.author = author;
+            embed.fields = fields;
+            embed.timestamp = timestamp;
+            return embed;
+        }
+    }
+
+    public static class DiscordAuthor {
+        @SerializedName("name")
+        public String name;
+
+        @SerializedName("url")
+        public String url;
+
+        @SerializedName("icon_url")
+        public String icon_url;
+
+        public DiscordAuthor create(String name, String url, String icon_url) {
+            DiscordAuthor author = new DiscordAuthor();
+            author.name = name;
+            author.url = url;
+            author.icon_url = icon_url;
+            return author;
+        }
+    }
+
+    public static class DiscordEmbedField {
+        @SerializedName("name")
+        public String name;
+
+        @SerializedName("value")
+        public String value;
+
+        @SerializedName("inline")
+        public boolean inline;
+
+        public DiscordEmbedField create(String name, String value, boolean inline) {
+            DiscordEmbedField field = new DiscordEmbedField();
+            field.name = name;
+            field.value = value;
+            field.inline = inline;
+            return field;
+        }
+    }
+
+    // --- LOCAL CACHE ---
 
     @SerializedName("activeShinyBoost")
     public ShinyBoost activeShinyBoost = null;

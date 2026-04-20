@@ -1,6 +1,8 @@
 package dev.matthiesen.common.cobblemon_boosters.utils;
 
+import com.n1netails.n1netails.discord.exception.DiscordWebhookException;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
@@ -12,30 +14,44 @@ public class TickManager {
     private static <T extends IBoost> void handleBoostTick(
             T activeBoost,
             Queue<T> queue,
-            Consumer<T> setActiveBoost
-    ) {
+            Consumer<T> setActiveBoost,
+            ModConfig.DiscordEmbed boostEndEmbed,
+            ModConfig.DiscordEmbed boostStartEmbed
+    ) throws DiscordWebhookException {
         if (activeBoost == null) return;
         decrementBoost(activeBoost);
         if (activeBoost.getTimeRemaining() > 0) return;
         CobblemonBoosters.INSTANCE.getAdventure().all().hideBossBar(activeBoost.getBossBar());
+        CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                boostEndEmbed,
+                activeBoost
+        );
         T nextBoost = queue.poll();
         setActiveBoost.accept(nextBoost);
         if (nextBoost != null) {
             CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(nextBoost.getBossBar());
+            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                    boostStartEmbed,
+                    nextBoost
+            );
         }
         CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
     }
 
-    public static void tickBoosts() {
+    public static void tickBoosts() throws DiscordWebhookException {
         handleBoostTick(
                 CobblemonBoosters.INSTANCE.activeShinyBoost,
                 CobblemonBoosters.INSTANCE.queuedShinyBoosts,
-                boost -> CobblemonBoosters.INSTANCE.activeShinyBoost = boost
+                boost -> CobblemonBoosters.INSTANCE.activeShinyBoost = boost,
+                CobblemonBoosters.INSTANCE.config.discordWebhookConfig.shinyEventEndEmbed,
+                CobblemonBoosters.INSTANCE.config.discordWebhookConfig.shinyEventStartEmbed
         );
         handleBoostTick(
                 CobblemonBoosters.INSTANCE.activeCatchBoost,
                 CobblemonBoosters.INSTANCE.queuedCatchBoosts,
-                boost -> CobblemonBoosters.INSTANCE.activeCatchBoost = boost
+                boost -> CobblemonBoosters.INSTANCE.activeCatchBoost = boost,
+                CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventEndEmbed,
+                CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventStartEmbed
         );
     }
 
