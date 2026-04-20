@@ -20,6 +20,8 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 
     compileOnly("net.kyori:adventure-platform-mod-shared:${property("adventure_text_version")}")
+
+    implementation("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
 }
 
 tasks {

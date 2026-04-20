@@ -6,6 +6,8 @@ import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
+import java.time.Instant;
+
 public class TextUtils {
     public static net.minecraft.network.chat.Component deserializeMC(String text) {
         return CobblemonBoosters.INSTANCE.getAdventure().asNative(
@@ -15,6 +17,10 @@ public class TextUtils {
 
     public static Component deserialize(String text) {
         return CobblemonBoosters.INSTANCE.getAdventure().asAdventure(deserializeMC(text));
+    }
+
+    public static String getCurrentTimestampForDiscordEmbed() {
+        return Instant.now().toString();
     }
 
     public static String parse(String text) {
@@ -28,7 +34,10 @@ public class TextUtils {
         return text
                 .replaceAll("%multiplier%", String.valueOf(boost.getMultiplier()))
                 .replaceAll("%duration%", hms(boost.getDuration()))
-                .replaceAll("%time_remaining%", hms(boost.getTimeRemaining() / 20L));
+                .replaceAll("%time_remaining%", hms(boost.getTimeRemaining() / 20L))
+                .replaceAll("%discord_webhook_author_name%", CobblemonBoosters.INSTANCE.config.discordWebhookConfig.discordAuthorName)
+                .replaceAll("%discord_webhook_author_icon_url%", CobblemonBoosters.INSTANCE.config.discordWebhookConfig.discordAuthorIconUrl)
+                .replaceAll("%timestamp%", getCurrentTimestampForDiscordEmbed());
     }
 
     public static String hms(long raw_time) {
