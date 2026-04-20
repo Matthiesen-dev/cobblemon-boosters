@@ -164,7 +164,7 @@ public class ModConfig {
         public String discordAuthorName = "Cobblemon Boosters";
 
         @SerializedName("discordAuthorIconUrl")
-        public String discordAuthorIconUrl = "https://raw.githubusercontent.com/Matthiesen-Dev/cobblemon-boosters/main/assets/logo.png";
+        public String discordAuthorIconUrl = "https://raw.githubusercontent.com/Matthiesen-Dev/cobblemon-boosters/refs/heads/main/assets/logo.png";
 
         @SerializedName("catchEventStartEmbed")
         public DiscordEmbed catchEventStartEmbed = new DiscordEmbed().create(
