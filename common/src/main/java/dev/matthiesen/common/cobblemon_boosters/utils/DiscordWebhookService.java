@@ -6,6 +6,7 @@ import com.n1netails.n1netails.discord.internal.DiscordWebhookClientImpl;
 import com.n1netails.n1netails.discord.model.*;
 import com.n1netails.n1netails.discord.service.WebhookService;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 
@@ -51,6 +52,10 @@ public class DiscordWebhookService {
 
     public void sendMessage(ModConfig.DiscordEmbed embed, IBoost boost) throws DiscordWebhookException {
         if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.enabled) return;
+        if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl.startsWith("https://")) {
+            Constants.createErrorLog("Discord webhooks are enabled but an invalid Discord Webhook URL is set! Please check your configuration. (Must start with 'https://')");
+            return;
+        }
 
         WebhookMessage message = new WebhookMessageBuilder()
                 .withAvatarUrl(TextUtils.parse(embed.author.icon_url, boost))
