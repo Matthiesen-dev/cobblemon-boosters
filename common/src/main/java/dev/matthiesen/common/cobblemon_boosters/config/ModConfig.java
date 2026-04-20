@@ -3,6 +3,7 @@ package dev.matthiesen.common.cobblemon_boosters.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.n1netails.n1netails.discord.DiscordColor;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
@@ -170,7 +171,7 @@ public class ModConfig {
         public DiscordEmbed catchEventStartEmbed = new DiscordEmbed().create(
                 "Catch Event Started!",
                 "A new Catch Boost event has started! Here are the details:",
-                "3066993",
+                DiscordColor.GREEN.getValue(),
                 new DiscordAuthor().create(
                         "%discord_webhook_author_name%",
                         null,
@@ -195,7 +196,7 @@ public class ModConfig {
         public DiscordEmbed catchEventEndEmbed = new DiscordEmbed().create(
                 "Catch Event Ended!",
                 "The %multiplier%x Catch Boost event has ended!",
-                "3066993",
+                DiscordColor.GREEN.getValue(),
                 new DiscordAuthor().create(
                         "%discord_webhook_author_name%",
                         null,
@@ -209,7 +210,7 @@ public class ModConfig {
         public DiscordEmbed shinyEventStartEmbed = new DiscordEmbed().create(
                 "Shiny Event Started!",
                 "A new Shiny Boost event has started! Here are the details:",
-                "15844367",
+                DiscordColor.GOLD.getValue(),
                 new DiscordAuthor().create(
                         "%discord_webhook_author_name%",
                         null,
@@ -234,7 +235,7 @@ public class ModConfig {
         public DiscordEmbed shinyEventEndEmbed = new DiscordEmbed().create(
                 "Shiny Event Ended!",
                 "The %multiplier%x Shiny Boost event has ended!",
-                "15844367",
+                DiscordColor.GOLD.getValue(),
                 new DiscordAuthor().create(
                         "%discord_webhook_author_name%",
                         null,
