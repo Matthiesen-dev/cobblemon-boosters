@@ -142,7 +142,6 @@ public class BoostersCommand implements ICommand {
 
     private void handleStopCommand(CommandContext<CommandSourceStack> ctx, ServerPlayer player, IBoost active, String message, ModConfig.DiscordEmbed embed) throws DiscordWebhookException {
         active.setTimeRemaining(1);
-        CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(embed, active);
         sendMessage(ctx, player, message, active);
     }
 

@@ -32,12 +32,14 @@ public class DiscordWebhookService {
 
         // Process Fields
         List<Embed.EmbedField> fields = new ArrayList<>();
-        for (ModConfig.DiscordEmbedField field : embed.fields) {
-            Embed.EmbedField embedField = new Embed.EmbedField();
-            embedField.setName(TextUtils.parse(field.name, boost));
-            embedField.setValue(TextUtils.parse(field.value, boost));
-            embedField.setInline(field.inline);
-            fields.add(embedField);
+        if (embed.fields != null) {
+            for (ModConfig.DiscordEmbedField field : embed.fields) {
+                Embed.EmbedField embedField = new Embed.EmbedField();
+                embedField.setName(TextUtils.parse(field.name, boost));
+                embedField.setValue(TextUtils.parse(field.value, boost));
+                embedField.setInline(field.inline);
+                fields.add(embedField);
+            }
         }
 
         return new EmbedBuilder()
