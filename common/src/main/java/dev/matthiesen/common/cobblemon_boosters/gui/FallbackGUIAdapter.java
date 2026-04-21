@@ -1,4 +1,4 @@
-package dev.matthiesen.common.cobblemon_boosters.default_adapters;
+package dev.matthiesen.common.cobblemon_boosters.gui;
 
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
@@ -11,6 +11,11 @@ public class FallbackGUIAdapter implements IGUIAdapter {
 
     @Override
     public void openBoostersGUI(ServerPlayer player) {
+        player.sendSystemMessage(defaultComponent);
+    }
+
+    @Override
+    public void openQueuesGUI(ServerPlayer player) {
         player.sendSystemMessage(defaultComponent);
     }
 

@@ -32,6 +32,7 @@ public class BoostersCommand implements ICommand {
     // '/boosters clear-queues'
 
     // '/boosters check-queues'
+    // TODO: Refactor check-queues to use the following format: '/boosters check-queues <booster>'
 
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registry, Commands.CommandSelection context) {

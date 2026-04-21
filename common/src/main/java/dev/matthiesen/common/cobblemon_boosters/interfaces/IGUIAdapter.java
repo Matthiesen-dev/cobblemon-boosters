@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 public interface IGUIAdapter {
     // Main GUIs
     void openBoostersGUI(ServerPlayer player);
+    void openQueuesGUI(ServerPlayer player);
 
     // Booster GUIs
     void openBucketBoosterGUI(ServerPlayer player);
