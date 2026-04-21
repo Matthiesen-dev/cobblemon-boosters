@@ -50,7 +50,7 @@ public class DiscordWebhookService {
         if (embed.author != null) {
             Embed.Author author = new Embed.Author();
             if (embed.author.name != null) author.setName(TextUtils.parse(embed.author.name, boost));
-            if (embed.author.icon_url != null) author.setUrl(TextUtils.parse(embed.author.icon_url, boost));
+            if (embed.author.icon_url != null) author.setIcon_url(TextUtils.parse(embed.author.icon_url, boost));
             if (embed.author.url != null) author.setUrl(TextUtils.parse(embed.author.url, boost));
             embedBuilder.withAuthor(author);
         }
