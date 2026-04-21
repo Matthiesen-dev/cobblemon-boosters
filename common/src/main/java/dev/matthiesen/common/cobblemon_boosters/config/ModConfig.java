@@ -7,7 +7,9 @@ import com.n1netails.n1netails.discord.DiscordColor;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
+import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
+import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import net.kyori.adventure.bossbar.BossBar;
 
 import java.util.ArrayList;
@@ -41,6 +43,22 @@ public class ModConfig {
         public int CATCH_STATUS_PERMISSION =
                 Constants.PERMISSION_LEVELS.NONE.getLevel();
 
+        @SerializedName("command.boosters.experience")
+        public int EXPERIENCE_PERMISSION =
+                Constants.PERMISSION_LEVELS.NONE.getLevel();
+
+        @SerializedName("command.boosters.experience.start")
+        public int EXPERIENCE_START_PERMISSION =
+                Constants.PERMISSION_LEVELS.ALL_COMMANDS.getLevel();
+
+        @SerializedName("command.boosters.experience.stop")
+        public int EXPERIENCE_STOP_PERMISSION =
+                Constants.PERMISSION_LEVELS.ALL_COMMANDS.getLevel();
+
+        @SerializedName("command.boosters.experience.status")
+        public int EXPERIENCE_STATUS_PERMISSION =
+                Constants.PERMISSION_LEVELS.ALL_COMMANDS.getLevel();
+
         @SerializedName("command.boosters.shiny")
         public int SHINY_PERMISSION =
                 Constants.PERMISSION_LEVELS.NONE.getLevel();
@@ -55,6 +73,22 @@ public class ModConfig {
 
         @SerializedName("command.boosters.shiny.status")
         public int SHINY_STATUS_PERMISSION =
+                Constants.PERMISSION_LEVELS.NONE.getLevel();
+
+        @SerializedName("command.boosters.bucket")
+        public int BUCKET_PERMISSION =
+                Constants.PERMISSION_LEVELS.NONE.getLevel();
+
+        @SerializedName("command.boosters.bucket.start")
+        public int BUCKET_START_PERMISSION =
+                Constants.PERMISSION_LEVELS.ALL_COMMANDS.getLevel();
+
+        @SerializedName("command.boosters.bucket.stop")
+        public int BUCKET_STOP_PERMISSION =
+                Constants.PERMISSION_LEVELS.ALL_COMMANDS.getLevel();
+
+        @SerializedName("command.boosters.bucket.status")
+        public int BUCKET_STATUS_PERMISSION =
                 Constants.PERMISSION_LEVELS.NONE.getLevel();
 
         @SerializedName("command.boosters.clear_queues")
@@ -83,70 +117,140 @@ public class ModConfig {
 
         @SerializedName("catchBoostMessages")
         public CatchBoostMessagesConfig catchBoostMessages = new CatchBoostMessagesConfig();
+
+        @SerializedName("experienceBoostMessages")
+        public ExperienceBoostMessagesConfig experienceBoostMessages = new ExperienceBoostMessagesConfig();
+
+        @SerializedName("spawnBucketBoostMessages")
+        public SpawnBucketBoostMessagesConfig spawnBucketBoostMessages = new SpawnBucketBoostMessagesConfig();
     }
 
     public static class ShinyMessagesConfig {
-        @SerializedName("shinyBarColor")
-        public BossBar.Color shinyBarColor = BossBar.Color.YELLOW;
+        @SerializedName("barColor")
+        public BossBar.Color barColor = BossBar.Color.YELLOW;
 
-        @SerializedName("shinyBarOverlay")
-        public BossBar.Overlay shinyBarOverlay = BossBar.Overlay.PROGRESS;
+        @SerializedName("barOverlay")
+        public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
 
-        @SerializedName("shinyBarText")
-        public String shinyBarText = "<gold> %multiplier%x Shiny Boost <gray>| <green>%time_remaining% Remaining";
+        @SerializedName("barText")
+        public String barText = "<gold> %multiplier%x Shiny Boost <gray>| <green>%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
         public String noActiveBoosts = "%prefix% <green>There are currently no active Shiny Boosts!";
 
-        @SerializedName("shinyBoostStarted")
-        public String shinyBoostStarted = "%prefix% <green>Started a Shiny %multiplier%x boost for %duration%!";
+        @SerializedName("boostStarted")
+        public String boostStarted = "%prefix% <green>Started a Shiny %multiplier%x boost for %duration%!";
 
-        @SerializedName("shinyBoostAddedToQueue")
-        public String shinyBoostAddedToQueued = "%prefix% <green>Added a Shiny %multiplier%x boost with a %duration% duration to queue!";
+        @SerializedName("boostAddedToQueued")
+        public String boostAddedToQueued = "%prefix% <green>Added a Shiny %multiplier%x boost with a %duration% duration to queue!";
 
-        @SerializedName("shinyBoostStopped")
-        public String shinyBoostStopped = "%prefix% <green>Stopped the current Shiny boost!";
+        @SerializedName("boostStopped")
+        public String boostStopped = "%prefix% <green>Stopped the current Shiny boost!";
 
-        @SerializedName("shinyBoostQueueCleared")
-        public String shinyBoostQueueCleared = "%prefix% <green>Cleared the Shiny queued boosts!";
+        @SerializedName("boostQueueCleared")
+        public String boostQueueCleared = "%prefix% <green>Cleared the Shiny queued boosts!";
 
-        @SerializedName("shinyBoostInfo")
-        public String shinyBoostInfo = "%prefix% <white><bold>Multiplier: <reset><gold>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+        @SerializedName("boostInfo")
+        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><gold>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
 
         @SerializedName("noQueuedBoosts")
         public String noQueuedBoosts = "%prefix% <green>There are currently no Shiny Boosts in the queue!";
     }
 
     public static class CatchBoostMessagesConfig {
-        @SerializedName("catchBoostBarColor")
-        public BossBar.Color catchBoostBarColor = BossBar.Color.GREEN;
+        @SerializedName("barColor")
+        public BossBar.Color barColor = BossBar.Color.PURPLE;
 
-        @SerializedName("catchBoostBarOverlay")
-        public BossBar.Overlay catchBoostBarOverlay = BossBar.Overlay.PROGRESS;
+        @SerializedName("barOverlay")
+        public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
 
-        @SerializedName("catchBoostBarText")
-        public String catchBoostBarText = "<green> %multiplier%x Catch Boost <gray>| <green>%time_remaining% Remaining";
+        @SerializedName("barText")
+        public String barText = "<light_purple> %multiplier%x Catch Boost <gray>| <green>%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
         public String noActiveBoosts = "%prefix% <green>There are currently no active Catch Boosts!";
 
-        @SerializedName("catchBoostStarted")
-        public String catchBoostStarted = "%prefix% <green>Started a Catch %multiplier%x boost for %duration%!";
+        @SerializedName("boostStarted")
+        public String boostStarted = "%prefix% <green>Started a Catch %multiplier%x boost for %duration%!";
 
-        @SerializedName("catchBoostAddedToQueue")
-        public String catchBoostAddedToQueued = "%prefix% <green>Added a Catch %multiplier%x boost with a %duration% duration to queue!";
+        @SerializedName("boostAddedToQueued")
+        public String boostAddedToQueued = "%prefix% <green>Added a Catch %multiplier%x boost with a %duration% duration to queue!";
 
-        @SerializedName("catchBoostStopped")
-        public String catchBoostStopped = "%prefix% <green>Stopped the current Catch boost!";
+        @SerializedName("boostStopped")
+        public String boostStopped = "%prefix% <green>Stopped the current Catch boost!";
 
-        @SerializedName("catchBoostQueueCleared")
-        public String catchBoostQueueCleared = "%prefix% <green>Cleared the Catch queued boosts!";
+        @SerializedName("boostQueueCleared")
+        public String boostQueueCleared = "%prefix% <green>Cleared the Catch queued boosts!";
 
-        @SerializedName("catchBoostInfo")
-        public String catchBoostInfo = "%prefix% <white><bold>Multiplier: <reset><gold>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+        @SerializedName("boostInfo")
+        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><gold>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
 
         @SerializedName("noQueuedBoosts")
         public String noQueuedBoosts = "%prefix% <green>There are currently no Catch Boosts in the queue!";
+    }
+
+    public static class ExperienceBoostMessagesConfig {
+        @SerializedName("barColor")
+        public BossBar.Color barColor = BossBar.Color.GREEN;
+
+        @SerializedName("barOverlay")
+        public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
+
+        @SerializedName("barText")
+        public String barText = "<green> %multiplier%x Experience Boost <gray>| <green>%time_remaining% Remaining";
+
+        @SerializedName("noActiveBoosts")
+        public String noActiveBoosts = "%prefix% <green>There are currently no active Experience Boosts!";
+
+        @SerializedName("boostStarted")
+        public String boostStarted = "%prefix% <green>Started a Experience %multiplier%x boost for %duration%!";
+
+        @SerializedName("boostAddedToQueued")
+        public String boostAddedToQueued = "%prefix% <green>Added a Experience %multiplier%x boost with a %duration% duration to queue!";
+
+        @SerializedName("boostStopped")
+        public String boostStopped = "%prefix% <green>Stopped the current Experience boost!";
+
+        @SerializedName("boostQueueCleared")
+        public String boostQueueCleared = "%prefix% <green>Cleared the Experience queued boosts!";
+
+        @SerializedName("boostInfo")
+        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><gold>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+
+        @SerializedName("noQueuedBoosts")
+        public String noQueuedBoosts = "%prefix% <green>There are currently no Experience Boosts in the queue!";
+    }
+
+    public static class SpawnBucketBoostMessagesConfig {
+        @SerializedName("barColor")
+        public BossBar.Color barColor = BossBar.Color.BLUE;
+
+        @SerializedName("barOverlay")
+        public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
+
+        @SerializedName("barText")
+        public String barText = "<cyan> %bucket% Spawn Bucket Boost <gray>| <green>%time_remaining% Remaining";
+
+        @SerializedName("noActiveBoosts")
+        public String noActiveBoosts = "%prefix% <green>There are currently no active Spawn Bucket Boosts!";
+
+        @SerializedName("boostStarted")
+        public String boostStarted = "%prefix% <green>Started a %bucket% Spawn Bucket Boost for %duration%!";
+
+        @SerializedName("boostAddedToQueued")
+        public String boostAddedToQueued = "%prefix% <green>Added a %bucket% Spawn Bucket Boost with a %duration% duration to queue!";
+
+        @SerializedName("boostStopped")
+        public String boostStopped = "%prefix% <green>Stopped the current Spawn Bucket boost!";
+
+        @SerializedName("boostQueueCleared")
+        public String boostQueueCleared = "%prefix% <green>Cleared the Spawn Bucket queued boosts!";
+
+        @SerializedName("boostInfo")
+        public String boostInfo = "%prefix% <white><bold>Bucket: <reset><gold>%bucket% <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+
+        @SerializedName("noQueuedBoosts")
+        public String noQueuedBoosts = "%prefix% <green>There are currently no Spawn Bucket Boosts in the queue!";
     }
 
     // --- DISCORD WEBHOOK ---
@@ -171,7 +275,7 @@ public class ModConfig {
         public DiscordEmbed catchEventStartEmbed = new DiscordEmbed().create(
                 "Catch Event Started!",
                 "A new Catch Boost event has started! Here are the details:",
-                DiscordColor.GREEN.getValue(),
+                DiscordColor.PURPLE.getValue(),
                 new DiscordAuthor().create(
                         "%discord_webhook_author_name%",
                         null,
@@ -196,6 +300,45 @@ public class ModConfig {
         public DiscordEmbed catchEventEndEmbed = new DiscordEmbed().create(
                 "Catch Event Ended!",
                 "The %multiplier%x Catch Boost event has ended!",
+                DiscordColor.PURPLE.getValue(),
+                new DiscordAuthor().create(
+                        "%discord_webhook_author_name%",
+                        null,
+                        "%discord_webhook_author_icon_url%"
+                ),
+                null,
+                "%timestamp%"
+        );
+
+        @SerializedName("experienceEventStartEmbed")
+        public DiscordEmbed experienceEventStartEmbed = new DiscordEmbed().create(
+                "Experience Event Started!",
+                "A new Experience Boost event has started! Here are the details:",
+                DiscordColor.GREEN.getValue(),
+                new DiscordAuthor().create(
+                        "%discord_webhook_author_name%",
+                        null,
+                        "%discord_webhook_author_icon_url%"
+                ),
+                List.of(
+                        new DiscordEmbedField().create(
+                                "Multiplier",
+                                "%multiplier%x",
+                                true
+                        ),
+                        new DiscordEmbedField().create(
+                                "Duration",
+                                "%duration%",
+                                true
+                        )
+                ),
+                "%timestamp%"
+        );
+
+        @SerializedName("experienceEventEndEmbed")
+        public DiscordEmbed experienceEventEndEmbed = new DiscordEmbed().create(
+                "Experience Event Ended!",
+                "The %multiplier%x Experience Boost event has ended!",
                 DiscordColor.GREEN.getValue(),
                 new DiscordAuthor().create(
                         "%discord_webhook_author_name%",
@@ -236,6 +379,45 @@ public class ModConfig {
                 "Shiny Event Ended!",
                 "The %multiplier%x Shiny Boost event has ended!",
                 DiscordColor.GOLD.getValue(),
+                new DiscordAuthor().create(
+                        "%discord_webhook_author_name%",
+                        null,
+                        "%discord_webhook_author_icon_url%"
+                ),
+                null,
+                "%timestamp%"
+        );
+
+        @SerializedName("spawnBucketEventStartEmbed")
+        public DiscordEmbed spawnBucketEventStartEmbed = new DiscordEmbed().create(
+                "Spawn Bucket Event Started!",
+                "A new Spawn Bucket Boost event has started! Here are the details:",
+                DiscordColor.BLUE.getValue(),
+                new DiscordAuthor().create(
+                        "%discord_webhook_author_name%",
+                        null,
+                        "%discord_webhook_author_icon_url%"
+                ),
+                List.of(
+                        new DiscordEmbedField().create(
+                                "Bucket",
+                                "%bucket%",
+                                true
+                        ),
+                        new DiscordEmbedField().create(
+                                "Duration",
+                                "%duration%",
+                                true
+                        )
+                ),
+                "%timestamp%"
+        );
+
+        @SerializedName("spawnBucketEventEndEmbed")
+        public DiscordEmbed spawnBucketEventEndEmbed = new DiscordEmbed().create(
+                "Spawn Bucket Event Ended!",
+                "The %bucket% Spawn Bucket Boost event has ended!",
+                DiscordColor.BLUE.getValue(),
                 new DiscordAuthor().create(
                         "%discord_webhook_author_name%",
                         null,
@@ -330,11 +512,23 @@ public class ModConfig {
     @SerializedName("activeCatchBoost")
     public CatchBoost activeCatchBoost = null;
 
+    @SerializedName("activeExperienceBoost")
+    public ExperienceBoost activeExperienceBoost = null;
+
+    @SerializedName("activeSpawnBucketBoost")
+    public SpawnBucketBoost activeSpawnBucketBoost = null;
+
     @SerializedName("queuedShinyBoosts")
     public List<ShinyBoost> queuedShinyBoosts = new ArrayList<>();
 
     @SerializedName("queuedCatchBoosts")
     public List<CatchBoost> queuedCatchBoosts = new ArrayList<>();
+
+    @SerializedName("queuedExperienceBoosts")
+    public List<ExperienceBoost> queuedExperienceBoosts = new ArrayList<>();
+
+    @SerializedName("queuedSpawnBucketBoosts")
+    public List<SpawnBucketBoost> queuedSpawnBucketBoosts = new ArrayList<>();
 
     private void saveShinyBoostData() {
         ShinyBoost activeShinyBoost = null;
@@ -358,9 +552,33 @@ public class ModConfig {
         CobblemonBoosters.INSTANCE.config.queuedCatchBoosts.addAll(queuedCatchBoosts);
     }
 
+    private void saveExperienceBoostData() {
+        ExperienceBoost activeExperienceBoost = null;
+        if (CobblemonBoosters.INSTANCE.activeExperienceBoost != null) {
+            activeExperienceBoost = CobblemonBoosters.INSTANCE.activeExperienceBoost;
+        }
+        CobblemonBoosters.INSTANCE.config.activeExperienceBoost = activeExperienceBoost;
+        List<ExperienceBoost> queuedExperienceBoosts = CobblemonBoosters.INSTANCE.queuedExperienceBoosts.stream().toList();
+        CobblemonBoosters.INSTANCE.config.queuedExperienceBoosts.clear();
+        CobblemonBoosters.INSTANCE.config.queuedExperienceBoosts.addAll(queuedExperienceBoosts);
+    }
+
+    private void saveSpawnBucketBoostData() {
+        SpawnBucketBoost activeSpawnBucketBoost = null;
+        if (CobblemonBoosters.INSTANCE.activeSpawnBucketBoost != null) {
+            activeSpawnBucketBoost = CobblemonBoosters.INSTANCE.activeSpawnBucketBoost;
+        }
+        CobblemonBoosters.INSTANCE.config.activeSpawnBucketBoost = activeSpawnBucketBoost;
+        List<SpawnBucketBoost> queuedSpawnBucketBoosts = CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts.stream().toList();
+        CobblemonBoosters.INSTANCE.config.queuedSpawnBucketBoosts.clear();
+        CobblemonBoosters.INSTANCE.config.queuedSpawnBucketBoosts.addAll(queuedSpawnBucketBoosts);
+    }
+
     public void saveGlobalBoostData() {
         saveShinyBoostData();
         saveCatchBoostData();
+        saveExperienceBoostData();
+        saveSpawnBucketBoostData();
     }
 
     public static final Gson GSON = new GsonBuilder()

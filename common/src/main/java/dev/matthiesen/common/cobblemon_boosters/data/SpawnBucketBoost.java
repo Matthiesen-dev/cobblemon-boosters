@@ -6,13 +6,14 @@ import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 
-public class CatchBoost implements IBoost {
+public class SpawnBucketBoost implements IBoost {
     public float multiplier;
     public int duration;
     public long timeRemaining;
     public BossBar bossBar;
+    public String bucket;
 
-    public CatchBoost(float multiplier, int duration) {
+    public SpawnBucketBoost(float multiplier, int duration) {
         this.multiplier = multiplier;
         this.duration = duration;
         this.timeRemaining = duration * 20L;
@@ -39,6 +40,15 @@ public class CatchBoost implements IBoost {
         this.timeRemaining = timeRemaining;
     }
 
+    public SpawnBucketBoost setBucket(String bucket) {
+        this.bucket = bucket;
+        return this;
+    }
+
+    public String getBucket() {
+        return this.bucket;
+    }
+
     @Override
     public BossBar getBossBar() {
         if (this.bossBar == null) {
@@ -51,8 +61,8 @@ public class CatchBoost implements IBoost {
         return BossBar.bossBar(
                 getBossBarText(),
                 1F,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.barColor,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.barOverlay
+                CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.barColor,
+                CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.barOverlay
         );
     }
 
@@ -60,7 +70,7 @@ public class CatchBoost implements IBoost {
     public Component getBossBarText() {
         return TextUtils.deserialize(
                 TextUtils.parse(
-                        CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.barText,
+                        CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.barText,
                         this
                 )
         );

@@ -53,6 +53,20 @@ public class TickManager {
                 CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventEndEmbed,
                 CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventStartEmbed
         );
+        handleBoostTick(
+                CobblemonBoosters.INSTANCE.activeExperienceBoost,
+                CobblemonBoosters.INSTANCE.queuedExperienceBoosts,
+                boost -> CobblemonBoosters.INSTANCE.activeExperienceBoost = boost,
+                CobblemonBoosters.INSTANCE.config.discordWebhookConfig.experienceEventEndEmbed,
+                CobblemonBoosters.INSTANCE.config.discordWebhookConfig.experienceEventStartEmbed
+        );
+        handleBoostTick(
+                CobblemonBoosters.INSTANCE.activeSpawnBucketBoost,
+                CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts,
+                boost -> CobblemonBoosters.INSTANCE.activeSpawnBucketBoost = boost,
+                CobblemonBoosters.INSTANCE.config.discordWebhookConfig.spawnBucketEventEndEmbed,
+                CobblemonBoosters.INSTANCE.config.discordWebhookConfig.spawnBucketEventStartEmbed
+        );
     }
 
     public static void updateBossBars() {
@@ -61,6 +75,12 @@ public class TickManager {
         }
         if (CobblemonBoosters.INSTANCE.activeCatchBoost != null) {
             updateBossBar(CobblemonBoosters.INSTANCE.activeCatchBoost);
+        }
+        if (CobblemonBoosters.INSTANCE.activeExperienceBoost != null) {
+            updateBossBar(CobblemonBoosters.INSTANCE.activeExperienceBoost);
+        }
+        if (CobblemonBoosters.INSTANCE.activeSpawnBucketBoost != null) {
+            updateBossBar(CobblemonBoosters.INSTANCE.activeSpawnBucketBoost);
         }
     }
 
