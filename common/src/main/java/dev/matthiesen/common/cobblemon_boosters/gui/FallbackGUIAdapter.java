@@ -10,7 +10,7 @@ public class FallbackGUIAdapter implements IGUIAdapter {
     private static final Component defaultComponent = TextUtils.deserializeMC(defaultMessage);
 
     @Override
-    public void openBoostersGUI(ServerPlayer player) {
+    public void openMainMenuGUI(ServerPlayer player) {
         player.sendSystemMessage(defaultComponent);
     }
 

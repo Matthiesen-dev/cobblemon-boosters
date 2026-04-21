@@ -21,7 +21,7 @@ public record CatchGui(ServerPlayer player) implements IGui {
 
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("Cobblemon Boosters - Bucket Boosts")
+                TextUtils.parse("Cobblemon Boosters - Catch Boosts")
         );
     }
 

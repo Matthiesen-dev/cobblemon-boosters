@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class GooeyGUIAdapter implements IGUIAdapter {
     @Override
-    public void openBoostersGUI(ServerPlayer player) {
+    public void openMainMenuGUI(ServerPlayer player) {
         new MainMenuGui(player).open();
     }
 

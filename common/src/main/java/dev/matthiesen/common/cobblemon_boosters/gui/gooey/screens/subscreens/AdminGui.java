@@ -21,7 +21,7 @@ public record AdminGui(ServerPlayer player) implements IGui {
 
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("Cobblemon Boosters")
+                TextUtils.parse("Cobblemon Boosters - Admin Menu")
         );
     }
 

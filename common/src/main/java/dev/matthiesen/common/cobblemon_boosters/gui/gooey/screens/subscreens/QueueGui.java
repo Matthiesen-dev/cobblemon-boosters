@@ -19,15 +19,16 @@ import java.util.List;
 
 public class QueueGui implements IGui {
     public final ServerPlayer player;
-    public final Object todo;
+    public final String queueName;
 
-    public QueueGui(ServerPlayer player, Object data) {
+    public QueueGui(ServerPlayer player, String queueName) {
         this.player = player;
-        this.todo = data;
+        this.queueName = queueName;
     }
+    
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("Cobblemon Boosters")
+                TextUtils.parse("Cobblemon Boosters - " + queueName + " Queue")
         );
     }
 

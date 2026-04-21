@@ -29,9 +29,6 @@ public class CobblemonBoostersFabric implements ModInitializer {
         });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> core.onServerStarted());
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> core.onShutdown());
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
-            core.onEndTick();
-        });
+        ServerTickEvents.END_SERVER_TICK.register(server -> core.onEndTick());
     }
-
 }

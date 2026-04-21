@@ -19,6 +19,7 @@ public class Experience implements ISubCommand {
         return Util.newBasicMultiplierBoosterCommand(
                 "experience",
                 CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_PERMISSION,
+                this::openGUI,
                 this::startCommand,
                 maxMultiplier,
                 CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_START_PERMISSION,
@@ -30,6 +31,14 @@ public class Experience implements ISubCommand {
     }
 
     public static final Float maxMultiplier = 100F;
+
+    public int openGUI(CommandContext<CommandSourceStack> ctx) {
+        ServerPlayer player = ctx.getSource().getPlayer();
+        if (player != null) {
+            CobblemonBoosters.INSTANCE.guiAdapter.openExperienceBoosterGUI(player);
+        }
+        return 1;
+    }
 
     public int startCommand(CommandContext<CommandSourceStack> ctx) {
         float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
