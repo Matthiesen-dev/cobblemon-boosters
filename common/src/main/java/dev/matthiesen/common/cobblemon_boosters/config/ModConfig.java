@@ -136,7 +136,7 @@ public class ModConfig {
         public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
 
         @SerializedName("barText")
-        public String barText = "<gold> %multiplier%x Shiny Boost <gray>| <green>%time_remaining% Remaining";
+        public String barText = "<gold>%multiplier%x Shiny Boost <gray>| <green>%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
         public String noActiveBoosts = "%prefix% <green>There are currently no active Shiny Boosts!";
@@ -168,7 +168,7 @@ public class ModConfig {
         public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
 
         @SerializedName("barText")
-        public String barText = "<light_purple> %multiplier%x Catch Boost <gray>| <green>%time_remaining% Remaining";
+        public String barText = "<light_purple>%multiplier%x Catch Boost <gray>| <green>%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
         public String noActiveBoosts = "%prefix% <green>There are currently no active Catch Boosts!";
@@ -186,7 +186,7 @@ public class ModConfig {
         public String boostQueueCleared = "%prefix% <green>Cleared the Catch queued boosts!";
 
         @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><gold>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><light_purple>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
 
         @SerializedName("noQueuedBoosts")
         public String noQueuedBoosts = "%prefix% <green>There are currently no Catch Boosts in the queue!";
@@ -200,7 +200,7 @@ public class ModConfig {
         public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
 
         @SerializedName("barText")
-        public String barText = "<green> %multiplier%x Experience Boost <gray>| <green>%time_remaining% Remaining";
+        public String barText = "<green>%multiplier%x Experience Boost <gray>| <green>%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
         public String noActiveBoosts = "%prefix% <green>There are currently no active Experience Boosts!";
@@ -218,7 +218,7 @@ public class ModConfig {
         public String boostQueueCleared = "%prefix% <green>Cleared the Experience queued boosts!";
 
         @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><gold>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><green>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
 
         @SerializedName("noQueuedBoosts")
         public String noQueuedBoosts = "%prefix% <green>There are currently no Experience Boosts in the queue!";
@@ -232,7 +232,7 @@ public class ModConfig {
         public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
 
         @SerializedName("barText")
-        public String barText = "<cyan> %bucket% Spawn Bucket Boost <gray>| <green>%time_remaining% Remaining";
+        public String barText = "<aqua>%bucket% Spawn Bucket Boost <gray>| <green>%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
         public String noActiveBoosts = "%prefix% <green>There are currently no active Spawn Bucket Boosts!";
@@ -250,7 +250,7 @@ public class ModConfig {
         public String boostQueueCleared = "%prefix% <green>Cleared the Spawn Bucket queued boosts!";
 
         @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% <white><bold>Bucket: <reset><gold>%bucket% <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+        public String boostInfo = "%prefix% <white><bold>Bucket: <reset><aqua>%bucket% <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
 
         @SerializedName("noQueuedBoosts")
         public String noQueuedBoosts = "%prefix% <green>There are currently no Spawn Bucket Boosts in the queue!";
