@@ -10,10 +10,13 @@ import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import net.kyori.adventure.bossbar.BossBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.function.Consumer;
 
 public class ModConfig {
 
@@ -530,55 +533,42 @@ public class ModConfig {
     @SerializedName("queuedSpawnBucketBoosts")
     public List<SpawnBucketBoost> queuedSpawnBucketBoosts = new ArrayList<>();
 
-    private void saveShinyBoostData() {
-        ShinyBoost activeShinyBoost = null;
-        if (CobblemonBoosters.INSTANCE.activeShinyBoost != null) {
-            activeShinyBoost = CobblemonBoosters.INSTANCE.activeShinyBoost;
-        }
-        CobblemonBoosters.INSTANCE.config.activeShinyBoost = activeShinyBoost;
-        List<ShinyBoost> queuedShinyBoosts = CobblemonBoosters.INSTANCE.queuedShinyBoosts.stream().toList();
-        CobblemonBoosters.INSTANCE.config.queuedShinyBoosts.clear();
-        CobblemonBoosters.INSTANCE.config.queuedShinyBoosts.addAll(queuedShinyBoosts);
-    }
-
-    private void saveCatchBoostData() {
-        CatchBoost activeCatchBoost = null;
-        if (CobblemonBoosters.INSTANCE.activeCatchBoost != null) {
-            activeCatchBoost = CobblemonBoosters.INSTANCE.activeCatchBoost;
-        }
-        CobblemonBoosters.INSTANCE.config.activeCatchBoost = activeCatchBoost;
-        List<CatchBoost> queuedCatchBoosts = CobblemonBoosters.INSTANCE.queuedCatchBoosts.stream().toList();
-        CobblemonBoosters.INSTANCE.config.queuedCatchBoosts.clear();
-        CobblemonBoosters.INSTANCE.config.queuedCatchBoosts.addAll(queuedCatchBoosts);
-    }
-
-    private void saveExperienceBoostData() {
-        ExperienceBoost activeExperienceBoost = null;
-        if (CobblemonBoosters.INSTANCE.activeExperienceBoost != null) {
-            activeExperienceBoost = CobblemonBoosters.INSTANCE.activeExperienceBoost;
-        }
-        CobblemonBoosters.INSTANCE.config.activeExperienceBoost = activeExperienceBoost;
-        List<ExperienceBoost> queuedExperienceBoosts = CobblemonBoosters.INSTANCE.queuedExperienceBoosts.stream().toList();
-        CobblemonBoosters.INSTANCE.config.queuedExperienceBoosts.clear();
-        CobblemonBoosters.INSTANCE.config.queuedExperienceBoosts.addAll(queuedExperienceBoosts);
-    }
-
-    private void saveSpawnBucketBoostData() {
-        SpawnBucketBoost activeSpawnBucketBoost = null;
-        if (CobblemonBoosters.INSTANCE.activeSpawnBucketBoost != null) {
-            activeSpawnBucketBoost = CobblemonBoosters.INSTANCE.activeSpawnBucketBoost;
-        }
-        CobblemonBoosters.INSTANCE.config.activeSpawnBucketBoost = activeSpawnBucketBoost;
-        List<SpawnBucketBoost> queuedSpawnBucketBoosts = CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts.stream().toList();
-        CobblemonBoosters.INSTANCE.config.queuedSpawnBucketBoosts.clear();
-        CobblemonBoosters.INSTANCE.config.queuedSpawnBucketBoosts.addAll(queuedSpawnBucketBoosts);
+    private static <T extends IBoost> void saveBoostData(
+            T runtimeActive,
+            Queue<? extends T> runtimeQueue,
+            Consumer<T> configActiveSetter,
+            List<? super T> configQueue
+    ) {
+        configActiveSetter.accept(runtimeActive);
+        configQueue.clear();
+        configQueue.addAll(runtimeQueue.stream().toList());
     }
 
     public void saveGlobalBoostData() {
-        saveShinyBoostData();
-        saveCatchBoostData();
-        saveExperienceBoostData();
-        saveSpawnBucketBoostData();
+        saveBoostData(
+                CobblemonBoosters.INSTANCE.activeShinyBoost,
+                CobblemonBoosters.INSTANCE.queuedShinyBoosts,
+                value -> CobblemonBoosters.INSTANCE.config.activeShinyBoost = value,
+                CobblemonBoosters.INSTANCE.config.queuedShinyBoosts
+        );
+        saveBoostData(
+                CobblemonBoosters.INSTANCE.activeCatchBoost,
+                CobblemonBoosters.INSTANCE.queuedCatchBoosts,
+                value -> CobblemonBoosters.INSTANCE.config.activeCatchBoost = value,
+                CobblemonBoosters.INSTANCE.config.queuedCatchBoosts
+        );
+        saveBoostData(
+                CobblemonBoosters.INSTANCE.activeExperienceBoost,
+                CobblemonBoosters.INSTANCE.queuedExperienceBoosts,
+                value -> CobblemonBoosters.INSTANCE.config.activeExperienceBoost = value,
+                CobblemonBoosters.INSTANCE.config.queuedExperienceBoosts
+        );
+        saveBoostData(
+                CobblemonBoosters.INSTANCE.activeSpawnBucketBoost,
+                CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts,
+                value -> CobblemonBoosters.INSTANCE.config.activeSpawnBucketBoost = value,
+                CobblemonBoosters.INSTANCE.config.queuedSpawnBucketBoosts
+        );
     }
 
     public static final Gson GSON = new GsonBuilder()
