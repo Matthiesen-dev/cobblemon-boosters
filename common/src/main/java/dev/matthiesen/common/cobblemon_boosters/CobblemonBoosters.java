@@ -12,7 +12,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import dev.matthiesen.common.cobblemon_boosters.commands.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.config.*;
 import dev.matthiesen.common.cobblemon_boosters.data.*;
-import dev.matthiesen.common.cobblemon_boosters.default_adapters.DummyGUIAdapter;
+import dev.matthiesen.common.cobblemon_boosters.default_adapters.FallbackGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.*;
@@ -28,7 +28,7 @@ import java.util.Queue;
 
 public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
-    public IGUIAdapter guiAdapter = new DummyGUIAdapter();
+    public IGUIAdapter guiAdapter = new FallbackGUIAdapter();
     public ModPermissions permissions;
     public ModConfig config;
     private volatile MinecraftServerAudiences adventure;

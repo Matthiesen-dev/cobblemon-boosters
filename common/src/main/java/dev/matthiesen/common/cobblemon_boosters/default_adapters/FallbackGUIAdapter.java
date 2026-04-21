@@ -5,7 +5,7 @@ import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-public class DummyGUIAdapter implements IGUIAdapter {
+public class FallbackGUIAdapter implements IGUIAdapter {
     private static final String defaultMessage = TextUtils.parse("%prefix% <gray>GUI not available, please use command arguments instead.</gray>");
     private static final Component defaultComponent = TextUtils.deserializeMC(defaultMessage);
 
