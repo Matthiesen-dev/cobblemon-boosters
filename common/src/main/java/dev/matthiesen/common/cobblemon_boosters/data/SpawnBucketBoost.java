@@ -6,6 +6,8 @@ import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 
+import java.util.Map;
+
 public class SpawnBucketBoost implements IBoost {
     public float multiplier;
     public int duration;
@@ -45,8 +47,14 @@ public class SpawnBucketBoost implements IBoost {
         return this;
     }
 
-    public String getBucket() {
-        return this.bucket;
+    public String getBucketDisplayName() {
+        Map<String, String> bucketDisplayNames = Map.of(
+                "common", "Common",
+                "uncommon", "Uncommon",
+                "rare", "Rare",
+                "ultra-rare", "Ultra Rare"
+        );
+        return bucketDisplayNames.getOrDefault(this.bucket.toLowerCase(), this.bucket);
     }
 
     @Override

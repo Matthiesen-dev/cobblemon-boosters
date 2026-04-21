@@ -24,11 +24,6 @@ public class TextUtils {
         return Instant.now().toString();
     }
 
-    public static String parseSpawnBucket(String text, IBoost boost) {
-        SpawnBucketBoost spawnBoost = (SpawnBucketBoost) boost;
-        return text.replaceAll("%bucket%", spawnBoost.getBucket());
-    }
-
     public static String parse(String text) {
         return text
                 .replaceAll("%prefix%", CobblemonBoosters.INSTANCE.config.messages.prefix)
@@ -37,8 +32,8 @@ public class TextUtils {
 
     public static String parse(String text, IBoost boost) {
         text = parse(text);
-        if (boost instanceof SpawnBucketBoost) {
-            text = parseSpawnBucket(text, boost);
+        if (boost instanceof SpawnBucketBoost && ((SpawnBucketBoost) boost).bucket != null) {
+            return text.replaceAll("%bucket%", ((SpawnBucketBoost) boost).getBucketDisplayName());
         }
         return text
                 .replaceAll("%multiplier%", String.valueOf(boost.getMultiplier()))
