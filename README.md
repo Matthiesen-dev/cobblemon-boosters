@@ -5,7 +5,9 @@ chances of finding Shiny Pokemon, or increases the catch rate!
 
 ### Currently supported Booster types:
 - **Catch Boosters**: Increases the catch rate for all players on the server.
-- **Shiny Boosters**: Increases the chances of finding shiny Pokemon for all players on the
+- **Experience Boosters**: Increases the experience gain for all player's Pokemon on the server.
+- **Shiny Boosters**: Increases the chances of finding shiny Pokemon for all players on the server.
+- **Spawn Bucket Boosters**: Increases the spawn rates for Pokemon in a specific spawn bucket for all players on the server.
 
 ## Requirements
 - [Cobblemon 1.7.3+1.21.1](https://www.modrinth.com/mod/cobblemon)
@@ -38,6 +40,13 @@ your active boosts between restarts. And you **will not be able to directly edit
     - Requires the `cobblemon_boosters.command.boosters.catch.stop` permission. (Defaults to OP status)
   - `/boosters catch status` - Checks the status of the active catch booster.
     - Requires the `cobblemon_boosters.command.boosters.catch.status` permission. (Defaults to Any User)
+- `/boosters experience` - The Root command for Experience boosters.
+  - `/boosters experience start <multiplier> <duration> <unit>` - Starts an Experience booster with the specified multiplier, duration, and time unit.
+    - Requires the `cobblemon_boosters.command.boosters.experience.start` permission. (Defaults to OP status)
+  - `/boosters experience stop` - Stops the active Experience booster.
+    - Requires the `cobblemon_boosters.command.boosters.experience.stop` permission. (Defaults to OP status)
+  - `/boosters experience status` - Checks the status of the active Experience booster.
+    - Requires the `cobblemon_boosters.command.boosters.experience.status` permission. (Defaults to Any User)
 - `/boosters shiny` - The Root command for shiny boosters.
   - `/boosters shiny start <multiplier> <duration> <unit>` - Starts a shiny booster with the specified multiplier, duration, and time unit.
     - Requires the `cobblemon_boosters.command.boosters.shiny.start` permission. (Defaults to OP status)
@@ -45,3 +54,10 @@ your active boosts between restarts. And you **will not be able to directly edit
     - Requires the `cobblemon_boosters.command.boosters.shiny.stop` permission. (Defaults to OP status)
   - `/boosters shiny status` - Checks the status of the active shiny booster.
     - Requires the `cobblemon_boosters.command.boosters.shiny.status` permission. (Defaults to Any User)
+- `/boosters bucket` - The Root command for Spawn Bucket boosters.
+  - `/boosters bucket start <bucket> <multiplier> <duration> <unit>` - Starts a Spawn Bucket booster with the specified multiplier, duration, and time unit.
+    - Requires the `cobblemon_boosters.command.boosters.bucket.start` permission. (Defaults to OP status)
+  - `/boosters bucket stop` - Stops the active Spawn Bucket booster.
+    - Requires the `cobblemon_boosters.command.boosters.bucket.stop` permission. (Defaults to OP status)
+  - `/boosters bucket status` - Checks the status of the active Spawn Bucket booster.
+    - Requires the `cobblemon_boosters.command.boosters.bucket.status` permission. (Defaults to Any User)

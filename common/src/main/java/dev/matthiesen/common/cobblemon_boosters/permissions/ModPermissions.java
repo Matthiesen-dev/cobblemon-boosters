@@ -5,7 +5,6 @@ import com.cobblemon.mod.common.api.permission.PermissionLevel;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerPlayer;
 
 public class ModPermissions {
     public final ModPermission RELOAD_PERMISSION;
@@ -13,10 +12,18 @@ public class ModPermissions {
     public final ModPermission CATCH_START_PERMISSION;
     public final ModPermission CATCH_STOP_PERMISSION;
     public final ModPermission CATCH_STATUS_PERMISSION;
+    public final ModPermission EXPERIENCE_PERMISSION;
+    public final ModPermission EXPERIENCE_START_PERMISSION;
+    public final ModPermission EXPERIENCE_STOP_PERMISSION;
+    public final ModPermission EXPERIENCE_STATUS_PERMISSION;
     public final ModPermission SHINY_PERMISSION;
     public final ModPermission SHINY_START_PERMISSION;
     public final ModPermission SHINY_STOP_PERMISSION;
     public final ModPermission SHINY_STATUS_PERMISSION;
+    public final ModPermission BUCKET_PERMISSION;
+    public final ModPermission BUCKET_START_PERMISSION;
+    public final ModPermission BUCKET_STOP_PERMISSION;
+    public final ModPermission BUCKET_STATUS_PERMISSION;
     public final ModPermission CLEAR_QUEUES_PERMISSION;
     public final ModPermission CHECK_QUEUE_PERMISSION;
 
@@ -41,6 +48,22 @@ public class ModPermissions {
                 "command.boosters.catch.status",
                 CobblemonBoosters.INSTANCE.config.permissionLevels.CATCH_STATUS_PERMISSION
         );
+        this.EXPERIENCE_PERMISSION = toModPerm(
+                "command.boosters.experience",
+                CobblemonBoosters.INSTANCE.config.permissionLevels.EXPERIENCE_PERMISSION
+        );
+        this.EXPERIENCE_START_PERMISSION = toModPerm(
+                "command.boosters.experience.start",
+                CobblemonBoosters.INSTANCE.config.permissionLevels.EXPERIENCE_START_PERMISSION
+        );
+        this.EXPERIENCE_STOP_PERMISSION = toModPerm(
+                "command.boosters.experience.stop",
+                CobblemonBoosters.INSTANCE.config.permissionLevels.EXPERIENCE_STOP_PERMISSION
+        );
+        this.EXPERIENCE_STATUS_PERMISSION = toModPerm(
+                "command.boosters.experience.status",
+                CobblemonBoosters.INSTANCE.config.permissionLevels.EXPERIENCE_STATUS_PERMISSION
+        );
         this.SHINY_PERMISSION = toModPerm(
                 "command.boosters.shiny",
                 CobblemonBoosters.INSTANCE.config.permissionLevels.SHINY_PERMISSION
@@ -56,6 +79,22 @@ public class ModPermissions {
         this.SHINY_STATUS_PERMISSION = toModPerm(
                 "command.boosters.shiny.status",
                 CobblemonBoosters.INSTANCE.config.permissionLevels.SHINY_STATUS_PERMISSION
+        );
+        this.BUCKET_PERMISSION = toModPerm(
+                "command.boosters.bucket",
+                CobblemonBoosters.INSTANCE.config.permissionLevels.BUCKET_PERMISSION
+        );
+        this.BUCKET_START_PERMISSION = toModPerm(
+                "command.boosters.bucket.start",
+                CobblemonBoosters.INSTANCE.config.permissionLevels.BUCKET_START_PERMISSION
+        );
+        this.BUCKET_STOP_PERMISSION = toModPerm(
+                "command.boosters.bucket.stop",
+                CobblemonBoosters.INSTANCE.config.permissionLevels.BUCKET_STOP_PERMISSION
+        );
+        this.BUCKET_STATUS_PERMISSION = toModPerm(
+                "command.boosters.bucket.status",
+                CobblemonBoosters.INSTANCE.config.permissionLevels.BUCKET_STATUS_PERMISSION
         );
         this.CLEAR_QUEUES_PERMISSION = toModPerm(
                 "command.boosters.clear_queues",

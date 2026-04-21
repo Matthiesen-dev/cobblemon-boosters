@@ -2,6 +2,7 @@ package dev.matthiesen.common.cobblemon_boosters.utils;
 
 import com.cobblemon.mod.common.Cobblemon;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -31,6 +32,9 @@ public class TextUtils {
 
     public static String parse(String text, IBoost boost) {
         text = parse(text);
+        if (boost instanceof SpawnBucketBoost && ((SpawnBucketBoost) boost).bucket != null) {
+            text = text.replaceAll("%bucket%", ((SpawnBucketBoost) boost).getBucketDisplayName());
+        }
         return text
                 .replaceAll("%multiplier%", String.valueOf(boost.getMultiplier()))
                 .replaceAll("%duration%", hms(boost.getDuration()))

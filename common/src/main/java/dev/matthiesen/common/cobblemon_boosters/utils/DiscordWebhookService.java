@@ -25,46 +25,53 @@ public class DiscordWebhookService {
     }
 
     public static Embed parseEventEmbed(ModConfig.DiscordEmbed embed, IBoost boost) {
-        // Process Author
-        Embed.Author author = new Embed.Author();
-        author.setName(TextUtils.parse(embed.author.name, boost));
-        author.setIcon_url(TextUtils.parse(embed.author.icon_url, boost));
-
-        // Process Fields
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        if (embed.title != null)
+            embedBuilder.withTitle(TextUtils.parse(embed.title, boost));
+        if (embed.description != null)
+            embedBuilder.withDescription(TextUtils.parse(embed.description, boost));
+        if (embed.color != null)
+            embedBuilder.withColor(embed.color);
+        if (embed.timestamp != null)
+            embedBuilder.withTimestamp(TextUtils.parse(embed.timestamp, boost));
         List<Embed.EmbedField> fields = new ArrayList<>();
         if (embed.fields != null) {
             for (ModConfig.DiscordEmbedField field : embed.fields) {
                 Embed.EmbedField embedField = new Embed.EmbedField();
-                embedField.setName(TextUtils.parse(field.name, boost));
-                embedField.setValue(TextUtils.parse(field.value, boost));
+                if (field.name != null)
+                    embedField.setName(TextUtils.parse(field.name, boost));
+                if (field.value != null)
+                    embedField.setValue(TextUtils.parse(field.value, boost));
                 embedField.setInline(field.inline);
                 fields.add(embedField);
             }
+            embedBuilder.withFields(fields);
         }
-
-        return new EmbedBuilder()
-                .withTitle(TextUtils.parse(embed.title, boost))
-                .withDescription(TextUtils.parse(embed.description, boost))
-                .withColor(embed.color)
-                .withAuthor(author)
-                .withFields(fields)
-                .withTimestamp(TextUtils.parse(embed.timestamp, boost))
-                .build();
+        if (embed.author != null) {
+            Embed.Author author = new Embed.Author();
+            if (embed.author.name != null) author.setName(TextUtils.parse(embed.author.name, boost));
+            if (embed.author.icon_url != null) author.setIcon_url(TextUtils.parse(embed.author.icon_url, boost));
+            if (embed.author.url != null) author.setUrl(TextUtils.parse(embed.author.url, boost));
+            embedBuilder.withAuthor(author);
+        }
+        return embedBuilder.build();
     }
 
-    public void sendMessage(ModConfig.DiscordEmbed embed, IBoost boost) throws DiscordWebhookException {
+    public void sendMessage(ModConfig.DiscordEmbed embed, IBoost boost) {
         if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.enabled) return;
         if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl.startsWith("https://")) {
             Constants.createErrorLog("Discord webhooks are enabled but an invalid Discord Webhook URL is set! Please check your configuration. (Must start with 'https://')");
             return;
         }
-
         WebhookMessage message = new WebhookMessageBuilder()
                 .withAvatarUrl(TextUtils.parse(embed.author.icon_url, boost))
                 .withUsername(TextUtils.parse(embed.author.name, boost))
                 .withEmbeds(List.of(parseEventEmbed(embed, boost)))
                 .build();
-
-        getWebhookClient().sendMessage(CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl, message);
+        try {
+            getWebhookClient().sendMessage(CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl, message);
+        } catch (DiscordWebhookException e) {
+            Constants.LOGGER.error("Failed to send Discord webhook message", e);
+        }
     }
 }
