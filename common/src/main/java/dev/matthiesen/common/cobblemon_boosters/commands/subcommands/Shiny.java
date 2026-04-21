@@ -45,14 +45,10 @@ public class Shiny implements ISubCommand {
         if (CobblemonBoosters.INSTANCE.activeShinyBoost == null) {
             CobblemonBoosters.INSTANCE.activeShinyBoost = new ShinyBoost(multiplier, totalSeconds);
             Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyMessages.boostStarted, CobblemonBoosters.INSTANCE.activeShinyBoost);
-            try {
-                CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                        CobblemonBoosters.INSTANCE.config.discordWebhookConfig.shinyEventStartEmbed,
-                        CobblemonBoosters.INSTANCE.activeShinyBoost
-                );
-            } catch (DiscordWebhookException e) {
-                Constants.LOGGER.error("Failed to send shiny boost start webhook", e);
-            }
+            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.shinyEventStartEmbed,
+                    CobblemonBoosters.INSTANCE.activeShinyBoost
+            );
             CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeShinyBoost.getBossBar());
         } else {
             ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);

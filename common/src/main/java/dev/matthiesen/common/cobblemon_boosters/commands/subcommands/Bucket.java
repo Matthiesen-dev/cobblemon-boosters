@@ -39,14 +39,10 @@ public class Bucket implements ISubCommand {
         if (CobblemonBoosters.INSTANCE.activeSpawnBucketBoost == null) {
             CobblemonBoosters.INSTANCE.activeSpawnBucketBoost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
             Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostStarted, CobblemonBoosters.INSTANCE.activeSpawnBucketBoost);
-            try {
-                CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                        CobblemonBoosters.INSTANCE.config.discordWebhookConfig.spawnBucketEventStartEmbed,
-                        CobblemonBoosters.INSTANCE.activeSpawnBucketBoost
-                );
-            } catch (DiscordWebhookException e) {
-                Constants.LOGGER.error("Failed to send spawn bucket boost start webhook", e);
-            }
+            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.spawnBucketEventStartEmbed,
+                    CobblemonBoosters.INSTANCE.activeSpawnBucketBoost
+            );
             CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeSpawnBucketBoost.getBossBar());
         } else {
             SpawnBucketBoost boost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);

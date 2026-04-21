@@ -144,7 +144,7 @@ public class CobblemonBoosters {
         try {
             TickManager.tickBoosts();
             TickManager.updateBossBars();
-        } catch (IllegalArgumentException | DiscordWebhookException e) {
+        } catch (IllegalArgumentException e) {
             Constants.LOGGER.error("Caught BossBar exception! ", e);
         }
     }

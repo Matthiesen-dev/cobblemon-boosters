@@ -15,7 +15,7 @@ public class TickManager {
             Consumer<T> setActiveBoost,
             ModConfig.DiscordEmbed boostEndEmbed,
             ModConfig.DiscordEmbed boostStartEmbed
-    ) throws DiscordWebhookException {
+    ) {
         if (activeBoost == null) return;
         decrementBoost(activeBoost);
         if (activeBoost.getTimeRemaining() > 0) return;
@@ -36,7 +36,7 @@ public class TickManager {
         CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
     }
 
-    public static void tickBoosts() throws DiscordWebhookException {
+    public static void tickBoosts() {
         handleBoostTick(
                 CobblemonBoosters.INSTANCE.activeShinyBoost,
                 CobblemonBoosters.INSTANCE.queuedShinyBoosts,

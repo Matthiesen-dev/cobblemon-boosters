@@ -42,14 +42,10 @@ public class Experience implements ISubCommand {
         if (CobblemonBoosters.INSTANCE.activeExperienceBoost == null) {
             CobblemonBoosters.INSTANCE.activeExperienceBoost = new ExperienceBoost(multiplier, totalSeconds);
             Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.boostStarted, CobblemonBoosters.INSTANCE.activeExperienceBoost);
-            try {
-                CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                        CobblemonBoosters.INSTANCE.config.discordWebhookConfig.experienceEventStartEmbed,
-                        CobblemonBoosters.INSTANCE.activeExperienceBoost
-                );
-            } catch (DiscordWebhookException e) {
-                Constants.LOGGER.error("Failed to send experience boost start webhook", e);
-            }
+            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.experienceEventStartEmbed,
+                    CobblemonBoosters.INSTANCE.activeExperienceBoost
+            );
             CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeExperienceBoost.getBossBar());
         } else {
             ExperienceBoost boost = new ExperienceBoost(multiplier, totalSeconds);

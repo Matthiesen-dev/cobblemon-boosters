@@ -42,14 +42,10 @@ public class Catch implements ISubCommand {
         if (CobblemonBoosters.INSTANCE.activeCatchBoost == null) {
             CobblemonBoosters.INSTANCE.activeCatchBoost = new CatchBoost(multiplier, totalSeconds);
             Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostStarted, CobblemonBoosters.INSTANCE.activeCatchBoost);
-            try {
-                CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                        CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventStartEmbed,
-                        CobblemonBoosters.INSTANCE.activeCatchBoost
-                );
-            } catch (DiscordWebhookException e) {
-                Constants.LOGGER.error("Failed to send catch boost start webhook", e);
-            }
+            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventStartEmbed,
+                    CobblemonBoosters.INSTANCE.activeCatchBoost
+            );
             CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeCatchBoost.getBossBar());
         } else {
             CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
