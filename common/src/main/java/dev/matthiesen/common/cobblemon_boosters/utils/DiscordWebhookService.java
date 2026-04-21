@@ -57,7 +57,7 @@ public class DiscordWebhookService {
         return embedBuilder.build();
     }
 
-    public void sendMessage(ModConfig.DiscordEmbed embed, IBoost boost) throws DiscordWebhookException {
+    public void sendMessage(ModConfig.DiscordEmbed embed, IBoost boost) {
         if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.enabled) return;
         if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl.startsWith("https://")) {
             Constants.createErrorLog("Discord webhooks are enabled but an invalid Discord Webhook URL is set! Please check your configuration. (Must start with 'https://')");
@@ -68,6 +68,10 @@ public class DiscordWebhookService {
                 .withUsername(TextUtils.parse(embed.author.name, boost))
                 .withEmbeds(List.of(parseEventEmbed(embed, boost)))
                 .build();
-        getWebhookClient().sendMessage(CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl, message);
+        try {
+            getWebhookClient().sendMessage(CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl, message);
+        } catch (DiscordWebhookException e) {
+            Constants.LOGGER.error("Failed to send Discord webhook message", e);
+        }
     }
 }

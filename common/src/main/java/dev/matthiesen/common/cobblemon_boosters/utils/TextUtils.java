@@ -33,7 +33,7 @@ public class TextUtils {
     public static String parse(String text, IBoost boost) {
         text = parse(text);
         if (boost instanceof SpawnBucketBoost && ((SpawnBucketBoost) boost).bucket != null) {
-            return text.replaceAll("%bucket%", ((SpawnBucketBoost) boost).getBucketDisplayName());
+            text = text.replaceAll("%bucket%", ((SpawnBucketBoost) boost).getBucketDisplayName());
         }
         return text
                 .replaceAll("%multiplier%", String.valueOf(boost.getMultiplier()))
