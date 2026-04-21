@@ -5,7 +5,6 @@ import com.cobblemon.mod.common.api.permission.PermissionLevel;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerPlayer;
 
 public class ModPermissions {
     public final ModPermission RELOAD_PERMISSION;

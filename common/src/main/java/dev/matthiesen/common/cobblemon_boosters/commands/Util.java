@@ -21,8 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Queue;
 
 public class Util {
-    public Util() {}
-
     public static void handleStopCommand(CommandContext<CommandSourceStack> ctx, ServerPlayer player, IBoost active, String message) {
         active.setTimeRemaining(1);
         sendMessage(ctx, player, message, active);

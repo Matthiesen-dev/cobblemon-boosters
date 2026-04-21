@@ -3,8 +3,6 @@ package dev.matthiesen.common.cobblemon_boosters.utils;
 import com.n1netails.n1netails.discord.exception.DiscordWebhookException;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
-import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 
 import java.util.Queue;

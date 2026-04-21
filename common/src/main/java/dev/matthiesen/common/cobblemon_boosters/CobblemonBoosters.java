@@ -17,7 +17,6 @@ import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
-import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.DiscordWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.utils.SpawnBucketOverrideSelector;
@@ -31,7 +30,6 @@ import net.minecraft.server.MinecraftServer;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Random;
 
 public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
