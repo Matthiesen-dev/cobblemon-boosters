@@ -9,7 +9,6 @@ import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.mojang.brigadier.CommandDispatcher;
-import com.n1netails.n1netails.discord.exception.DiscordWebhookException;
 import dev.matthiesen.common.cobblemon_boosters.commands.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.config.ConfigManager;
 import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
