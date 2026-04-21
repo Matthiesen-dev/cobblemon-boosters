@@ -9,10 +9,12 @@ import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.mojang.brigadier.CommandDispatcher;
+import dev.architectury.platform.Platform;
 import dev.matthiesen.common.cobblemon_boosters.commands.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.config.*;
 import dev.matthiesen.common.cobblemon_boosters.data.*;
 import dev.matthiesen.common.cobblemon_boosters.gui.FallbackGUIAdapter;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.GooeyGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.*;
@@ -63,13 +65,13 @@ public class CobblemonBoosters {
         return this.adventure;
     }
 
-    public void initialize(IGUIAdapter adapter) {
+    public void initialize() {
         INSTANCE = this;
         Constants.createInfoLog("Initialized");
         reload(false);
         this.permissions = new ModPermissions();
-        if (adapter != null) {
-            this.guiAdapter = adapter;
+        if (Platform.isModLoaded("gooeylibs")) {
+            this.guiAdapter = new GooeyGUIAdapter();
         }
     }
 
