@@ -11,10 +11,106 @@ public class MenuUtils {
     public static final Item BACKGROUND = Items.GRAY_STAINED_GLASS_PANE;
     public static final Item PAGE_PLACEHOLDER = Items.PAPER;
     public static final Item NAV_ITEM = Items.ARROW;
+    public static final Item BUCKET_ITEM = Items.SPAWNER;
+    public static final Item CATCH_ITEM = CobblemonItems.POKE_BALL;
+    public static final Item EXPERIENCE_ITEM = Items.EXPERIENCE_BOTTLE;
+    public static final Item SHINY_ITEM = CobblemonItems.SHINY_STONE;
+    public static final Item QUEUE_ITEM = Items.CLOCK;
+    public static final Item ADMIN_ITEM = Items.COMMAND_BLOCK;
+    public static final Item RELOAD_ITEM = Items.WIND_CHARGE;
+    public static final Item CLEAR_QUEUE_ITEM = Items.BARRIER;
 
     public static ItemStack getFrameItem() {
         return new ItemBuilder(BACKGROUND)
                 .setCustomName(Component.literal(" "))
+                .build();
+    }
+
+    public static ItemStack getBucketItem() {
+        return new ItemBuilder(BUCKET_ITEM)
+                .setCustomName(
+                        Component.literal("Spawn Bucket Boosters")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.AQUA)
+                                )
+                )
+                .build();
+    }
+
+    public static ItemStack getCatchItem() {
+        return new ItemBuilder(CATCH_ITEM)
+                .setCustomName(
+                        Component.literal("Catch Rate Boosters")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.AQUA)
+                                )
+                )
+                .build();
+    }
+
+    public static ItemStack getExperienceItem() {
+        return new ItemBuilder(EXPERIENCE_ITEM)
+                .setCustomName(
+                        Component.literal("Experience Rate Boosters")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.AQUA)
+                                )
+                )
+                .build();
+    }
+
+    public static ItemStack getShinyItem() {
+        return new ItemBuilder(SHINY_ITEM)
+                .setCustomName(
+                        Component.literal("Shiny Rate Boosters")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.AQUA)
+                                )
+                )
+                .build();
+    }
+
+    public static ItemStack getQueueItem() {
+        return new ItemBuilder(QUEUE_ITEM)
+                .setCustomName(
+                        Component.literal("View Queues")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.AQUA)
+                                )
+                )
+                .build();
+    }
+
+    public static ItemStack getAdminItem() {
+        return new ItemBuilder(ADMIN_ITEM)
+                .setCustomName(
+                        Component.literal("Admin Menu")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.RED)
+                                )
+                )
+                .build();
+    }
+
+    public static ItemStack getReloadItem() {
+        return new ItemBuilder(RELOAD_ITEM)
+                .setCustomName(
+                        Component.literal("Reload Config")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.RED)
+                                )
+                )
+                .build();
+    }
+
+    public static ItemStack getClearQueueItem() {
+        return new ItemBuilder(CLEAR_QUEUE_ITEM)
+                .setCustomName(
+                        Component.literal("Clear All Queues")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.RED)
+                                )
+                )
                 .build();
     }
 

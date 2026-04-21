@@ -1,4 +1,4 @@
-package dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens;
+package dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates;
 
 import ca.landonjw.gooeylibs2.api.UIManager;
 import ca.landonjw.gooeylibs2.api.button.Button;
@@ -8,34 +8,36 @@ import ca.landonjw.gooeylibs2.api.helpers.PaginationHelper;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
+import com.google.common.collect.Lists;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class QueueGui implements IGui {
-    public final ServerPlayer player;
-    public final String queueName;
+public class BoosterGuiTemplate implements IGui {
+    public ServerPlayer player;
 
-    public QueueGui(ServerPlayer player, String queueName) {
+    public BoosterGuiTemplate(ServerPlayer player) {
         this.player = player;
-        this.queueName = queueName;
     }
 
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("Cobblemon Boosters - " + queueName + " Queue")
+                TextUtils.parse("Cobblemon Boosters")
         );
+    }
+
+    public List<Button> getButtons() {
+        return Lists.newArrayList();
     }
 
     public Page getPage() {
         PlaceholderButton placeholder = new PlaceholderButton();
 
-        List<Button> buttons = new ArrayList<>();
+        List<Button> buttons = getButtons();
 
         Button frame = GooeyButton.builder()
                 .display(MenuUtils.getFrameItem())
