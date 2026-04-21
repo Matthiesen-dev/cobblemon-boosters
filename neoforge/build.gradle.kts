@@ -37,6 +37,8 @@ dependencies {
         exclude("net.neoforged.fancymodloader", "loader")
     }
 
+    modRuntimeOnly("ca.landonjw.gooeylibs:neoforge:${property("gooeylibs_version")}")
+
     implementation(project(":common", configuration = "namedElements"))
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
         isTransitive = false

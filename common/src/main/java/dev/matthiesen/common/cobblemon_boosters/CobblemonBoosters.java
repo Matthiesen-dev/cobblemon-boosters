@@ -16,6 +16,8 @@ import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
+import dev.matthiesen.common.cobblemon_boosters.default_adapters.DummyGUIAdapter;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.DiscordWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.utils.SpawnBucketOverrideSelector;
@@ -32,6 +34,7 @@ import java.util.Queue;
 
 public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
+    public IGUIAdapter guiAdapter = new DummyGUIAdapter();
     public ModPermissions permissions;
     public ModConfig config;
     private volatile MinecraftServerAudiences adventure;
@@ -66,11 +69,14 @@ public class CobblemonBoosters {
         return this.adventure;
     }
 
-    public void initialize() {
+    public void initialize(IGUIAdapter adapter) {
         INSTANCE = this;
         Constants.createInfoLog("Initialized");
         reload(false);
         this.permissions = new ModPermissions();
+        if (adapter != null) {
+            this.guiAdapter = adapter;
+        }
     }
 
     public void onStartup(MinecraftServer server) {

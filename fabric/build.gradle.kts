@@ -42,6 +42,8 @@ dependencies {
         isTransitive = true
     }
 
+    modRuntimeOnly("ca.landonjw.gooeylibs:fabric:${property("gooeylibs_version")}")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 

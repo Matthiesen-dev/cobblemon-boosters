@@ -2,11 +2,14 @@ package dev.matthiesen.forge.cobblemon_boosters;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
+import dev.matthiesen.common.cobblemon_boosters.gooey.GooeyGUIAdapter;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -22,7 +25,11 @@ public class CobblemonBoostersNeoForge {
 
     public CobblemonBoostersNeoForge(IEventBus modBus) {
         Constants.createInfoLog("Loading for NeoForge Mod Loader");
-        core.initialize();
+        IGUIAdapter guiAdapter = null;
+        if (ModList.get().isLoaded("gooeylibs")) {
+            guiAdapter = new GooeyGUIAdapter();
+        }
+        core.initialize(guiAdapter);
         NeoForge.EVENT_BUS.register(this);
     }
 
