@@ -31,7 +31,7 @@ public final class SpawnBucketOverrideSelector {
 
         SpawnBucket originalChosenBucket = event.getBucket();
         Map<SpawnBucket, Float> originalWeights = event.getBucketWeights();
-        String boostedBucketName = activeBoost.getBucketDisplayName();
+        String boostedBucketName = activeBoost.getBucketName();
         float boostMultiplier = activeBoost.getMultiplier();
 
         if (originalWeights.isEmpty()) {

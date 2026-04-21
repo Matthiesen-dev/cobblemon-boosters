@@ -57,6 +57,10 @@ public class SpawnBucketBoost implements IBoost {
         return bucketDisplayNames.getOrDefault(this.bucket.toLowerCase(), this.bucket);
     }
 
+    public String getBucketName() {
+        return this.bucket;
+    }
+
     @Override
     public BossBar getBossBar() {
         if (this.bossBar == null) {
