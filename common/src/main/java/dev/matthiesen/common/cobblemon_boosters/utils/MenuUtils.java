@@ -23,6 +23,7 @@ public class MenuUtils {
     public static final Item NO_ITEM = Items.RED_STAINED_GLASS_PANE;
     public static final Item STOP_ITEM = Items.REDSTONE_BLOCK;
     public static final Item QUEUE_ENTRY_ITEM = Items.NAME_TAG;
+    public static final Item STATUS_ITEM = Items.BOOK;
 
     public static ItemBuilder getQueueEntryBuilder() {
         return new ItemBuilder(QUEUE_ENTRY_ITEM)
@@ -184,6 +185,18 @@ public class MenuUtils {
                                         style -> style.withColor(ChatFormatting.AQUA)
                                 )
                 )
+                .build();
+    }
+
+    public static ItemStack getStatusItem(boolean active) {
+        return new ItemBuilder(STATUS_ITEM)
+                .setCustomName(
+                        Component.literal("View Active Boost")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.AQUA)
+                                )
+                )
+                .setEnchanted(active)
                 .build();
     }
 }

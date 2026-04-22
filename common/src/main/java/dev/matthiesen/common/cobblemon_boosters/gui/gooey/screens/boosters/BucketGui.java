@@ -11,8 +11,9 @@ import java.util.Queue;
 
 public class BucketGui extends BoostersGuiTemplate {
 
-    public BucketGui(String boostType, ServerPlayer player, IBoost activeBoost, Queue<? extends IBoost> queuedBoosts, String noActiveBoost, String stopBoostMsg, ModPermission startPermission, ModPermission stopPermission, ModPermission statusPermission, ModPermission queuePermission) {
-        super(boostType, player, activeBoost, queuedBoosts, noActiveBoost, stopBoostMsg, startPermission, stopPermission, statusPermission, queuePermission);
+
+    public BucketGui(String boostType, ServerPlayer player, IBoost activeBoost, Queue<? extends IBoost> queuedBoosts, String noActiveBoost, String stopBoostMsg, String boostInfo, ModPermission startPermission, ModPermission stopPermission, ModPermission statusPermission, ModPermission queuePermission) {
+        super(boostType, player, activeBoost, queuedBoosts, noActiveBoost, stopBoostMsg, boostInfo, startPermission, stopPermission, statusPermission, queuePermission);
     }
 
     @Override
