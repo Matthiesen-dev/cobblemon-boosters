@@ -12,6 +12,10 @@ chances of finding Shiny Pokemon, or increases the catch rate!
 ## Requirements
 - [Cobblemon 1.7.3+1.21.1](https://www.modrinth.com/mod/cobblemon)
 - [Adventure API for 1.21.1](https://modrinth.com/mod/adventure-platform-mod)
+- [Architectury API for 1.21.1](https://modrinth.com/mod/architectury-api)
+
+### Optional Dependencies
+- [GooeyLibs 3.1.1-1.21.x](https://modrinth.com/mod/gooeylibs) - Used for optional GUIs
 
 ## Configuration
 
