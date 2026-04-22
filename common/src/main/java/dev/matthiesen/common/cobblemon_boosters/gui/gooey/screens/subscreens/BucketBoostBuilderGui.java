@@ -333,8 +333,8 @@ public class BucketBoostBuilderGui {
     }
 
     public ChestTemplate.Builder addModifierButtons(ChestTemplate.Builder builder) {
-        builder = builder.set(1, 5, getAddButton());
         builder = builder.set(1, 6, getSubtractButton());
+        builder = builder.set(1, 7, getAddButton());
         return builder;
     }
 
@@ -370,11 +370,11 @@ public class BucketBoostBuilderGui {
     public ChestTemplate getTemplate() {
         ChestTemplate.Builder builder = ChestTemplate.builder(3);
 
-        builder = builder.set(1, 0, getBucketButton());
-        builder = builder.set(1, 1, getMultiplierButton());
-        builder = builder.set(1, 2, getDurationButton());
-        builder = builder.set(1, 3, getUnitButton());
-        builder = builder.set(1, 4, getDetailsButton());
+        builder = builder.set(1, 1, getBucketButton());
+        builder = builder.set(1, 2, getMultiplierButton());
+        builder = builder.set(1, 3, getDurationButton());
+        builder = builder.set(1, 4, getUnitButton());
+        builder = builder.set(1, 5, getDetailsButton());
 
         if (getCurrentMode() != null)
             builder = addModifierButtons(builder);

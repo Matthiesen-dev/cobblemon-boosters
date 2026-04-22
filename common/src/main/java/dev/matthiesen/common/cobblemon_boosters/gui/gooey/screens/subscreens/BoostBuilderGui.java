@@ -298,8 +298,8 @@ public class BoostBuilderGui {
     }
 
     public ChestTemplate.Builder addModifierButtons(ChestTemplate.Builder builder) {
-        builder = builder.set(1, 5, getAddButton());
         builder = builder.set(1, 6, getSubtractButton());
+        builder = builder.set(1, 7, getAddButton());
         return builder;
     }
 

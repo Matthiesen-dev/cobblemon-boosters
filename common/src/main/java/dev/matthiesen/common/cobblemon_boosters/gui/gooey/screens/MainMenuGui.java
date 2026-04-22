@@ -63,7 +63,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                             }
                             CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
                         }
-                )
+                ).open()
         ).open();
     }
 
