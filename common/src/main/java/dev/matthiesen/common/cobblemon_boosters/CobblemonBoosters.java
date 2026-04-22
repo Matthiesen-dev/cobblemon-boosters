@@ -30,7 +30,7 @@ import java.util.Queue;
 
 public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
-    public IGUIAdapter guiAdapter = new FallbackGUIAdapter();
+    public IGUIAdapter guiAdapter;
     public ModPermissions permissions;
     public ModConfig config;
     private volatile MinecraftServerAudiences adventure;
@@ -72,6 +72,8 @@ public class CobblemonBoosters {
         this.permissions = new ModPermissions();
         if (Platform.isModLoaded("gooeylibs")) {
             this.guiAdapter = new GooeyGUIAdapter();
+        } else {
+            this.guiAdapter = new FallbackGUIAdapter();
         }
     }
 
