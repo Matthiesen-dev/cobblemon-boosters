@@ -199,6 +199,8 @@ public class BoostBuilderGui {
     public Button getDetailsButton() {
         List<Component> lore = new ArrayList<>();
 
+        lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Boost Type: <white>" + boostType)));
+
         if (boostBuilder.multiplier != null) {
             lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Multiplier: <white>" + boostBuilder.multiplier)));
         } else {
