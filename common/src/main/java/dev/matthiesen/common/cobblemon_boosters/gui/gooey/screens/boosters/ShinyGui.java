@@ -18,7 +18,7 @@ public class ShinyGui extends BoostersGuiTemplate {
     @Override
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("<gold>Cobblemon Boosters <reset>- <gold>Shiny Boosts<reset>")
+                TextUtils.parse("<gold>Shiny Boosts<reset>")
         );
     }
 }

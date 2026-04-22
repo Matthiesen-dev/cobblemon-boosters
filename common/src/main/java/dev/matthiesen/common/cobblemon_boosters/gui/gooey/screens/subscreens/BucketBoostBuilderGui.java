@@ -122,7 +122,7 @@ public class BucketBoostBuilderGui {
 
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("Cobblemon Boosters - Boost Builder")
+                TextUtils.parse("Boost Builder")
         );
     }
 

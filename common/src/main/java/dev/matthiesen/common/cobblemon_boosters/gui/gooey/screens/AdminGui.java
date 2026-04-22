@@ -25,7 +25,7 @@ public class AdminGui extends BaseMenuGuiTemplate {
     @Override
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("<gold>Cobblemon Boosters <reset>- <red>Admin Menu<reset>")
+                TextUtils.parse("<red>Admin Menu<reset>")
         );
     }
 

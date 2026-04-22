@@ -28,7 +28,7 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
 
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("<gold>Cobblemon Boosters <reset>- <aqua>" + queueName + " Queue")
+                TextUtils.parse("<aqua>" + queueName + " Queue")
         );
     }
 

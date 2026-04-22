@@ -18,7 +18,7 @@ public class BucketGui extends BoostersGuiTemplate {
     @Override
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("<gold>Cobblemon Boosters <reset>- <aqua>Bucket Boosts<reset>")
+                TextUtils.parse("<aqua>Spawn Bucket Boosts<reset>")
         );
     }
 }

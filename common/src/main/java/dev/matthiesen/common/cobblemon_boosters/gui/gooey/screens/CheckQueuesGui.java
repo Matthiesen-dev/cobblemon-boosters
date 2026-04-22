@@ -24,7 +24,7 @@ public class CheckQueuesGui extends BaseMenuGuiTemplate {
     @Override
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("<gold>Cobblemon Boosters <reset>- <green>Queues<reset>")
+                TextUtils.parse("<green>All Boost Queues<reset>")
         );
     }
 

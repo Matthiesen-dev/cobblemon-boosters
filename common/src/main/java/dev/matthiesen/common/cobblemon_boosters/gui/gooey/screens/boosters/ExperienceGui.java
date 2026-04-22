@@ -18,7 +18,7 @@ public class ExperienceGui extends BoostersGuiTemplate {
     @Override
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("<gold>Cobblemon Boosters <reset>- <green>Experience Boosts<reset>")
+                TextUtils.parse("<green>Experience Boosts<reset>")
         );
     }
 }

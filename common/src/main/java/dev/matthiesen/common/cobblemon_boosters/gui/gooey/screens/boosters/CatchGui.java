@@ -18,7 +18,7 @@ public class CatchGui extends BoostersGuiTemplate {
     @Override
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("<gold>Cobblemon Boosters <reset>- <light_purple>Catch Boosts<reset>")
+                TextUtils.parse("<light_purple>Catch Boosts<reset>")
         );
     }
 }

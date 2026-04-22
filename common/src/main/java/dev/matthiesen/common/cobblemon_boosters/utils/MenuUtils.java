@@ -31,6 +31,7 @@ public class MenuUtils {
 
     public static ItemStack getConfirmItem() {
         return new ItemBuilder(BOOST_CONFIRM_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Confirm Boost")
                                 .withStyle(
@@ -75,12 +76,14 @@ public class MenuUtils {
 
     public static ItemStack getFrameItem() {
         return new ItemBuilder(BACKGROUND)
+                .hideAdditional()
                 .setCustomName(Component.literal(" "))
                 .build();
     }
 
     public static ItemStack getBucketItem() {
         return new ItemBuilder(BUCKET_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Spawn Bucket Boosters")
                                 .withStyle(
@@ -92,6 +95,7 @@ public class MenuUtils {
 
     public static ItemStack getCatchItem() {
         return new ItemBuilder(CATCH_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Catch Rate Boosters")
                                 .withStyle(
@@ -103,6 +107,7 @@ public class MenuUtils {
 
     public static ItemStack getExperienceItem() {
         return new ItemBuilder(EXPERIENCE_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Experience Rate Boosters")
                                 .withStyle(
@@ -114,6 +119,7 @@ public class MenuUtils {
 
     public static ItemStack getShinyItem() {
         return new ItemBuilder(SHINY_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Shiny Rate Boosters")
                                 .withStyle(
@@ -125,6 +131,7 @@ public class MenuUtils {
 
     public static ItemStack getQueueItem(String name, boolean multiple) {
         return new ItemBuilder(QUEUE_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("View " + name + " Queue" + (multiple ? "s" : ""))
                                 .withStyle(
@@ -140,6 +147,7 @@ public class MenuUtils {
 
     public static ItemStack getAdminItem() {
         return new ItemBuilder(ADMIN_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Admin Menu")
                                 .withStyle(
@@ -151,6 +159,7 @@ public class MenuUtils {
 
     public static ItemStack getReloadItem() {
         return new ItemBuilder(RELOAD_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Reload Config")
                                 .withStyle(
@@ -162,6 +171,7 @@ public class MenuUtils {
 
     public static ItemStack getClearQueueItem() {
         return new ItemBuilder(CLEAR_QUEUE_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Clear All Queues")
                                 .withStyle(
@@ -173,6 +183,7 @@ public class MenuUtils {
 
     public static ItemStack getNoItem() {
         return new ItemBuilder(NO_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Cancel")
                                 .withStyle(
@@ -184,6 +195,7 @@ public class MenuUtils {
 
     public static ItemStack getYesItem() {
         return new ItemBuilder(YES_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Confirm")
                                 .withStyle(
@@ -195,6 +207,7 @@ public class MenuUtils {
 
     public static ItemStack getStopButton(boolean active) {
         return new ItemBuilder(STOP_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Stop Active Boost")
                                 .withStyle(
@@ -207,6 +220,7 @@ public class MenuUtils {
 
     public static ItemStack getPageItem(int currentPage, int pageLength) {
         return new ItemBuilder(PAGE_PLACEHOLDER)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Page " + currentPage + "/" + pageLength).withStyle(style -> style.withColor(ChatFormatting.GOLD))
                 )
@@ -227,6 +241,7 @@ public class MenuUtils {
 
     public static ItemStack getStatusItem(boolean active) {
         return new ItemBuilder(STATUS_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("View Active Boost")
                                 .withStyle(
@@ -239,6 +254,7 @@ public class MenuUtils {
 
     public static ItemStack getCreateNewBoosterItem(String label) {
         return new ItemBuilder(CREATE_NEW_BOOSTER_ITEM)
+                .hideAdditional()
                 .setCustomName(
                         Component.literal("Start New " + label)
                                 .withStyle(
