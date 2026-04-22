@@ -65,4 +65,9 @@ public class ExperienceBoost implements IBoost {
                 )
         );
     }
+
+    @Override
+    public String getBoostType() {
+        return "Experience Boost";
+    }
 }

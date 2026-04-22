@@ -9,6 +9,7 @@ import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import com.google.common.collect.Lists;
+import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
@@ -17,16 +18,16 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 
-public class BoosterGuiTemplate implements IGui {
+public class BaseMenuGuiTemplate implements IGui {
     public ServerPlayer player;
 
-    public BoosterGuiTemplate(ServerPlayer player) {
+    public BaseMenuGuiTemplate(ServerPlayer player) {
         this.player = player;
     }
 
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("Cobblemon Boosters")
+                TextUtils.parse("<gold>Cobblemon Boosters<reset>")
         );
     }
 
@@ -66,5 +67,15 @@ public class BoosterGuiTemplate implements IGui {
     @Override
     public void open() {
         UIManager.openUIForcefully(player, getPage());
+    }
+
+    @Override
+    public void close() {
+        UIManager.closeUI(player);
+    }
+
+    @Override
+    public void sendPlayerMessage(String rawMessage) {
+        CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
     }
 }

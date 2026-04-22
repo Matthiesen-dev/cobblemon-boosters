@@ -74,6 +74,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setEnchanted(boolean enchanted) {
+        stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, enchanted);
+        return this;
+    }
+
     public ItemStack build() {
         return this.stack;
     }

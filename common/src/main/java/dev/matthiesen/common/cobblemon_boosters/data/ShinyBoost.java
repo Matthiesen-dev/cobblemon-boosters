@@ -65,4 +65,9 @@ public class ShinyBoost implements IBoost {
                 )
         );
     }
+
+    @Override
+    public String getBoostType() {
+        return "Shiny Boost";
+    }
 }

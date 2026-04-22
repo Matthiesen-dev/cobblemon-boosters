@@ -19,6 +19,21 @@ public class MenuUtils {
     public static final Item ADMIN_ITEM = Items.COMMAND_BLOCK;
     public static final Item RELOAD_ITEM = Items.WIND_CHARGE;
     public static final Item CLEAR_QUEUE_ITEM = Items.BARRIER;
+    public static final Item YES_ITEM = Items.GREEN_STAINED_GLASS_PANE;
+    public static final Item NO_ITEM = Items.RED_STAINED_GLASS_PANE;
+    public static final Item STOP_ITEM = Items.REDSTONE_BLOCK;
+    public static final Item QUEUE_ENTRY_ITEM = Items.NAME_TAG;
+
+    public static ItemBuilder getQueueEntryBuilder() {
+        return new ItemBuilder(QUEUE_ENTRY_ITEM)
+                .hideAdditional()
+                .setCustomName(
+                        Component.literal("Boost Queue Entry")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.AQUA)
+                                )
+                );
+    }
 
     public static ItemStack getFrameItem() {
         return new ItemBuilder(BACKGROUND)
@@ -70,15 +85,19 @@ public class MenuUtils {
                 .build();
     }
 
-    public static ItemStack getQueueItem() {
+    public static ItemStack getQueueItem(String name, boolean multiple) {
         return new ItemBuilder(QUEUE_ITEM)
                 .setCustomName(
-                        Component.literal("View Queues")
+                        Component.literal("View " + name + " Queue" + (multiple ? "s" : ""))
                                 .withStyle(
                                         style -> style.withColor(ChatFormatting.AQUA)
                                 )
                 )
                 .build();
+    }
+
+    public static ItemStack getQueueItem(String name) {
+        return getQueueItem(name, false);
     }
 
     public static ItemStack getAdminItem() {
@@ -111,6 +130,40 @@ public class MenuUtils {
                                         style -> style.withColor(ChatFormatting.RED)
                                 )
                 )
+                .build();
+    }
+
+    public static ItemStack getNoItem() {
+        return new ItemBuilder(NO_ITEM)
+                .setCustomName(
+                        Component.literal("Cancel")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.RED)
+                                )
+                )
+                .build();
+    }
+
+    public static ItemStack getYesItem() {
+        return new ItemBuilder(YES_ITEM)
+                .setCustomName(
+                        Component.literal("Confirm")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.GREEN)
+                                )
+                )
+                .build();
+    }
+
+    public static ItemStack getStopButton(boolean active) {
+        return new ItemBuilder(STOP_ITEM)
+                .setCustomName(
+                        Component.literal("Stop Active Boost")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.RED)
+                                )
+                )
+                .setEnchanted(active)
                 .build();
     }
 

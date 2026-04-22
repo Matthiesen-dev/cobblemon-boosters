@@ -65,4 +65,9 @@ public class CatchBoost implements IBoost {
                 )
         );
     }
+
+    @Override
+    public String getBoostType() {
+        return "Catch Boost";
+    }
 }

@@ -15,4 +15,6 @@ public interface IBoost {
 	BossBar getBossBar();
 
 	Component getBossBarText();
+
+	String getBoostType();
 }

@@ -87,4 +87,9 @@ public class SpawnBucketBoost implements IBoost {
                 )
         );
     }
+
+    @Override
+    public String getBoostType() {
+        return "Spawn Bucket Boost";
+    }
 }

@@ -17,21 +17,21 @@ public class GooeyGUIAdapter implements IGUIAdapter {
 
     @Override
     public void openBucketBoosterGUI(ServerPlayer player) {
-        new BucketGui(player).open();
+        MainMenuGui.openBucketGui(player);
     }
 
     @Override
     public void openCatchBoosterGUI(ServerPlayer player) {
-        new CatchGui(player).open();
+        MainMenuGui.openCatchGUI(player);
     }
 
     @Override
     public void openExperienceBoosterGUI(ServerPlayer player) {
-        new ExperienceGui(player).open();
+        MainMenuGui.openExperienceGUI(player);
     }
 
     @Override
     public void openShinyBoosterGUI(ServerPlayer player) {
-        new ShinyGui(player).open();
+        MainMenuGui.openShinyGUI(player);
     }
 }
