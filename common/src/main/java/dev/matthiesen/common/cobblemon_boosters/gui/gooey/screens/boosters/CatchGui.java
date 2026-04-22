@@ -11,8 +11,8 @@ import java.util.Queue;
 
 public class CatchGui extends BoostersGuiTemplate {
 
-    public CatchGui(String boostType, ServerPlayer player, IBoost activeBoost, Queue<? extends IBoost> queuedBoosts, String noActiveBoost, String stopBoostMsg, String boostInfo, ModPermission startPermission, ModPermission stopPermission, ModPermission statusPermission, ModPermission queuePermission) {
-        super(boostType, player, activeBoost, queuedBoosts, noActiveBoost, stopBoostMsg, boostInfo, startPermission, stopPermission, statusPermission, queuePermission);
+    public CatchGui(String boostType, ServerPlayer player, IBoost activeBoost, Queue<? extends IBoost> queuedBoosts, String noActiveBoost, String stopBoostMsg, String boostInfo, ModPermission startPermission, ModPermission stopPermission, ModPermission statusPermission, ModPermission queuePermission, Runnable startOnClick) {
+        super(boostType, player, activeBoost, queuedBoosts, noActiveBoost, stopBoostMsg, boostInfo, startPermission, stopPermission, statusPermission, queuePermission, startOnClick);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates;
 
 import ca.landonjw.gooeylibs2.api.button.Button;
+import ca.landonjw.gooeylibs2.api.button.ButtonAction;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.QueueGui;
@@ -14,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Consumer;
 
 public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     public final String boostType;
@@ -26,6 +28,7 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     public final ModPermission stopPermission;
     public final ModPermission statusPermission;
     public final ModPermission queuePermission;
+    public final Consumer<ButtonAction> startOnClick;
 
     public BoostersGuiTemplate(
             String boostType,
@@ -38,7 +41,8 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
             ModPermission startPermission,
             ModPermission stopPermission,
             ModPermission statusPermission,
-            ModPermission queuePermission
+            ModPermission queuePermission,
+            Runnable startOnClick
     ) {
         super(player);
         this.boostType = boostType;
@@ -51,6 +55,7 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
         this.stopPermission = stopPermission;
         this.statusPermission = statusPermission;
         this.queuePermission = queuePermission;
+        this.startOnClick = (startOnClick != null) ? (action) -> startOnClick.run() : null;
     }
 
     public Button getStopButton() {
@@ -100,25 +105,28 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
                 .build();
     }
 
+    public Button getStartButton() {
+        return GooeyButton.builder()
+                .display(MenuUtils.getCreateNewBoosterItem(boostType))
+                .onClick(startOnClick)
+                .build();
+    }
+
     @Override
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
 
-//        if (ModPermissions.checkPermission(player, startPermission)) {
-//            // TODO: Start
-//        }
+        if (ModPermissions.checkPermission(player, startPermission))
+            buttons.add(getStartButton());
 
-        if (ModPermissions.checkPermission(player, stopPermission)) {
+        if (ModPermissions.checkPermission(player, stopPermission))
             buttons.add(getStopButton());
-        }
 
-        if (ModPermissions.checkPermission(player, statusPermission)) {
+        if (ModPermissions.checkPermission(player, statusPermission))
             buttons.add(getStatusButton());
-        }
 
-        if (ModPermissions.checkPermission(player, queuePermission)) {
+        if (ModPermissions.checkPermission(player, queuePermission))
             buttons.add(getQueueButton());
-        }
 
         return buttons;
     }

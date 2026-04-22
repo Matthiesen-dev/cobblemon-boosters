@@ -19,9 +19,23 @@ public class CatchBoost implements IBoost {
         this.bossBar = createBossBar();
     }
 
+    public CatchBoost() {}
+
     @Override
     public float getMultiplier() {
         return this.multiplier;
+    }
+
+    @Override
+    public void setMultiplier(float multiplier) {
+        this.multiplier = multiplier;
+    }
+
+    @Override
+    public void setDuration(int duration) {
+        this.duration = duration;
+        this.timeRemaining = duration * 20L;
+        this.bossBar = createBossBar();
     }
 
     @Override

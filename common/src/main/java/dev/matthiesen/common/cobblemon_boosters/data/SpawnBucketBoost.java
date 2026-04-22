@@ -22,6 +22,8 @@ public class SpawnBucketBoost implements IBoost {
         this.bossBar = createBossBar();
     }
 
+    public SpawnBucketBoost() {}
+
     @Override
     public float getMultiplier() {
         return this.multiplier;
@@ -45,6 +47,18 @@ public class SpawnBucketBoost implements IBoost {
     public SpawnBucketBoost setBucket(String bucket) {
         this.bucket = bucket;
         return this;
+    }
+
+    @Override
+    public void setMultiplier(float multiplier) {
+        this.multiplier = multiplier;
+    }
+
+    @Override
+    public void setDuration(int duration) {
+        this.duration = duration;
+        this.timeRemaining = duration * 20L;
+        this.bossBar = createBossBar();
     }
 
     public String getBucketDisplayName() {

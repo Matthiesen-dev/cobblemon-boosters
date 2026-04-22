@@ -24,6 +24,9 @@ public class MenuUtils {
     public static final Item STOP_ITEM = Items.REDSTONE_BLOCK;
     public static final Item QUEUE_ENTRY_ITEM = Items.NAME_TAG;
     public static final Item STATUS_ITEM = Items.BOOK;
+    public static final Item CREATE_NEW_BOOSTER_ITEM = Items.EMERALD;
+    public static final Item PLUS_ITEM = Items.LIME_STAINED_GLASS_PANE;
+    public static final Item MINUS_ITEM = Items.RED_STAINED_GLASS_PANE;
 
     public static ItemBuilder getQueueEntryBuilder() {
         return new ItemBuilder(QUEUE_ENTRY_ITEM)
@@ -34,6 +37,28 @@ public class MenuUtils {
                                         style -> style.withColor(ChatFormatting.AQUA)
                                 )
                 );
+    }
+
+    public static ItemStack getPlusItem() {
+        return new ItemBuilder(PLUS_ITEM)
+                .hideAdditional()
+                .setCustomName(Component.literal("Increment")
+                        .withStyle(
+                                style -> style.withColor(ChatFormatting.GREEN)
+                        )
+                )
+                .build();
+    }
+
+    public static ItemStack getMinusItem() {
+        return new ItemBuilder(MINUS_ITEM)
+                .hideAdditional()
+                .setCustomName(Component.literal("Decrement")
+                        .withStyle(
+                                style -> style.withColor(ChatFormatting.RED)
+                        )
+                )
+                .build();
     }
 
     public static ItemStack getFrameItem() {
@@ -197,6 +222,17 @@ public class MenuUtils {
                                 )
                 )
                 .setEnchanted(active)
+                .build();
+    }
+
+    public static ItemStack getCreateNewBoosterItem(String label) {
+        return new ItemBuilder(CREATE_NEW_BOOSTER_ITEM)
+                .setCustomName(
+                        Component.literal("Start New " + label)
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.GREEN)
+                                )
+                )
                 .build();
     }
 }

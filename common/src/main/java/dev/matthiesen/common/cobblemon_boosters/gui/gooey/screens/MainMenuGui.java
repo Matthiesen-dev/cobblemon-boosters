@@ -30,7 +30,8 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_START_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_STOP_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_STATUS_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
+                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION,
+                () -> {}
         ).open();
     }
 
@@ -46,7 +47,8 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                 CobblemonBoosters.INSTANCE.permissions.CATCH_START_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.CATCH_STOP_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.CATCH_STATUS_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
+                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION,
+                () -> {}
         ).open();
     }
 
@@ -62,7 +64,8 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                 CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_START_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STOP_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STATUS_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
+                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION,
+                () -> {}
         ).open();
     }
 
@@ -78,7 +81,8 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                 CobblemonBoosters.INSTANCE.permissions.SHINY_START_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.SHINY_STOP_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.SHINY_STATUS_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
+                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION,
+                () -> {}
         ).open();
     }
 
