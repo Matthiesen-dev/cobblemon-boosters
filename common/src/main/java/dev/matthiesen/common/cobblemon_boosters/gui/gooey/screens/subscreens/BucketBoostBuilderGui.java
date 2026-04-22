@@ -25,7 +25,7 @@ public class BucketBoostBuilderGui {
     public String currentMode = null;
     public final Consumer<SpawnBucketBoost> setActiveBoost;
 
-    public final List<String> allowedBuckets = List.of("common", "uncommon", "rare", "ultra-rate");
+    public final List<String> allowedBuckets = List.of("common", "uncommon", "rare", "ultra-rare");
     public final List<String> allowedUnits = List.of("seconds", "minutes", "hours", "days");
     public final Map<String, String> labelToColor = Map.of(
             "Multiplier", "<green>",
@@ -116,7 +116,7 @@ public class BucketBoostBuilderGui {
             String boostType,
             Consumer<SpawnBucketBoost> setActiveBoost
     ) {
-        this(player, boostType, setActiveBoost, null);
+        this(player, boostType, setActiveBoost, new BoostBuilder());
     }
 
     public void openUpdatedPage(BucketBoostBuilderGui boostBuilderGui) {
@@ -254,6 +254,10 @@ public class BucketBoostBuilderGui {
         return GooeyButton.builder()
                 .display(MenuUtils.getPlusItem())
                 .onClick(() -> {
+                    if (getCurrentMode() == null) {
+                        sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
+                        return;
+                    }
                     switch (getCurrentMode()) {
                         case "multiplier" -> {
                             if (boostBuilder.multiplier == null) {
@@ -287,6 +291,7 @@ public class BucketBoostBuilderGui {
                                 boostBuilder = boostBuilder.setBucket(allowedBuckets.get(nextIndex));
                             }
                         }
+                        default -> sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
                     }
                     openUpdatedPage(this);
                 })
@@ -297,6 +302,10 @@ public class BucketBoostBuilderGui {
         return GooeyButton.builder()
                 .display(MenuUtils.getMinusItem())
                 .onClick(() -> {
+                    if (getCurrentMode() == null) {
+                        sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
+                        return;
+                    }
                     switch (getCurrentMode()) {
                         case "multiplier" -> {
                             if (boostBuilder.multiplier != null) {
@@ -332,6 +341,7 @@ public class BucketBoostBuilderGui {
                                 boostBuilder = boostBuilder.setBucket("common");
                             }
                         }
+                        default -> sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
                     }
                     openUpdatedPage(this);
                 })
@@ -349,7 +359,7 @@ public class BucketBoostBuilderGui {
         if (boostBuilder.multiplier == null) return false;
         if (boostBuilder.duration == null) return false;
         if (boostBuilder.unit == null) return false;
-        return getCurrentMode() != null;
+        return getCurrentMode() == null;
     }
 
     public Button getConfirmButton() {
@@ -382,11 +392,7 @@ public class BucketBoostBuilderGui {
         builder = builder.set(1, 3, getUnitButton());
         builder = builder.set(1, 4, getDetailsButton());
 
-        if (getCurrentMode() != null && getCurrentMode().equals("multiplier"))
-            builder = addModifierButtons(builder);
-        if (getCurrentMode() != null && getCurrentMode().equals("duration"))
-            builder = addModifierButtons(builder);
-        if (getCurrentMode() != null && getCurrentMode().equals("unit"))
+        if (getCurrentMode() != null)
             builder = addModifierButtons(builder);
 
         if (isReadyToConfirm())

@@ -111,7 +111,7 @@ public class BoostBuilderGui {
             Class<? extends IBoost> boostClass,
             Consumer<IBoost> setActiveBoost
     ) {
-        this(player, boostType, boostClass, setActiveBoost, null);
+        this(player, boostType, boostClass, setActiveBoost, new BoostBuilder());
     }
 
     public void openUpdatedPage(BoostBuilderGui boostBuilderGui) {
@@ -237,6 +237,10 @@ public class BoostBuilderGui {
         return GooeyButton.builder()
                 .display(MenuUtils.getPlusItem())
                 .onClick(() -> {
+                    if (getCurrentMode() == null) {
+                        sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
+                        return;
+                    }
                     switch (getCurrentMode()) {
                         case "multiplier" -> {
                             if (boostBuilder.multiplier == null) {
@@ -261,6 +265,7 @@ public class BoostBuilderGui {
                                 boostBuilder = boostBuilder.setUnit(allowedUnits.get(nextIndex));
                             }
                         }
+                        default -> sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
                     }
                     openUpdatedPage(this);
                 })
@@ -271,6 +276,10 @@ public class BoostBuilderGui {
         return GooeyButton.builder()
                 .display(MenuUtils.getMinusItem())
                 .onClick(() -> {
+                    if (getCurrentMode() == null) {
+                        sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
+                        return;
+                    }
                     switch (getCurrentMode()) {
                         case "multiplier" -> {
                             if (boostBuilder.multiplier != null) {
@@ -297,6 +306,7 @@ public class BoostBuilderGui {
                                 boostBuilder = boostBuilder.setUnit("seconds");
                             }
                         }
+                        default -> sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
                     }
                     openUpdatedPage(this);
                 })
@@ -313,7 +323,7 @@ public class BoostBuilderGui {
         if (boostBuilder.multiplier == null) return false;
         if (boostBuilder.duration == null) return false;
         if (boostBuilder.unit == null) return false;
-        return getCurrentMode() != null;
+        return getCurrentMode() == null;
     }
 
     public Button getConfirmButton() {
@@ -345,11 +355,7 @@ public class BoostBuilderGui {
         builder = builder.set(1, 3, getUnitButton());
         builder = builder.set(1, 4, getDetailsButton());
 
-        if (getCurrentMode() != null && getCurrentMode().equals("multiplier"))
-            builder = addModifierButtons(builder);
-        if (getCurrentMode() != null && getCurrentMode().equals("duration"))
-            builder = addModifierButtons(builder);
-        if (getCurrentMode() != null && getCurrentMode().equals("unit"))
+        if (getCurrentMode() != null)
             builder = addModifierButtons(builder);
 
         if (isReadyToConfirm())
