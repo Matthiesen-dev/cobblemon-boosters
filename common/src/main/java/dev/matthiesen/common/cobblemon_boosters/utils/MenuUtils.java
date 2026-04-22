@@ -27,6 +27,18 @@ public class MenuUtils {
     public static final Item CREATE_NEW_BOOSTER_ITEM = Items.EMERALD;
     public static final Item PLUS_ITEM = Items.LIME_STAINED_GLASS_PANE;
     public static final Item MINUS_ITEM = Items.RED_STAINED_GLASS_PANE;
+    public static final Item BOOST_CONFIRM_ITEM = Items.GREEN_WOOL;
+
+    public static ItemStack getConfirmItem() {
+        return new ItemBuilder(BOOST_CONFIRM_ITEM)
+                .setCustomName(
+                        Component.literal("Confirm Boost")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.GREEN)
+                                )
+                )
+                .build();
+    }
 
     public static ItemBuilder getQueueEntryBuilder() {
         return new ItemBuilder(QUEUE_ENTRY_ITEM)

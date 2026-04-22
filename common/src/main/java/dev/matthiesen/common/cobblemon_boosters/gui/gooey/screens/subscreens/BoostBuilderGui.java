@@ -3,7 +3,6 @@ package dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens;
 import ca.landonjw.gooeylibs2.api.UIManager;
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
-import ca.landonjw.gooeylibs2.api.button.PlaceholderButton;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
@@ -16,6 +15,8 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class BoostBuilderGui {
     public final ServerPlayer player;
@@ -23,8 +24,14 @@ public class BoostBuilderGui {
     public final Class<? extends IBoost> boostClass;
     public BoostBuilder boostBuilder;
     public String currentMode = null;
+    public final Consumer<IBoost> setActiveBoost;
 
     public final List<String> allowedUnits = List.of("seconds", "minutes", "hours", "days");
+    public final Map<String, String> labelToColor = Map.of(
+            "Multiplier", "<green>",
+            "Duration", "<aqua>",
+            "Unit", "<yellow>"
+    );
 
     public String getCurrentMode() {
         return currentMode;
@@ -84,15 +91,27 @@ public class BoostBuilderGui {
         }
     }
 
-    public BoostBuilderGui(ServerPlayer player, String boostType, Class<? extends IBoost> boostClass, BoostBuilder boostBuilder) {
+    public BoostBuilderGui(
+            ServerPlayer player,
+            String boostType,
+            Class<? extends IBoost> boostClass,
+            Consumer<IBoost> setActiveBoost,
+            BoostBuilder boostBuilder
+    ) {
         this.player = player;
         this.boostType = boostType;
         this.boostClass = boostClass;
+        this.setActiveBoost = setActiveBoost;
         this.boostBuilder = boostBuilder;
     }
 
-    public BoostBuilderGui(ServerPlayer player, String boostType, Class<? extends IBoost> boostClass) {
-        this(player, boostType, boostClass, null);
+    public BoostBuilderGui(
+            ServerPlayer player,
+            String boostType,
+            Class<? extends IBoost> boostClass,
+            Consumer<IBoost> setActiveBoost
+    ) {
+        this(player, boostType, boostClass, setActiveBoost, null);
     }
 
     public void openUpdatedPage(BoostBuilderGui boostBuilderGui) {
@@ -100,6 +119,7 @@ public class BoostBuilderGui {
                 boostBuilderGui.player,
                 boostBuilderGui.boostType,
                 boostBuilderGui.boostClass,
+                boostBuilderGui.setActiveBoost,
                 boostBuilderGui.boostBuilder
         )
                 .setCurrentMode(getCurrentMode())
@@ -108,12 +128,8 @@ public class BoostBuilderGui {
 
     public Component getTitle() {
         return TextUtils.deserializeMC(
-                TextUtils.parse("Cobblemon Boosters - Builder")
+                TextUtils.parse("Cobblemon Boosters - Boost Builder")
         );
-    }
-
-    public PlaceholderButton getPlaceholder() {
-        return new PlaceholderButton();
     }
 
     public Button getFrame() {
@@ -143,7 +159,7 @@ public class BoostBuilderGui {
 
         return GooeyButton.builder()
                 .display(MenuUtils.getQueueEntryBuilder()
-                        .setCustomName(TextUtils.deserializeMC(TextUtils.parse(label)))
+                        .setCustomName(TextUtils.deserializeMC(TextUtils.parse(labelToColor.get(label) + label)))
                         .addLore(loreArray)
                         .setEnchanted(isActive)
                         .build()
@@ -208,7 +224,7 @@ public class BoostBuilderGui {
 
         return GooeyButton.builder()
                 .display(MenuUtils.getQueueEntryBuilder()
-                        .setCustomName(TextUtils.deserializeMC(TextUtils.parse("Details")))
+                        .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<gold>Details")))
                         .addLore(loreArray)
                         .build()
                 )
@@ -221,7 +237,6 @@ public class BoostBuilderGui {
                 .onClick(() -> {
                     switch (getCurrentMode()) {
                         case "multiplier" -> {
-                            // Add 1.0 to the multiplier, or set it to 1.0 if it's null
                             if (boostBuilder.multiplier == null) {
                                 boostBuilder = boostBuilder.setMultiplier(1.0f);
                             } else {
@@ -258,13 +273,17 @@ public class BoostBuilderGui {
                         case "multiplier" -> {
                             if (boostBuilder.multiplier != null) {
                                 boostBuilder = boostBuilder.setMultiplier(boostBuilder.multiplier - 1.0f);
-                                if (boostBuilder.multiplier < 0) boostBuilder = boostBuilder.setMultiplier(0.0f);
+                                if (boostBuilder.multiplier < 0) boostBuilder = boostBuilder.setMultiplier(1.0f);
+                            } else {
+                                boostBuilder = boostBuilder.setMultiplier(1.0f);
                             }
                         }
                         case "duration" -> {
                             if (boostBuilder.duration != null) {
                                 boostBuilder = boostBuilder.setDuration(boostBuilder.duration - 1);
-                                if (boostBuilder.duration < 0) boostBuilder = boostBuilder.setDuration(0);
+                                if (boostBuilder.duration < 0) boostBuilder = boostBuilder.setDuration(1);
+                            } else {
+                                boostBuilder = boostBuilder.setDuration(1);
                             }
                         }
                         case "unit" -> {
@@ -272,6 +291,8 @@ public class BoostBuilderGui {
                                 int currentIndex = allowedUnits.indexOf(boostBuilder.unit);
                                 int nextIndex = (currentIndex - 1 + allowedUnits.size()) % allowedUnits.size();
                                 boostBuilder = boostBuilder.setUnit(allowedUnits.get(nextIndex));
+                            } else {
+                                boostBuilder = boostBuilder.setUnit("seconds");
                             }
                         }
                     }
@@ -293,6 +314,27 @@ public class BoostBuilderGui {
         return getCurrentMode() == null;
     }
 
+    public Button getConfirmButton() {
+        return GooeyButton.builder()
+                .display(MenuUtils.getConfirmItem())
+                .onClick(() -> new CancelConfirmGuiBuilder(
+                        player,
+                        "<green>Confirm to start/queue boost!",
+                        () -> {
+                            if (isReadyToConfirm()) {
+                                IBoost boost = boostBuilder.build(boostClass);
+                                setActiveBoost.accept(boost);
+                                close();
+                            } else {
+                                sendPlayerMessage("<red>You must fill out all fields before confirming!");
+                                openUpdatedPage(this);
+                            }
+                        },
+                        () -> openUpdatedPage(this)
+                ).open())
+                .build();
+    }
+
     public ChestTemplate getTemplate() {
         ChestTemplate.Builder builder = ChestTemplate.builder(3);
 
@@ -309,7 +351,7 @@ public class BoostBuilderGui {
             builder = addModifierButtons(builder);
 
         if (isReadyToConfirm())
-            builder = builder.set(1, 7, getPlaceholder());
+            builder = builder.set(1, 7, getConfirmButton());
 
         return builder.fill(getFrame()).build();
     }
