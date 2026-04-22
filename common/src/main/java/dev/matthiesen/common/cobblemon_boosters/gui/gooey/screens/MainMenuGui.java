@@ -6,8 +6,10 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
+import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.boosters.*;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.BoostBuilderGui;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.BucketBoostBuilderGui;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
@@ -41,7 +43,26 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_STOP_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_STATUS_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION,
-                () -> {}
+                () -> new BucketBoostBuilderGui(
+                        player,
+                        boostType,
+                        boost -> {
+                            if (CobblemonBoosters.INSTANCE.activeSpawnBucketBoost == null) {
+                                CobblemonBoosters.INSTANCE.activeSpawnBucketBoost = new SpawnBucketBoost(boost.getMultiplier(), boost.getDuration()).setBucket(boost.getBucket());
+                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostStarted);
+                                CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                                        CobblemonBoosters.INSTANCE.config.discordWebhookConfig.spawnBucketEventStartEmbed,
+                                        CobblemonBoosters.INSTANCE.activeSpawnBucketBoost
+                                );
+                                CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeSpawnBucketBoost.getBossBar());
+                            } else {
+                                SpawnBucketBoost newBoost = new SpawnBucketBoost(boost.getMultiplier(), boost.getDuration()).setBucket(boost.getBucket());
+                                CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts.add(newBoost);
+                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostAddedToQueued);
+                            }
+                            CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
+                        }
+                )
         ).open();
     }
 

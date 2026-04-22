@@ -19,7 +19,7 @@ dependencies {
 
     modApi("dev.architectury:architectury:${property("architectury_version")}") { isTransitive = false }
     modImplementation("com.cobblemon:mod:${property("cobblemon_version")}") { isTransitive = false }
-    modImplementation("ca.landonjw.gooeylibs:api:${property("gooeylibs_version")}")
+    modCompileOnly("ca.landonjw.gooeylibs:api:${property("gooeylibs_version")}")
 
     compileOnly("net.kyori:adventure-platform-mod-shared:${property("adventure_text_version")}")
 

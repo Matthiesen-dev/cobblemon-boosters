@@ -7,7 +7,7 @@ import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
-import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
@@ -18,34 +18,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class BoostBuilderGui {
+public class BucketBoostBuilderGui {
     public final ServerPlayer player;
     public final String boostType;
-    public final Class<? extends IBoost> boostClass;
     public BoostBuilder boostBuilder;
     public String currentMode = null;
-    public final Consumer<IBoost> setActiveBoost;
+    public final Consumer<SpawnBucketBoost> setActiveBoost;
 
+    public final List<String> allowedBuckets = List.of("common", "uncommon", "rare", "ultra-rate");
     public final List<String> allowedUnits = List.of("seconds", "minutes", "hours", "days");
     public final Map<String, String> labelToColor = Map.of(
             "Multiplier", "<green>",
             "Duration", "<aqua>",
-            "Unit", "<yellow>"
+            "Unit", "<yellow>",
+            "Bucket", "<gold>"
     );
 
     public String getCurrentMode() {
         return currentMode;
     }
 
-    public BoostBuilderGui setCurrentMode(String mode) {
+    public BucketBoostBuilderGui setCurrentMode(String mode) {
         this.currentMode = mode;
         return this;
     }
 
     public static class BoostBuilder {
+        public String bucket;
         public Float multiplier;
         public Integer duration;
         public String unit;
+
+        public BoostBuilder setBucket(String bucket) {
+            this.bucket = bucket;
+            return this;
+        }
 
         public BoostBuilder setMultiplier(float multiplier) {
             this.multiplier = multiplier;
@@ -78,12 +85,13 @@ public class BoostBuilderGui {
             return totalSeconds;
         }
 
-        public <T extends IBoost> T build(Class<T> boostClass) {
+        public SpawnBucketBoost build() {
             try {
-                T boost = boostClass.getDeclaredConstructor().newInstance();
+                SpawnBucketBoost boost = new SpawnBucketBoost();
                 boost.setMultiplier(multiplier);
                 int totalSeconds = parseTotalSeconds(duration, unit);
                 boost.setDuration(totalSeconds);
+                boost.setBucket(bucket);
                 return boost;
             } catch (Exception e) {
                 throw new RuntimeException("Failed to build boost", e);
@@ -91,34 +99,30 @@ public class BoostBuilderGui {
         }
     }
 
-    public BoostBuilderGui(
+    public BucketBoostBuilderGui(
             ServerPlayer player,
             String boostType,
-            Class<? extends IBoost> boostClass,
-            Consumer<IBoost> setActiveBoost,
+            Consumer<SpawnBucketBoost> setActiveBoost,
             BoostBuilder boostBuilder
     ) {
         this.player = player;
         this.boostType = boostType;
-        this.boostClass = boostClass;
         this.setActiveBoost = setActiveBoost;
         this.boostBuilder = boostBuilder;
     }
 
-    public BoostBuilderGui(
+    public BucketBoostBuilderGui(
             ServerPlayer player,
             String boostType,
-            Class<? extends IBoost> boostClass,
-            Consumer<IBoost> setActiveBoost
+            Consumer<SpawnBucketBoost> setActiveBoost
     ) {
-        this(player, boostType, boostClass, setActiveBoost, null);
+        this(player, boostType, setActiveBoost, null);
     }
 
-    public void openUpdatedPage(BoostBuilderGui boostBuilderGui) {
-        new BoostBuilderGui(
+    public void openUpdatedPage(BucketBoostBuilderGui boostBuilderGui) {
+        new BucketBoostBuilderGui(
                 boostBuilderGui.player,
                 boostBuilderGui.boostType,
-                boostBuilderGui.boostClass,
                 boostBuilderGui.setActiveBoost,
                 boostBuilderGui.boostBuilder
         )
@@ -196,10 +200,23 @@ public class BoostBuilderGui {
         );
     }
 
+    public Button getBucketButton() {
+        return buildModeButton(
+                "Bucket",
+                boostBuilder.bucket
+        );
+    }
+
     public Button getDetailsButton() {
         List<Component> lore = new ArrayList<>();
 
         lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Boost Type: <white>" + boostType)));
+
+        if (boostBuilder.bucket != null) {
+            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Bucket: <white>" + boostBuilder.bucket)));
+        } else {
+            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Bucket: <red>Not set")));
+        }
 
         if (boostBuilder.multiplier != null) {
             lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Multiplier: <white>" + boostBuilder.multiplier)));
@@ -261,6 +278,15 @@ public class BoostBuilderGui {
                                 boostBuilder = boostBuilder.setUnit(allowedUnits.get(nextIndex));
                             }
                         }
+                        case "bucket" -> {
+                            if (boostBuilder.bucket == null) {
+                                boostBuilder = boostBuilder.setBucket("common");
+                            } else {
+                                int currentIndex = allowedBuckets.indexOf(boostBuilder.bucket);
+                                int nextIndex = (currentIndex + 1) % allowedBuckets.size();
+                                boostBuilder = boostBuilder.setBucket(allowedBuckets.get(nextIndex));
+                            }
+                        }
                     }
                     openUpdatedPage(this);
                 })
@@ -297,6 +323,15 @@ public class BoostBuilderGui {
                                 boostBuilder = boostBuilder.setUnit("seconds");
                             }
                         }
+                        case "bucket" -> {
+                            if (boostBuilder.bucket != null) {
+                                int currentIndex = allowedBuckets.indexOf(boostBuilder.bucket);
+                                int nextIndex = (currentIndex - 1 + allowedBuckets.size()) % allowedBuckets.size();
+                                boostBuilder = boostBuilder.setBucket(allowedBuckets.get(nextIndex));
+                            } else {
+                                boostBuilder = boostBuilder.setBucket("common");
+                            }
+                        }
                     }
                     openUpdatedPage(this);
                 })
@@ -310,6 +345,7 @@ public class BoostBuilderGui {
     }
 
     public boolean isReadyToConfirm() {
+        if (boostBuilder.bucket == null) return false;
         if (boostBuilder.multiplier == null) return false;
         if (boostBuilder.duration == null) return false;
         if (boostBuilder.unit == null) return false;
@@ -324,7 +360,7 @@ public class BoostBuilderGui {
                         "<green>Confirm to start/queue boost!",
                         () -> {
                             if (isReadyToConfirm()) {
-                                IBoost boost = boostBuilder.build(boostClass);
+                                SpawnBucketBoost boost = boostBuilder.build();
                                 setActiveBoost.accept(boost);
                                 close();
                             } else {
@@ -340,6 +376,7 @@ public class BoostBuilderGui {
     public ChestTemplate getTemplate() {
         ChestTemplate.Builder builder = ChestTemplate.builder(3);
 
+        builder = builder.set(1, 0, getBucketButton());
         builder = builder.set(1, 1, getMultiplierButton());
         builder = builder.set(1, 2, getDurationButton());
         builder = builder.set(1, 3, getUnitButton());

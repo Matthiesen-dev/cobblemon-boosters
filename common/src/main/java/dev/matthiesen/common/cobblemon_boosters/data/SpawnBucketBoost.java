@@ -49,6 +49,10 @@ public class SpawnBucketBoost implements IBoost {
         return this;
     }
 
+    public String getBucket() {
+        return this.bucket;
+    }
+
     @Override
     public void setMultiplier(float multiplier) {
         this.multiplier = multiplier;
