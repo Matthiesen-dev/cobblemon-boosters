@@ -7,6 +7,7 @@ import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
@@ -26,7 +27,7 @@ public class BoostBuilderGui {
     public String currentMode = null;
     public final Consumer<IBoost> setActiveBoost;
 
-    public final List<String> allowedUnits = List.of("seconds", "minutes", "hours", "days");
+    public final List<String> allowedUnits = Helpers.allowedUnits;
     public final Map<String, String> labelToColor = Map.of(
             "Multiplier", "<green>",
             "Duration", "<aqua>",
@@ -58,7 +59,7 @@ public class BoostBuilderGui {
         }
 
         public BoostBuilder setUnit(String unit) {
-            List<String> allowedUnits = List.of("seconds", "minutes", "hours", "days");
+            List<String> allowedUnits = Helpers.allowedUnits;
             if (allowedUnits.contains(unit.toLowerCase())) {
                 this.unit = unit.toLowerCase();
             } else {
@@ -67,22 +68,11 @@ public class BoostBuilderGui {
             return this;
         }
 
-        public static int parseTotalSeconds(int duration, String unit) {
-            int totalSeconds;
-            switch (unit) {
-                case "minutes" -> totalSeconds = duration * 60;
-                case "hours" -> totalSeconds = duration * 3600;
-                case "days" -> totalSeconds = duration * 86400;
-                default -> totalSeconds = duration;
-            }
-            return totalSeconds;
-        }
-
         public <T extends IBoost> T build(Class<T> boostClass) {
             try {
                 T boost = boostClass.getDeclaredConstructor().newInstance();
                 boost.setMultiplier(multiplier);
-                int totalSeconds = parseTotalSeconds(duration, unit);
+                int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
                 boost.setDuration(totalSeconds);
                 return boost;
             } catch (Exception e) {
@@ -130,12 +120,6 @@ public class BoostBuilderGui {
         return TextUtils.deserializeMC(
                 TextUtils.parse("Cobblemon Boosters - Boost Builder")
         );
-    }
-
-    public Button getFrame() {
-        return GooeyButton.builder()
-                .display(MenuUtils.getFrameItem())
-                .build();
     }
 
     public Button buildModeButton(
@@ -361,7 +345,7 @@ public class BoostBuilderGui {
         if (isReadyToConfirm())
             builder = builder.set(1, 7, getConfirmButton());
 
-        return builder.fill(getFrame()).build();
+        return builder.fill(Helpers.getFrame()).build();
     }
 
     public Page getPage() {
