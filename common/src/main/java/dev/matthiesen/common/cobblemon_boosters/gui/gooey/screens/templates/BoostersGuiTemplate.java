@@ -105,7 +105,7 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
 
     public Button getQueueButton() {
         return GooeyButton.builder()
-                .display(MenuUtils.getQueueItem(boostType))
+                .display(MenuUtils.getQueueItemForSubscreen(boostType))
                 .onClick(() -> new QueueGui(
                         player,
                         boostType,

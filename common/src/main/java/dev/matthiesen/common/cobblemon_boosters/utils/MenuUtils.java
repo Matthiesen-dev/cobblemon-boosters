@@ -152,15 +152,26 @@ public class MenuUtils {
                 .build();
     }
 
+    public static ItemStack getQueueItemForSubscreen(String name) {
+        return new ItemBuilder(QUEUE_ITEM)
+                .hideAdditional()
+                .setCustomName(
+                        Component.literal("View " + name + " Queue")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.AQUA)
+                                )
+                )
+                .build();
+    }
+
     public static ItemStack getQueueItem(String name, boolean multiple) {
 
-        Item queueItem;
+        Item queueItem = QUEUE_ITEM;
         switch (name) {
             case "Spawn Bucket" -> queueItem = getBucketItem().getItem();
             case "Catch" -> queueItem = getCatchItem().getItem();
             case "Experience" -> queueItem = getExperienceItem().getItem();
             case "Shiny" -> queueItem = getShinyItem().getItem();
-            default -> queueItem = QUEUE_ITEM;
         }
 
         return new ItemBuilder(queueItem)
