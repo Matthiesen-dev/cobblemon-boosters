@@ -1,9 +1,9 @@
 package dev.matthiesen.common.cobblemon_boosters.data;
 
-import com.cobblemon.mod.common.CobblemonItems;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.utils.ItemBuilder;
+import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -21,8 +21,6 @@ public class ShinyBoost implements IBoost {
         this.timeRemaining = duration * 20L;
         this.bossBar = createBossBar();
     }
-
-    public ShinyBoost() {}
 
     @Override
     public void setMultiplier(float multiplier) {
@@ -90,7 +88,7 @@ public class ShinyBoost implements IBoost {
 
     @Override
     public ItemStack getGUIItem() {
-        return new ItemBuilder(CobblemonItems.SHINY_STONE)
+        return new ItemBuilder(MenuUtils.SHINY_ITEM)
                 .hideAdditional()
                 .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Shiny Boost</green>", this)))
                 .build();
@@ -98,7 +96,7 @@ public class ShinyBoost implements IBoost {
 
     @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
-        return new ItemBuilder(CobblemonItems.SHINY_STONE)
+        return new ItemBuilder(MenuUtils.SHINY_ITEM)
                 .hideAdditional()
                 .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Shiny Boost</green>", this)))
                 .addLore(lore)

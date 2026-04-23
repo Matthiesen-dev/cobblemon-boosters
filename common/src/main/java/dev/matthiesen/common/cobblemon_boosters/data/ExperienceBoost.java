@@ -3,11 +3,11 @@ package dev.matthiesen.common.cobblemon_boosters.data;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.utils.ItemBuilder;
+import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class ExperienceBoost implements IBoost {
     public float multiplier;
@@ -21,8 +21,6 @@ public class ExperienceBoost implements IBoost {
         this.timeRemaining = duration * 20L;
         this.bossBar = createBossBar();
     }
-
-    public ExperienceBoost() {}
 
     @Override
     public void setMultiplier(float multiplier) {
@@ -90,7 +88,7 @@ public class ExperienceBoost implements IBoost {
 
     @Override
     public ItemStack getGUIItem() {
-        return new ItemBuilder(Items.EXPERIENCE_BOTTLE)
+        return new ItemBuilder(MenuUtils.EXPERIENCE_ITEM)
                 .hideAdditional()
                 .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Experience Boost</green>", this)))
                 .build();
@@ -98,7 +96,7 @@ public class ExperienceBoost implements IBoost {
 
     @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
-        return new ItemBuilder(Items.EXPERIENCE_BOTTLE)
+        return new ItemBuilder(MenuUtils.EXPERIENCE_ITEM)
                 .hideAdditional()
                 .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Experience Boost</green>", this)))
                 .addLore(lore)

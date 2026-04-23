@@ -1,17 +1,21 @@
 package dev.matthiesen.common.cobblemon_boosters.utils;
 
 import com.cobblemon.mod.common.CobblemonItems;
+import dev.architectury.platform.Platform;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+
+import java.util.Optional;
 
 public class MenuUtils {
     public static final Item BACKGROUND = Items.GRAY_STAINED_GLASS_PANE;
     public static final Item PAGE_PLACEHOLDER = Items.PAPER;
     public static final Item NAV_ITEM = Items.ARROW;
-    public static final Item BUCKET_ITEM = Items.SPAWNER;
     public static final Item CATCH_ITEM = CobblemonItems.POKE_BALL;
     public static final Item EXPERIENCE_ITEM = Items.EXPERIENCE_BOTTLE;
     public static final Item SHINY_ITEM = CobblemonItems.SHINY_STONE;
@@ -28,6 +32,7 @@ public class MenuUtils {
     public static final Item PLUS_ITEM = Items.LIME_STAINED_GLASS_PANE;
     public static final Item MINUS_ITEM = Items.RED_STAINED_GLASS_PANE;
     public static final Item BOOST_CONFIRM_ITEM = Items.GREEN_WOOL;
+    public static final Item BUCKET_ITEM = Items.TURTLE_SPAWN_EGG;
 
     public static ItemStack getConfirmItem() {
         return new ItemBuilder(BOOST_CONFIRM_ITEM)
@@ -93,7 +98,14 @@ public class MenuUtils {
     }
 
     public static ItemStack getBucketItem() {
-        return new ItemBuilder(BUCKET_ITEM)
+        Item item = BUCKET_ITEM;
+
+        if (Platform.isModLoaded("cobbreeding")) {
+            Optional<Item> hopeful = BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse("cobbreeding:manaphy_egg"));
+            item = hopeful.orElse(BUCKET_ITEM);
+        }
+
+        return new ItemBuilder(item)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Spawn Bucket Boosters")
@@ -141,7 +153,17 @@ public class MenuUtils {
     }
 
     public static ItemStack getQueueItem(String name, boolean multiple) {
-        return new ItemBuilder(QUEUE_ITEM)
+
+        Item queueItem;
+        switch (name) {
+            case "Spawn Bucket" -> queueItem = getBucketItem().getItem();
+            case "Catch" -> queueItem = getCatchItem().getItem();
+            case "Experience" -> queueItem = getExperienceItem().getItem();
+            case "Shiny" -> queueItem = getShinyItem().getItem();
+            default -> queueItem = QUEUE_ITEM;
+        }
+
+        return new ItemBuilder(queueItem)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("View " + name + " Queue" + (multiple ? "s" : ""))
