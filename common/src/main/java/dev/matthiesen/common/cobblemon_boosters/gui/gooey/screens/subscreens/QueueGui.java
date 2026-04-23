@@ -13,6 +13,7 @@ import ca.landonjw.gooeylibs2.api.template.slot.TemplateSlotDelegate;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
@@ -60,8 +61,6 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
     }
 
     public Page getPage() {
-        PlaceholderButton placeholder = new PlaceholderButton();
-
         List<Button> buttons = new ArrayList<>();
 
         if (!queuedBoosts.isEmpty()) {
@@ -81,27 +80,12 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
                 }
 
                 Button boostButton = GooeyButton.builder()
-                        .display(
-                                MenuUtils.getQueueEntryBuilder()
-                                    .setCustomName(
-                                            TextUtils.deserializeMC(
-                                                    TextUtils.parse(
-                                                            "<green>%multiplier%x " + boost.getBoostType() + "</green>",
-                                                            boost
-                                                    )
-                                            )
-                                    )
-                                    .addLore(lore)
-                                    .build())
+                        .display(boost.getGUIItem(lore))
                         .build();
 
                 buttons.add(boostButton);
             }
         }
-
-        Button frame = GooeyButton.builder()
-                .display(MenuUtils.getFrameItem())
-                .build();
 
         LinkedPageButton previous = LinkedPageButton.builder()
                 .display(MenuUtils.getNavItem("Previous"))
@@ -114,16 +98,16 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
                 .build();
 
         ChestTemplate template = ChestTemplate.builder(3)
-                .row(0, frame)
-                .row(1, frame)
-                .set(1, 1, placeholder)
-                .set(1, 2, placeholder)
-                .set(1, 3, placeholder)
-                .set(1, 4, placeholder)
-                .set(1, 5, placeholder)
-                .set(1, 6, placeholder)
-                .set(1, 7, placeholder)
-                .row(2, frame)
+                .row(0, Helpers.getFrame())
+                .row(1, Helpers.getFrame())
+                .set(1, 1, Helpers.getPlaceholder())
+                .set(1, 2, Helpers.getPlaceholder())
+                .set(1, 3, Helpers.getPlaceholder())
+                .set(1, 4, Helpers.getPlaceholder())
+                .set(1, 5, Helpers.getPlaceholder())
+                .set(1, 6, Helpers.getPlaceholder())
+                .set(1, 7, Helpers.getPlaceholder())
+                .row(2, Helpers.getFrame())
                 .set(2, 0, previous)
                 .set(2, 4, getInfoButton(1, 1))
                 .set(2, 8, next)

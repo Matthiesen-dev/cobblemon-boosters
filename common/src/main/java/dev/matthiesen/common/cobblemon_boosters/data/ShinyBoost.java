@@ -1,10 +1,14 @@
 package dev.matthiesen.common.cobblemon_boosters.data;
 
+import com.cobblemon.mod.common.CobblemonItems;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.utils.ItemBuilder;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class ShinyBoost implements IBoost {
     public float multiplier;
@@ -83,5 +87,22 @@ public class ShinyBoost implements IBoost {
     @Override
     public String getBoostType() {
         return "Shiny Boost";
+    }
+
+    @Override
+    public ItemStack getGUIItem() {
+        return new ItemBuilder(CobblemonItems.SHINY_STONE)
+                .hideAdditional()
+                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Shiny Boost</green>", this)))
+                .build();
+    }
+
+    @Override
+    public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
+        return new ItemBuilder(CobblemonItems.SHINY_STONE)
+                .hideAdditional()
+                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Shiny Boost</green>", this)))
+                .addLore(lore)
+                .build();
     }
 }

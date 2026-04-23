@@ -7,10 +7,10 @@ import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
-import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.boosters.*;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.BoostBuilderGui;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.BucketBoostBuilderGui;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BaseMenuGuiTemplate;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BoostersGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
@@ -32,7 +32,8 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openBucketGui(ServerPlayer player) {
         String boostType = "Spawn Bucket";
-        new BucketGui(
+        new BoostersGuiTemplate(
+                "<aqua>Spawn Bucket Boosts<reset>",
                 boostType,
                 player,
                 CobblemonBoosters.INSTANCE.activeSpawnBucketBoost,
@@ -69,7 +70,8 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openCatchGUI(ServerPlayer player) {
         String boostType = "Catch";
-        new CatchGui(
+        new BoostersGuiTemplate(
+                "<light_purple>Catch Boosts<reset>",
                 boostType,
                 player,
                 CobblemonBoosters.INSTANCE.activeCatchBoost,
@@ -107,7 +109,8 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openExperienceGUI(ServerPlayer player) {
         String boostType = "Experience";
-        new ExperienceGui(
+        new BoostersGuiTemplate(
+                "<green>Experience Boosts<reset>",
                 boostType,
                 player,
                 CobblemonBoosters.INSTANCE.activeExperienceBoost,
@@ -145,7 +148,8 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openShinyGUI(ServerPlayer player) {
         String boostType = "Shiny";
-        new ShinyGui(
+        new BoostersGuiTemplate(
+                "<gold>Shiny Boosts<reset>",
                 boostType,
                 player,
                 CobblemonBoosters.INSTANCE.activeShinyBoost,

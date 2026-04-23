@@ -2,6 +2,7 @@ package dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils;
 
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
+import ca.landonjw.gooeylibs2.api.button.PlaceholderButton;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 
 import java.util.List;
@@ -25,5 +26,9 @@ public final class Helpers {
         return GooeyButton.builder()
                 .display(MenuUtils.getFrameItem())
                 .build();
+    }
+
+    public static PlaceholderButton getPlaceholder() {
+        return new PlaceholderButton();
     }
 }

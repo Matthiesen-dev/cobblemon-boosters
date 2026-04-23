@@ -10,6 +10,7 @@ import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermission;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Queue;
 import java.util.function.Consumer;
 
 public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
+    public final String guiTitle;
     public final String boostType;
     public final IBoost activeBoost;
     public final Queue<? extends IBoost> queuedBoosts;
@@ -31,6 +33,7 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     public final Consumer<ButtonAction> startOnClick;
 
     public BoostersGuiTemplate(
+            String guiTitle,
             String boostType,
             ServerPlayer player,
             IBoost activeBoost,
@@ -45,6 +48,7 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
             Runnable startOnClick
     ) {
         super(player);
+        this.guiTitle = guiTitle;
         this.boostType = boostType;
         this.activeBoost = activeBoost;
         this.queuedBoosts = queuedBoosts;
@@ -56,6 +60,11 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
         this.statusPermission = statusPermission;
         this.queuePermission = queuePermission;
         this.startOnClick = (startOnClick != null) ? (action) -> startOnClick.run() : null;
+    }
+
+    @Override
+    public Component getTitle() {
+        return TextUtils.deserializeMC(TextUtils.parse(guiTitle));
     }
 
     public Button getStopButton() {

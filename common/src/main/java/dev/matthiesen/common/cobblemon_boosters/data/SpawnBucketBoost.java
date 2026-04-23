@@ -1,10 +1,14 @@
 package dev.matthiesen.common.cobblemon_boosters.data;
 
+import com.cobblemon.mod.common.CobblemonItems;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.utils.ItemBuilder;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.Map;
 
@@ -109,5 +113,22 @@ public class SpawnBucketBoost implements IBoost {
     @Override
     public String getBoostType() {
         return "Spawn Bucket Boost";
+    }
+
+    @Override
+    public ItemStack getGUIItem() {
+        return new ItemBuilder(Items.SPAWNER)
+                .hideAdditional()
+                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%bucket% Spawn Bucket Boost</green>", this)))
+                .build();
+    }
+
+    @Override
+    public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
+        return new ItemBuilder(Items.SPAWNER)
+                .hideAdditional()
+                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%bucket% Spawn Bucket Boost</green>", this)))
+                .addLore(lore)
+                .build();
     }
 }

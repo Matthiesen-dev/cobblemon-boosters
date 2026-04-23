@@ -10,6 +10,7 @@ import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import com.google.common.collect.Lists;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
@@ -36,31 +37,23 @@ public class BaseMenuGuiTemplate implements IGui {
     }
 
     public Page getPage() {
-        PlaceholderButton placeholder = new PlaceholderButton();
-
         List<Button> buttons = getButtons();
 
-        Button frame = GooeyButton.builder()
-                .display(MenuUtils.getFrameItem())
-                .build();
-
         ChestTemplate template = ChestTemplate.builder(3)
-                .row(0, frame)
-                .row(1, frame)
-                .set(1, 1, placeholder)
-                .set(1, 2, placeholder)
-                .set(1, 3, placeholder)
-                .set(1, 4, placeholder)
-                .set(1, 5, placeholder)
-                .set(1, 6, placeholder)
-                .set(1, 7, placeholder)
-                .row(2, frame)
+                .row(0, Helpers.getFrame())
+                .row(1, Helpers.getFrame())
+                .set(1, 1, Helpers.getPlaceholder())
+                .set(1, 2, Helpers.getPlaceholder())
+                .set(1, 3, Helpers.getPlaceholder())
+                .set(1, 4, Helpers.getPlaceholder())
+                .set(1, 5, Helpers.getPlaceholder())
+                .set(1, 6, Helpers.getPlaceholder())
+                .set(1, 7, Helpers.getPlaceholder())
+                .row(2, Helpers.getFrame())
                 .build();
 
         GooeyPage page = PaginationHelper.createPagesFromPlaceholders(template, buttons, null);
-
         page.setTitle(getTitle());
-
         return page;
     }
 

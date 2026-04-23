@@ -10,6 +10,7 @@ import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
@@ -24,7 +25,8 @@ public record CancelConfirmGuiBuilder(
         ServerPlayer player,
         String title,
         Consumer<ButtonAction> yesButtonAction,
-        Consumer<ButtonAction> noButtonAction
+        Consumer<ButtonAction> noButtonAction,
+        Button optionalDetails
 ) implements IGui {
 
     public CancelConfirmGuiBuilder(
@@ -37,7 +39,24 @@ public record CancelConfirmGuiBuilder(
                 player,
                 title,
                 (yesButtonAction != null) ? (action) -> yesButtonAction.run() : null,
-                (noButtonAction != null) ? (action) -> noButtonAction.run() : null
+                (noButtonAction != null) ? (action) -> noButtonAction.run() : null,
+                null
+        );
+    }
+
+    public CancelConfirmGuiBuilder(
+            ServerPlayer player,
+            String title,
+            Runnable yesButtonAction,
+            Runnable noButtonAction,
+            Button optionalDetails
+    ) {
+        this(
+                player,
+                title,
+                (yesButtonAction != null) ? (action) -> yesButtonAction.run() : null,
+                (noButtonAction != null) ? (action) -> noButtonAction.run() : null,
+                optionalDetails
         );
     }
 
@@ -46,39 +65,30 @@ public record CancelConfirmGuiBuilder(
     }
 
     public Page getPage() {
-        PlaceholderButton placeholder = new PlaceholderButton();
-
-        List<Button> buttons = new ArrayList<>();
-
-        buttons.add(
-                GooeyButton.builder()
-                        .display(MenuUtils.getNoItem())
-                        .onClick(noButtonAction)
-                        .build()
-        );
-        buttons.add(
-                GooeyButton.builder()
-                        .display(MenuUtils.getYesItem())
-                        .onClick(yesButtonAction)
-                        .build()
-        );
-
-        Button frame = GooeyButton.builder()
-                .display(MenuUtils.getFrameItem())
+        Button cancelButton = GooeyButton.builder()
+                .display(MenuUtils.getNoItem())
+                .onClick(noButtonAction)
                 .build();
 
-        ChestTemplate template = ChestTemplate.builder(3)
-                .row(0, frame)
-                .row(1, frame)
-                .set(1, 3, placeholder)
-                .set(1, 5, placeholder)
-                .row(2, frame)
+        Button confirmButton = GooeyButton.builder()
+                .display(MenuUtils.getYesItem())
+                .onClick(yesButtonAction)
                 .build();
 
-        GooeyPage page = PaginationHelper.createPagesFromPlaceholders(template, buttons, null);
+        ChestTemplate.Builder builder = ChestTemplate.builder(3)
+                .row(0, Helpers.getFrame())
+                .row(1, Helpers.getFrame())
+                .set(1, 3, cancelButton)
+                .set(1, 5, confirmButton)
+                .row(2, Helpers.getFrame());
 
+        if (optionalDetails != null) {
+            builder = builder.set(1, 4, optionalDetails);
+        }
+
+        ChestTemplate template = builder.build();
+        GooeyPage page = GooeyPage.builder().template(template).build();
         page.setTitle(getTitle());
-
         return page;
     }
 

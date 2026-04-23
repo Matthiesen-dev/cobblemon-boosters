@@ -9,6 +9,7 @@ import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class BoostBuilderGui {
+public class BoostBuilderGui implements IGui {
     public final ServerPlayer player;
     public final String boostType;
     public final Class<? extends IBoost> boostClass;
@@ -209,7 +210,7 @@ public class BoostBuilderGui {
         }
 
         return GooeyButton.builder()
-                .display(MenuUtils.getQueueEntryBuilder()
+                .display(MenuUtils.getDetailsItemBuilder()
                         .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<gold>Details")))
                         .addLore(loreArray)
                         .build()
@@ -326,7 +327,8 @@ public class BoostBuilderGui {
                                 openUpdatedPage(this);
                             }
                         },
-                        () -> openUpdatedPage(this)
+                        () -> openUpdatedPage(this),
+                        getDetailsButton()
                 ).open())
                 .build();
     }

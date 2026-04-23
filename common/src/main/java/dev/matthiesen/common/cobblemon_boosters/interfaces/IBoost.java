@@ -2,6 +2,7 @@ package dev.matthiesen.common.cobblemon_boosters.interfaces;
 
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.minecraft.world.item.ItemStack;
 
 public interface IBoost {
 	float getMultiplier();
@@ -18,4 +19,7 @@ public interface IBoost {
 	Component getBossBarText();
 
 	String getBoostType();
+
+	ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore);
+	ItemStack getGUIItem();
 }

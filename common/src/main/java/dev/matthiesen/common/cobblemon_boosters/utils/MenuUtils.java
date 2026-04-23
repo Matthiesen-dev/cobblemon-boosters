@@ -52,6 +52,17 @@ public class MenuUtils {
                 );
     }
 
+    public static ItemBuilder getDetailsItemBuilder() {
+        return new ItemBuilder(STATUS_ITEM)
+                .hideAdditional()
+                .setCustomName(
+                        Component.literal("View Boost Details")
+                                .withStyle(
+                                        style -> style.withColor(ChatFormatting.AQUA)
+                                )
+                );
+    }
+
     public static ItemStack getPlusItem() {
         return new ItemBuilder(PLUS_ITEM)
                 .hideAdditional()
