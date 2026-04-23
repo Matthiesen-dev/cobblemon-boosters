@@ -1,6 +1,5 @@
 package dev.matthiesen.common.cobblemon_boosters.data;
 
-import com.cobblemon.mod.common.CobblemonItems;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.utils.ItemBuilder;
