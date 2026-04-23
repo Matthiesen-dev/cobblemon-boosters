@@ -6,9 +6,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 
 public class CobblemonBoostersFabric implements ModInitializer {
     CobblemonBoosters core = new CobblemonBoosters();
@@ -24,9 +22,6 @@ public class CobblemonBoostersFabric implements ModInitializer {
         });
         ServerLifecycleEvents.SERVER_STARTED.register(server -> core.onServerStarted());
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> core.onShutdown());
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
-            core.onEndTick();
-        });
+        ServerTickEvents.END_SERVER_TICK.register(server -> core.onEndTick());
     }
-
 }

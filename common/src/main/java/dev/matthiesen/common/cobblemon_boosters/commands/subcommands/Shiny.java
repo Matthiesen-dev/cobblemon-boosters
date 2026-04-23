@@ -20,6 +20,7 @@ public class Shiny implements ISubCommand {
         return Util.newBasicMultiplierBoosterCommand(
                 "shiny",
                 CobblemonBoosters.INSTANCE.permissions.SHINY_PERMISSION,
+                this::openGUI,
                 this::startCommand,
                 maxMultiplier(),
                 CobblemonBoosters.INSTANCE.permissions.SHINY_START_PERMISSION,
@@ -32,6 +33,14 @@ public class Shiny implements ISubCommand {
 
     public static Float maxMultiplier() {
         return Cobblemon.config.getShinyRate();
+    }
+
+    public int openGUI(CommandContext<CommandSourceStack> ctx) {
+        ServerPlayer player = ctx.getSource().getPlayer();
+        if (player != null) {
+            CobblemonBoosters.INSTANCE.guiAdapter.openShinyBoosterGUI(player);
+        }
+        return 1;
     }
 
     public int startCommand(CommandContext<CommandSourceStack> ctx) {

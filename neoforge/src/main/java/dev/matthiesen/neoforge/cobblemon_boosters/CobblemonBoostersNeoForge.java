@@ -1,16 +1,13 @@
-package dev.matthiesen.forge.cobblemon_boosters;
+package dev.matthiesen.neoforge.cobblemon_boosters;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -20,7 +17,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 public class CobblemonBoostersNeoForge {
     CobblemonBoosters core = new CobblemonBoosters();
 
-    public CobblemonBoostersNeoForge(IEventBus modBus) {
+    public CobblemonBoostersNeoForge() {
         Constants.createInfoLog("Loading for NeoForge Mod Loader");
         core.initialize();
         NeoForge.EVENT_BUS.register(this);

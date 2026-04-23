@@ -30,7 +30,7 @@ allprojects {
             name = "central-snapshots"
             mavenContent { snapshotsOnly() }
         }
-        maven("https://maven.impactdev.net/repository/development")
+        maven("https://maven.impactdev.net/repository/development/")
     }
 
     tasks {

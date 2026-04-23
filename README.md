@@ -12,6 +12,10 @@ chances of finding Shiny Pokemon, or increases the catch rate!
 ## Requirements
 - [Cobblemon 1.7.3+1.21.1](https://www.modrinth.com/mod/cobblemon)
 - [Adventure API for 1.21.1](https://modrinth.com/mod/adventure-platform-mod)
+- [Architectury API for 1.21.1](https://modrinth.com/mod/architectury-api)
+
+### Optional Dependencies
+- [GooeyLibs 3.1.1-1.21.x](https://modrinth.com/mod/gooeylibs) - Used for optional GUIs
 
 ## Configuration
 
@@ -31,7 +35,7 @@ your active boosts between restarts. And you **will not be able to directly edit
   - Requires the `cobblemon_boosters.command.boosters.reload` permission (Defaults to OP status)
 - `/boosters clear-queues` - Clears all active booster queues.
   - Requires the `cobblemon_boosters.command.boosters.clear_queues` permission. (Defaults to OP status)
-- `/boosters check-queues` - Checks the status of all active booster queues.
+- `/boosters check-queues <booster>` - Checks the status of a booster queue.
   - Requires the `cobblemon_boosters.command.boosters.check_queues` permission. (Defaults to Any User)
 - `/boosters catch` - The Root command for catch boosters.
   - `/boosters catch start <multiplier> <duration> <unit>` - Starts a catch booster with the specified multiplier, duration, and time unit.

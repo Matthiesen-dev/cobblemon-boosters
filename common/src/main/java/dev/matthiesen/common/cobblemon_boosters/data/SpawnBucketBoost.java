@@ -2,9 +2,13 @@ package dev.matthiesen.common.cobblemon_boosters.data;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.utils.ItemBuilder;
+import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.Map;
 
@@ -21,6 +25,8 @@ public class SpawnBucketBoost implements IBoost {
         this.timeRemaining = duration * 20L;
         this.bossBar = createBossBar();
     }
+
+    public SpawnBucketBoost() {}
 
     @Override
     public float getMultiplier() {
@@ -45,6 +51,22 @@ public class SpawnBucketBoost implements IBoost {
     public SpawnBucketBoost setBucket(String bucket) {
         this.bucket = bucket;
         return this;
+    }
+
+    public String getBucket() {
+        return this.bucket;
+    }
+
+    @Override
+    public void setMultiplier(float multiplier) {
+        this.multiplier = multiplier;
+    }
+
+    @Override
+    public void setDuration(int duration) {
+        this.duration = duration;
+        this.timeRemaining = duration * 20L;
+        this.bossBar = createBossBar();
     }
 
     public String getBucketDisplayName() {
@@ -86,5 +108,27 @@ public class SpawnBucketBoost implements IBoost {
                         this
                 )
         );
+    }
+
+    @Override
+    public String getBoostType() {
+        return "Spawn Bucket Boost";
+    }
+
+    @Override
+    public ItemStack getGUIItem() {
+        return new ItemBuilder(MenuUtils.getBucketItem())
+                .hideAdditional()
+                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%bucket% Spawn Bucket Boost</green>", this)))
+                .build();
+    }
+
+    @Override
+    public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
+        return new ItemBuilder(MenuUtils.getBucketItem())
+                .hideAdditional()
+                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%bucket% Spawn Bucket Boost</green>", this)))
+                .addLore(lore)
+                .build();
     }
 }
