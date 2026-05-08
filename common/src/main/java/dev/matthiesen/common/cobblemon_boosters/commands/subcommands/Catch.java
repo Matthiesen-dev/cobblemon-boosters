@@ -19,6 +19,7 @@ public class Catch implements ISubCommand {
         return Util.newBasicMultiplierBoosterCommand(
                 "catch",
                 CobblemonBoosters.INSTANCE.permissions.CATCH_PERMISSION,
+                this::openGUI,
                 this::startCommand,
                 maxMultiplier,
                 CobblemonBoosters.INSTANCE.permissions.CATCH_START_PERMISSION,
@@ -30,6 +31,14 @@ public class Catch implements ISubCommand {
     }
 
     public static final Float maxMultiplier = 100F;
+
+    public int openGUI(CommandContext<CommandSourceStack> ctx) {
+        ServerPlayer player = ctx.getSource().getPlayer();
+        if (player != null) {
+            CobblemonBoosters.INSTANCE.guiAdapter.openCatchBoosterGUI(player);
+        }
+        return 1;
+    }
 
     public int startCommand(CommandContext<CommandSourceStack> ctx) {
         float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");

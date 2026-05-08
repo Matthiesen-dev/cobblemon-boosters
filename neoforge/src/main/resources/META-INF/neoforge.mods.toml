@@ -33,3 +33,10 @@ mandatory = true
 versionRange = "[1.7.3,)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "gooeylibs"
+mandatory = false
+versionRange = "[3.1.1,)"
+ordering = "AFTER"
+side = "BOTH"

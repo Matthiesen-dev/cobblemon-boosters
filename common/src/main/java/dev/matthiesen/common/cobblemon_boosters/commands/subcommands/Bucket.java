@@ -18,6 +18,7 @@ public class Bucket implements ISubCommand {
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         return Util.newBucketBoosterCommand(
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_PERMISSION,
+                this::openGUI,
                 this::startCommand,
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_START_PERMISSION,
                 this::stopCommand,
@@ -25,6 +26,14 @@ public class Bucket implements ISubCommand {
                 this::statusCommand,
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_STATUS_PERMISSION
         );
+    }
+
+    public int openGUI(CommandContext<CommandSourceStack> ctx) {
+        ServerPlayer player = ctx.getSource().getPlayer();
+        if (player != null) {
+            CobblemonBoosters.INSTANCE.guiAdapter.openBucketBoosterGUI(player);
+        }
+        return 1;
     }
 
     public int startCommand(CommandContext<CommandSourceStack> ctx) {

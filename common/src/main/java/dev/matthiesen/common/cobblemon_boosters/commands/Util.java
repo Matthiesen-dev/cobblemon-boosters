@@ -9,8 +9,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermission;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.permissions.*;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -97,6 +96,7 @@ public class Util {
     public static LiteralArgumentBuilder<CommandSourceStack> newBasicMultiplierBoosterCommand(
             String rootCommandName,
             ModPermission rootPermission,
+            Command<CommandSourceStack> gui,
             Command<CommandSourceStack> startCommand,
             float maxMultiplier,
             ModPermission startPermission,
@@ -107,6 +107,7 @@ public class Util {
     ) {
         return Commands.literal(rootCommandName)
                 .requires(src -> ModPermissions.checkPermission(src, rootPermission))
+                .executes(gui)
                 .then(Commands.literal("start")
                         .requires(src -> ModPermissions.checkPermission(src, startPermission))
                         .then(Commands.argument("multiplier", FloatArgumentType.floatArg(1, maxMultiplier))
@@ -125,6 +126,7 @@ public class Util {
 
     public static LiteralArgumentBuilder<CommandSourceStack> newBucketBoosterCommand(
             ModPermission rootPermission,
+            Command<CommandSourceStack> gui,
             Command<CommandSourceStack> startCommand,
             ModPermission startPermission,
             Command<CommandSourceStack> stopCommand,
@@ -134,6 +136,7 @@ public class Util {
     ) {
         return Commands.literal("bucket")
                 .requires(src -> ModPermissions.checkPermission(src, rootPermission))
+                .executes(gui)
                 .then(Commands.literal("start")
                         .requires(src -> ModPermissions.checkPermission(src, startPermission))
                         .then(Commands.argument("bucket", StringArgumentType.string())

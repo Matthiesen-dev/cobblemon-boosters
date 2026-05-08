@@ -9,17 +9,15 @@ import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.mojang.brigadier.CommandDispatcher;
+import dev.architectury.platform.Platform;
 import dev.matthiesen.common.cobblemon_boosters.commands.CommandRegistry;
-import dev.matthiesen.common.cobblemon_boosters.config.ConfigManager;
-import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
-import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
+import dev.matthiesen.common.cobblemon_boosters.config.*;
+import dev.matthiesen.common.cobblemon_boosters.data.*;
+import dev.matthiesen.common.cobblemon_boosters.gui.FallbackGUIAdapter;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.GooeyGUIAdapter;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
-import dev.matthiesen.common.cobblemon_boosters.utils.DiscordWebhookService;
-import dev.matthiesen.common.cobblemon_boosters.utils.SpawnBucketOverrideSelector;
-import dev.matthiesen.common.cobblemon_boosters.utils.TickManager;
+import dev.matthiesen.common.cobblemon_boosters.utils.*;
 import kotlin.Unit;
 import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.commands.CommandBuildContext;
@@ -32,6 +30,7 @@ import java.util.Queue;
 
 public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
+    public IGUIAdapter guiAdapter;
     public ModPermissions permissions;
     public ModConfig config;
     private volatile MinecraftServerAudiences adventure;
@@ -71,6 +70,11 @@ public class CobblemonBoosters {
         Constants.createInfoLog("Initialized");
         reload(false);
         this.permissions = new ModPermissions();
+        if (Platform.isModLoaded("gooeylibs")) {
+            this.guiAdapter = new GooeyGUIAdapter();
+        } else {
+            this.guiAdapter = new FallbackGUIAdapter();
+        }
     }
 
     public void onStartup(MinecraftServer server) {

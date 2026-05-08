@@ -23,30 +23,30 @@ val shadowCommon: Configuration by configurations.creating
 dependencies {
     minecraft("com.mojang:minecraft:${property("minecraft_version")}")
     mappings(loom.officialMojangMappings())
+
     modImplementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
-    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
     modImplementation(fabricApi.module("fabric-command-api-v2", property("fabric_api_version").toString()))
     modImplementation(fabricApi.module("fabric-lifecycle-events-v1", property("fabric_api_version").toString()))
     modImplementation(fabricApi.module("fabric-networking-api-v1", property("fabric_api_version").toString()))
-
-    //needed for cobblemon
     modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin")}")
     modImplementation("com.cobblemon:fabric:${property("cobblemon_version")}") { isTransitive = false }
+    modImplementation(include("net.kyori:adventure-text-minimessage:4.17.0")!!)
+    modImplementation(include("net.kyori:adventure-platform-fabric:5.14.1")!!)
 
-    implementation(project(":common", configuration = "namedElements"))
-    "developmentFabric"(project(":common", configuration = "namedElements"))
-    shadowCommon(project(":common", configuration = "transformProductionFabric"))
+    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
+    modRuntimeOnly("dev.architectury:architectury-fabric:${property("architectury_version")}") { isTransitive = false }
+    modRuntimeOnly("ca.landonjw.gooeylibs:fabric:${property("gooeylibs_version")}")
 
     implementation("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
     shadowCommon("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}") {
         isTransitive = true
     }
+    implementation(project(":common", configuration = "namedElements"))
+    "developmentFabric"(project(":common", configuration = "namedElements"))
+    shadowCommon(project(":common", configuration = "transformProductionFabric"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
-
-    modImplementation(include("net.kyori:adventure-text-minimessage:4.17.0")!!)
-    modImplementation(include("net.kyori:adventure-platform-fabric:5.14.1")!!)
 }
 
 tasks {

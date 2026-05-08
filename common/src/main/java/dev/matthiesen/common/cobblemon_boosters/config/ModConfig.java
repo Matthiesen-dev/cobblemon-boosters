@@ -6,10 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import com.n1netails.n1netails.discord.DiscordColor;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
-import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
+import dev.matthiesen.common.cobblemon_boosters.data.*;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import net.kyori.adventure.bossbar.BossBar;
 

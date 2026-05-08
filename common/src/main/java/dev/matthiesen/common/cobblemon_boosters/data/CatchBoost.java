@@ -2,9 +2,12 @@ package dev.matthiesen.common.cobblemon_boosters.data;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.utils.ItemBuilder;
+import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.minecraft.world.item.ItemStack;
 
 public class CatchBoost implements IBoost {
     public float multiplier;
@@ -22,6 +25,18 @@ public class CatchBoost implements IBoost {
     @Override
     public float getMultiplier() {
         return this.multiplier;
+    }
+
+    @Override
+    public void setMultiplier(float multiplier) {
+        this.multiplier = multiplier;
+    }
+
+    @Override
+    public void setDuration(int duration) {
+        this.duration = duration;
+        this.timeRemaining = duration * 20L;
+        this.bossBar = createBossBar();
     }
 
     @Override
@@ -64,5 +79,27 @@ public class CatchBoost implements IBoost {
                         this
                 )
         );
+    }
+
+    @Override
+    public String getBoostType() {
+        return "Catch Boost";
+    }
+
+    @Override
+    public ItemStack getGUIItem() {
+        return new ItemBuilder(MenuUtils.CATCH_ITEM)
+                .hideAdditional()
+                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Catch Boost</green>", this)))
+                .build();
+    }
+
+    @Override
+    public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
+        return new ItemBuilder(MenuUtils.CATCH_ITEM)
+                .hideAdditional()
+                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Catch Boost</green>", this)))
+                .addLore(lore)
+                .build();
     }
 }

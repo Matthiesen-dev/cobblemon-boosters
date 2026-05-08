@@ -31,28 +31,29 @@ dependencies {
     mappings(loom.officialMojangMappings())
     neoForge("net.neoforged:neoforge:${property("neoforge_version")}")
 
+    implementation("net.kyori:adventure-api:${property("adventure_version")}")
+    implementation("net.kyori:adventure-text-serializer-legacy:${property("adventure_version")}")
+    modImplementation(include("net.kyori:adventure-platform-neoforge:${property("adventure_text_version")}")!!)
+    modImplementation("dev.architectury:architectury-neoforge:${property("architectury_version")}")
     modImplementation("com.cobblemon:neoforge:${property("cobblemon_version")}") { isTransitive = false }
     //Needed for cobblemon
     forgeRuntimeLibrary("thedarkcolour:kotlinforforge-neoforge:${property("kotlin_for_forge_version")}") {
         exclude("net.neoforged.fancymodloader", "loader")
     }
 
+    modRuntimeOnly("ca.landonjw.gooeylibs:neoforge:${property("gooeylibs_version")}")
+
+    implementation("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
+    shadowBundle("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
+    forgeRuntimeLibrary("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
     implementation(project(":common", configuration = "namedElements"))
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 
-    implementation("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
-    shadowBundle("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
-    forgeRuntimeLibrary("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
-
     testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
-
-    implementation("net.kyori:adventure-api:${property("adventure_version")}")
-    implementation("net.kyori:adventure-text-serializer-legacy:${property("adventure_version")}")
-    modImplementation(include("net.kyori:adventure-platform-neoforge:${property("adventure_text_version")}")!!)
 }
 
 tasks {
