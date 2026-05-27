@@ -1,0 +1,70 @@
+[versions]
+kotlin = "2.2.20"
+shadow = "9.3.1"
+architectury-loom = "1.11-SNAPSHOT"
+architectury-plugin = "3.4-SNAPSHOT"
+minecraft = "1.21.1"
+fabric-loader = "0.17.2"
+fabric-api = "0.116.6+1.21.1"
+fabric-kotlin = "1.13.6+kotlin.2.2.20"
+neoforge = "21.1.182"
+kotlin-for-forge = "5.10.0"
+architectury = "13.0.8"
+cobblemon = "1.7.3+1.21.1"
+gooeylibs = "3.1.1-1.21.x"
+adventure = "4.17.0"
+adventure-text = "6.0.0"
+adventure-fabric = "5.14.1"
+discord-webhook-client = "0.3.0"
+junit = "5.1.0"
+publish = "0.35.0"
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
+architectury-plugin = { id = "architectury-plugin", version.ref = "architectury-plugin" }
+
+[libraries]
+publish = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "publish" }
+kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+architectury-loom = { group = "dev.architectury", name = "architectury-loom", version.ref = "architectury-loom" }
+architectury-plugin = { group = "architectury-plugin", name = "architectury-plugin.gradle.plugin", version.ref = "architectury-plugin" }
+shadow-gradle = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
+minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
+minecraft-net = { group = "net.minecraft", name = "minecraft", version.ref = "minecraft" }
+fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric-loader" }
+fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric-api" }
+fabric-language-kotlin = { group = "net.fabricmc", name = "fabric-language-kotlin", version.ref = "fabric-kotlin" }
+neoforge = { group = "net.neoforged", name = "neoforge", version.ref = "neoforge" }
+kotlinforforge = { group = "thedarkcolour", name = "kotlinforforge-neoforge", version.ref = "kotlin-for-forge" }
+architectury-common = { group = "dev.architectury", name = "architectury", version.ref = "architectury" }
+architectury-fabric = { group = "dev.architectury", name = "architectury-fabric", version.ref = "architectury" }
+architectury-neoforge = { group = "dev.architectury", name = "architectury-neoforge", version.ref = "architectury" }
+cobblemon-common = { group = "com.cobblemon", name = "mod", version.ref = "cobblemon" }
+cobblemon-fabric = { group = "com.cobblemon", name = "fabric", version.ref = "cobblemon" }
+cobblemon-neoforge = { group = "com.cobblemon", name = "neoforge", version.ref = "cobblemon" }
+gooeylibs-api = { group = "ca.landonjw.gooeylibs", name = "api", version.ref = "gooeylibs" }
+gooeylibs-fabric = { group = "ca.landonjw.gooeylibs", name = "fabric", version.ref = "gooeylibs" }
+gooeylibs-neoforge = { group = "ca.landonjw.gooeylibs", name = "neoforge", version.ref = "gooeylibs" }
+adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
+adventure-text-minimessage = { group = "net.kyori", name = "adventure-text-minimessage", version.ref = "adventure" }
+adventure-platform-fabric = { group = "net.kyori", name = "adventure-platform-fabric", version.ref = "adventure-fabric" }
+adventure-platform-mod-shared = { group = "net.kyori", name = "adventure-platform-mod-shared", version.ref = "adventure-text" }
+adventure-platform-neoforge = { group = "net.kyori", name = "adventure-platform-neoforge", version.ref = "adventure-text" }
+adventure-text-serializer-legacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure" }
+discord-webhook-client = { group = "com.n1netails", name = "n1netails-discord-webhook-client", version.ref = "discord-webhook-client" }
+junit-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
+junit-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit" }
+
+[bundles]
+commonImplementation = ["adventure-platform-mod-shared", "discord-webhook-client"]
+commonModImplementation = ["architectury-common", "cobblemon-common", "gooeylibs-api"]
+fabricModImplementation = ["fabric-loader", "fabric-api", "fabric-language-kotlin", "cobblemon-fabric", "adventure-text-minimessage", "adventure-platform-fabric"]
+fabricModRuntimeOnly = ["gooeylibs-fabric"]
+neoforgeModImplementation = ["adventure-api", "adventure-text-serializer-legacy", "adventure-platform-neoforge", "architectury-neoforge", "cobblemon-neoforge", "kotlinforforge"]
+neoforgeModRuntimeOnly = ["gooeylibs-neoforge"]
+
+
+
+
+

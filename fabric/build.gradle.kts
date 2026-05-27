@@ -2,6 +2,7 @@ plugins {
     id("com.gradleup.shadow")
     id("dev.architectury.loom")
     id("architectury-plugin")
+    id("boosters.shadow-platform-conventions")
 }
 
 architectury {
@@ -9,84 +10,47 @@ architectury {
     fabric()
 }
 
-loom {
-    enableTransitiveAccessWideners.set(true)
-    silentMojangMappingsLicense()
-
-    mixin {
-        defaultRefmapName.set("mixins.${project.name}.refmap.json")
-    }
-}
-
 val shadowCommon: Configuration by configurations.creating
 
 dependencies {
-    minecraft("com.mojang:minecraft:${property("minecraft_version")}")
+    minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
 
-    modImplementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
-    modImplementation(fabricApi.module("fabric-command-api-v2", property("fabric_api_version").toString()))
-    modImplementation(fabricApi.module("fabric-lifecycle-events-v1", property("fabric_api_version").toString()))
-    modImplementation(fabricApi.module("fabric-networking-api-v1", property("fabric_api_version").toString()))
-    modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin")}")
-    modImplementation("com.cobblemon:fabric:${property("cobblemon_version")}") { isTransitive = false }
-    modImplementation(include("net.kyori:adventure-text-minimessage:4.17.0")!!)
-    modImplementation(include("net.kyori:adventure-platform-fabric:5.14.1")!!)
+    add("modImplementation", libs.fabric.loader)
+    add("modImplementation", fabricApi.module("fabric-command-api-v2", "0.116.6+1.21.1"))
+    add("modImplementation", fabricApi.module("fabric-lifecycle-events-v1", "0.116.6+1.21.1"))
+    add("modImplementation", fabricApi.module("fabric-networking-api-v1", "0.116.6+1.21.1"))
+    add("modImplementation", libs.fabric.language.kotlin)
+    libs.bundles.fabricModImplementation.get().forEach { dependency ->
+        modImplementation(dependency.copy()) { isTransitive = false }
+    }
+    add("modImplementation", include("net.kyori:adventure-text-minimessage:4.17.0")!!)
+    add("modImplementation", include("net.kyori:adventure-platform-fabric:5.14.1")!!)
 
-    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
-    modRuntimeOnly("dev.architectury:architectury-fabric:${property("architectury_version")}") { isTransitive = false }
-    modRuntimeOnly("ca.landonjw.gooeylibs:fabric:${property("gooeylibs_version")}")
+    add("modRuntimeOnly", libs.fabric.api)
+    add("modRuntimeOnly", "dev.architectury:architectury-fabric:13.0.8") { isTransitive = false }
+    libs.bundles.fabricModRuntimeOnly.get().forEach { dependency ->
+        modRuntimeOnly(dependency)
+    }
 
-    implementation("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
-    shadowCommon("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}") {
+    implementation(libs.discord.webhook.client)
+    shadowCommon(libs.discord.webhook.client) {
         isTransitive = true
     }
+
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
     shadowCommon(project(":common", configuration = "transformProductionFabric"))
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 }
 
 tasks {
-    test {
-        useJUnitPlatform()
-    }
-
     processResources {
-        inputs.property("mod_id", project.property("mod_id").toString())
-        inputs.property("version", project.version)
-
         filesMatching("fabric.mod.json") {
             expand(project.properties)
         }
-
-    }
-
-    jar {
-        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
-        archiveClassifier.set("dev-slim")
     }
 
     shadowJar {
-        archiveClassifier.set("dev-shadow")
-        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
         configurations = listOf(shadowCommon)
-    }
-
-    remapJar {
-        dependsOn(shadowJar)
-        inputFile.set(shadowJar.flatMap { it.archiveFile })
-        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
-        archiveVersion.set("${rootProject.version}")
-    }
-
-    remapSourcesJar {
-        dependsOn(shadowJar)
-        inputFile.set(shadowJar.flatMap { it.archiveFile })
-        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
-        archiveVersion.set("${project.version}")
-        archiveClassifier.set("sources")
     }
 }
