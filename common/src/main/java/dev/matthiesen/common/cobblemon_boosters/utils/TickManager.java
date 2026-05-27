@@ -3,6 +3,8 @@ package dev.matthiesen.common.cobblemon_boosters.utils;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import net.minecraft.server.MinecraftServer;
 
 import java.util.Queue;
 import java.util.function.Consumer;
@@ -18,7 +20,7 @@ public class TickManager {
         if (activeBoost == null) return;
         decrementBoost(activeBoost);
         if (activeBoost.getTimeRemaining() > 0) return;
-        CobblemonBoosters.INSTANCE.getAdventure().all().hideBossBar(activeBoost.getBossBar());
+        activeBoost.getBossBar().hideBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
         CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
                 boostEndEmbed,
                 activeBoost
@@ -26,7 +28,7 @@ public class TickManager {
         T nextBoost = queue.poll();
         setActiveBoost.accept(nextBoost);
         if (nextBoost != null) {
-            CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(nextBoost.getBossBar());
+            nextBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
                     boostStartEmbed,
                     nextBoost
@@ -94,7 +96,13 @@ public class TickManager {
         if (total > 1F)
             total = 1F;
 
-        boost.getBossBar().progress(total);
-        boost.getBossBar().name(boost.getBossBarText());
+        boost.getBossBar().updateProgress(total);
+        boost.getBossBar().setName(boost.getBossBarText());
+
+        // if server tick is multiple of 20
+        MinecraftServer server = MatthiesenLibApi.getMinecraftServer();
+        if (server.getTickCount() % 20 == 0) {
+            boost.getBossBar().verifyPlayerList(server.getPlayerList());
+        }
     }
 }

@@ -64,7 +64,7 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserializeMC(TextUtils.parse(guiTitle));
+        return TextUtils.deserialize(TextUtils.parse(guiTitle));
     }
 
     public Button getStopButton() {
@@ -76,10 +76,10 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
                         () -> {
                             if (activeBoost != null) {
                                 activeBoost.setTimeRemaining(1);
-                                player.sendSystemMessage(TextUtils.deserializeMC(TextUtils.parse(stopBoostMsg)));
+                                player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(stopBoostMsg)));
                                 close();
                             } else {
-                                player.sendSystemMessage(TextUtils.deserializeMC(TextUtils.parse(noActiveBoost)));
+                                player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(noActiveBoost)));
                                 close();
                             }
                         },
@@ -93,10 +93,10 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
                 .display(MenuUtils.getStatusItem(activeBoost != null))
                 .onClick(() -> {
                     if (activeBoost != null) {
-                        player.sendSystemMessage(TextUtils.deserializeMC(TextUtils.parse(boostInfo, activeBoost)));
+                        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(boostInfo, activeBoost)));
                         close();
                     } else {
-                        player.sendSystemMessage(TextUtils.deserializeMC(TextUtils.parse(noActiveBoost)));
+                        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(noActiveBoost)));
                         close();
                     }
                 })

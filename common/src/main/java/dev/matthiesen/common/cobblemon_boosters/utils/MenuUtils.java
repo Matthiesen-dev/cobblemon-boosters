@@ -1,7 +1,7 @@
 package dev.matthiesen.common.cobblemon_boosters.utils;
 
 import com.cobblemon.mod.common.CobblemonItems;
-import dev.architectury.platform.Platform;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -100,7 +100,7 @@ public class MenuUtils {
     public static ItemStack getBucketItem() {
         Item item = BUCKET_ITEM;
 
-        if (Platform.isModLoaded("cobbreeding")) {
+        if (MatthiesenLibApi.isModLoaded("cobbreeding")) {
             Optional<Item> hopeful = BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse("cobbreeding:manaphy_egg"));
             item = hopeful.orElse(BUCKET_ITEM);
         }

@@ -24,7 +24,7 @@ public class BaseMenuGuiTemplate implements IGui {
     }
 
     public Component getTitle() {
-        return TextUtils.deserializeMC(
+        return TextUtils.deserialize(
                 TextUtils.parse("<gold>Cobblemon Boosters<reset>")
         );
     }
@@ -66,6 +66,6 @@ public class BaseMenuGuiTemplate implements IGui {
 
     @Override
     public void sendPlayerMessage(String rawMessage) {
-        CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
+        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
     }
 }

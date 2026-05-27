@@ -24,8 +24,6 @@ dependencies {
     libs.bundles.fabricModImplementation.get().forEach { dependency ->
         modImplementation(dependency.copy()) { isTransitive = false }
     }
-    add("modImplementation", include("net.kyori:adventure-text-minimessage:4.17.0")!!)
-    add("modImplementation", include("net.kyori:adventure-platform-fabric:5.14.1")!!)
 
     add("modRuntimeOnly", libs.fabric.api)
     add("modRuntimeOnly", "dev.architectury:architectury-fabric:13.0.8") { isTransitive = false }

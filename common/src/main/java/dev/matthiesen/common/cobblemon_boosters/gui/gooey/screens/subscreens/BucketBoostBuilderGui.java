@@ -6,7 +6,6 @@ import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
-import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
@@ -122,7 +121,7 @@ public class BucketBoostBuilderGui implements IGui {
     }
 
     public Component getTitle() {
-        return TextUtils.deserializeMC(
+        return TextUtils.deserialize(
                 TextUtils.parse("Boost Builder")
         );
     }
@@ -134,9 +133,9 @@ public class BucketBoostBuilderGui implements IGui {
         List<Component> lore = new ArrayList<>();
 
         if (value != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Current: <white>" + value)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Current: <white>" + value)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Current: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Current: <red>Not set")));
         }
 
         Component[] loreArray = new Component[lore.size()];
@@ -148,7 +147,7 @@ public class BucketBoostBuilderGui implements IGui {
 
         return GooeyButton.builder()
                 .display(MenuUtils.getQueueEntryBuilder()
-                        .setCustomName(TextUtils.deserializeMC(TextUtils.parse(labelToColor.get(label) + label)))
+                        .setCustomName(TextUtils.deserialize(TextUtils.parse(labelToColor.get(label) + label)))
                         .addLore(loreArray)
                         .setEnchanted(isActive)
                         .build()
@@ -195,30 +194,30 @@ public class BucketBoostBuilderGui implements IGui {
     public Button getDetailsButton() {
         List<Component> lore = new ArrayList<>();
 
-        lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Boost Type: <white>" + boostType)));
+        lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Boost Type: <white>" + boostType)));
 
         if (boostBuilder.bucket != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Bucket: <white>" + boostBuilder.bucket)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Bucket: <white>" + boostBuilder.bucket)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Bucket: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Bucket: <red>Not set")));
         }
 
         if (boostBuilder.multiplier != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Multiplier: <white>" + boostBuilder.multiplier)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Multiplier: <white>" + boostBuilder.multiplier)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Multiplier: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Multiplier: <red>Not set")));
         }
 
         if (boostBuilder.duration != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Duration: <white>" + boostBuilder.duration)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Duration: <white>" + boostBuilder.duration)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Duration: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Duration: <red>Not set")));
         }
 
         if (boostBuilder.unit != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Unit: <white>" + boostBuilder.unit)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Unit: <white>" + boostBuilder.unit)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Unit: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("<gray>Unit: <red>Not set")));
         }
 
         Component[] loreArray = new Component[lore.size()];
@@ -228,7 +227,7 @@ public class BucketBoostBuilderGui implements IGui {
 
         return GooeyButton.builder()
                 .display(MenuUtils.getDetailsItemBuilder()
-                        .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<gold>Details")))
+                        .setCustomName(TextUtils.deserialize(TextUtils.parse("<gold>Details")))
                         .addLore(loreArray)
                         .build()
                 )
@@ -402,6 +401,6 @@ public class BucketBoostBuilderGui implements IGui {
     }
 
     public void sendPlayerMessage(String rawMessage) {
-        CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
+        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
     }
 }

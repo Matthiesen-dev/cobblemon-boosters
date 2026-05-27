@@ -4,20 +4,13 @@ import com.cobblemon.mod.common.Cobblemon;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.minecraft.network.chat.Component;
 
 import java.time.Instant;
 
 public class TextUtils {
-    public static net.minecraft.network.chat.Component deserializeMC(String text) {
-        return CobblemonBoosters.INSTANCE.getAdventure().asNative(
-                MiniMessage.miniMessage().deserialize("<!i>" + text)
-        );
-    }
-
     public static Component deserialize(String text) {
-        return CobblemonBoosters.INSTANCE.getAdventure().asAdventure(deserializeMC(text));
+        return Component.literal(text);
     }
 
     public static String getCurrentTimestampForDiscordEmbed() {

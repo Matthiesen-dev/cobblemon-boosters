@@ -8,7 +8,6 @@ import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
 
 public class Reload implements ISubCommand {
     @Override
@@ -23,8 +22,7 @@ public class Reload implements ISubCommand {
 
     public int cmd(CommandContext<CommandSourceStack> ctx) {
         CobblemonBoosters.INSTANCE.reload(true);
-        ServerPlayer player = ctx.getSource().getPlayer();
-        Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.commandReload);
+        Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.config.messages.commandReload);
         return 1;
     }
 }

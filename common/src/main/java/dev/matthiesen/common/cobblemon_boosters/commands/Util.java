@@ -7,63 +7,56 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.permissions.*;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Queue;
 
 public class Util {
-    public static void handleStopCommand(CommandContext<CommandSourceStack> ctx, ServerPlayer player, IBoost active, String message) {
+    public static void handleStopCommand(CommandContext<CommandSourceStack> ctx, IBoost active, String message) {
         active.setTimeRemaining(1);
-        sendMessage(ctx, player, message, active);
+        sendMessage(ctx, message, active);
     }
 
-    public static void handleStatusCommand(CommandContext<CommandSourceStack> ctx, ServerPlayer player, IBoost active, String activeMessage, String noActiveMessage) {
+    public static void handleStatusCommand(CommandContext<CommandSourceStack> ctx, IBoost active, String activeMessage, String noActiveMessage) {
         if (active != null) {
-            sendMessage(ctx, player, activeMessage, active);
+            sendMessage(ctx, activeMessage, active);
         } else {
-            sendMessage(ctx, player, noActiveMessage);
+            sendMessage(ctx, noActiveMessage);
         }
     }
 
-    public static void handleQueueClear(CommandContext<CommandSourceStack> ctx, ServerPlayer player, Queue<? extends IBoost> queue, String clearedMessage) {
+    public static void handleQueueClear(CommandContext<CommandSourceStack> ctx, Queue<? extends IBoost> queue, String clearedMessage) {
         queue.clear();
-        sendMessage(ctx, player, clearedMessage);
+        sendMessage(ctx, clearedMessage);
     }
 
-    public static void handleQueueResponse(CommandContext<CommandSourceStack> ctx, ServerPlayer player, Queue<? extends IBoost> queue, String noQueue, String withQueue) {
+    public static void handleQueueResponse(CommandContext<CommandSourceStack> ctx, Queue<? extends IBoost> queue, String noQueue, String withQueue) {
         if (queue.isEmpty()) {
-            sendMessage(ctx, player, noQueue);
+            sendMessage(ctx, noQueue);
         } else {
             for (IBoost iBoost : queue) {
-                sendMessage(ctx, player, withQueue, iBoost);
+                sendMessage(ctx, withQueue, iBoost);
             }
         }
     }
 
-    public static void handleSendMessage(CommandContext<CommandSourceStack> ctx, @Nullable ServerPlayer player, String parsedMessage) {
-        if (player != null) {
-            CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(TextUtils.deserialize(parsedMessage));
-        } else {
-            ctx.getSource().sendSystemMessage(TextUtils.deserializeMC(parsedMessage));
-        }
+    public static void handleSendMessage(CommandContext<CommandSourceStack> ctx, String parsedMessage) {
+        ctx.getSource().sendSystemMessage(TextUtils.deserialize(parsedMessage));
     }
 
-    public static void sendMessage(CommandContext<CommandSourceStack> ctx, @Nullable ServerPlayer player, String rawMessage) {
+    public static void sendMessage(CommandContext<CommandSourceStack> ctx, String rawMessage) {
         String parsedMessage = TextUtils.parse(rawMessage);
-        handleSendMessage(ctx, player, parsedMessage);
+        handleSendMessage(ctx, parsedMessage);
     }
 
-    public static void sendMessage(CommandContext<CommandSourceStack> ctx, @Nullable ServerPlayer player, String rawMessage, @NotNull IBoost boost) {
+    public static void sendMessage(CommandContext<CommandSourceStack> ctx, String rawMessage, @NotNull IBoost boost) {
         String parsedMessage = TextUtils.parse(rawMessage, boost);
-        handleSendMessage(ctx, player, parsedMessage);
+        handleSendMessage(ctx, parsedMessage);
     }
 
     public static int parseTotalSeconds(int duration, String unit) {

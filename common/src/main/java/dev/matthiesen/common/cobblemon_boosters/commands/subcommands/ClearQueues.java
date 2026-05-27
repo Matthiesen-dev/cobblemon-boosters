@@ -8,7 +8,6 @@ import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
 
 public class ClearQueues implements ISubCommand {
     @Override
@@ -22,28 +21,23 @@ public class ClearQueues implements ISubCommand {
     }
 
     public int command(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
         Util.handleQueueClear(
                 ctx,
-                player,
                 CobblemonBoosters.INSTANCE.queuedShinyBoosts,
                 CobblemonBoosters.INSTANCE.config.messages.shinyMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                player,
                 CobblemonBoosters.INSTANCE.queuedCatchBoosts,
                 CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                player,
                 CobblemonBoosters.INSTANCE.queuedExperienceBoosts,
                 CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                player,
                 CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts,
                 CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostQueueCleared
         );

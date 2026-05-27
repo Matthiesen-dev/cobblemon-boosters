@@ -9,7 +9,7 @@ public class FallbackGUIAdapter implements IGUIAdapter {
 
     public Component getDefaultComponent() {
         String defaultMessage = TextUtils.parse("%prefix% <gray>GUI not available, please use command arguments instead.</gray>");
-        return TextUtils.deserializeMC(defaultMessage);
+        return TextUtils.deserialize(defaultMessage);
     }
 
     @Override

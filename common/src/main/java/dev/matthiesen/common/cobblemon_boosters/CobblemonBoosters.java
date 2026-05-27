@@ -9,7 +9,6 @@ import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.mojang.brigadier.CommandDispatcher;
-import dev.architectury.platform.Platform;
 import dev.matthiesen.common.cobblemon_boosters.commands.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.config.*;
 import dev.matthiesen.common.cobblemon_boosters.data.*;
@@ -18,12 +17,12 @@ import dev.matthiesen.common.cobblemon_boosters.gui.gooey.GooeyGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.*;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import kotlin.Unit;
-import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -33,7 +32,6 @@ public class CobblemonBoosters {
     public IGUIAdapter guiAdapter;
     public ModPermissions permissions;
     public ModConfig config;
-    private volatile MinecraftServerAudiences adventure;
     public DiscordWebhookService discordWebhookService = new DiscordWebhookService();
 
     // Shiny Boost Variables
@@ -58,28 +56,20 @@ public class CobblemonBoosters {
 
     public CobblemonBoosters() {}
 
-    public MinecraftServerAudiences getAdventure() {
-        if (this.adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure without a running server!");
-        }
-        return this.adventure;
-    }
-
     public void initialize() {
         INSTANCE = this;
         Constants.createInfoLog("Initialized");
         reload(false);
         this.permissions = new ModPermissions();
-        if (Platform.isModLoaded("gooeylibs")) {
+        if (MatthiesenLibApi.isModLoaded("gooeylibs")) {
             this.guiAdapter = new GooeyGUIAdapter();
         } else {
             this.guiAdapter = new FallbackGUIAdapter();
         }
     }
 
-    public void onStartup(MinecraftServer server) {
+    public void onStartup() {
         Constants.createInfoLog("Server starting, Setting up");
-        this.adventure = MinecraftServerAudiences.of(server);
     }
 
     public void onServerStarted() {
@@ -149,6 +139,36 @@ public class CobblemonBoosters {
             TickManager.updateBossBars();
         } catch (IllegalArgumentException e) {
             Constants.LOGGER.error("Caught BossBar exception! ", e);
+        }
+    }
+
+    public void onPlayerJoin(ServerPlayer player) {
+        if (this.activeShinyBoost != null) {
+            this.activeShinyBoost.getBossBar().addPlayer(player);
+        }
+        if (this.activeCatchBoost != null) {
+            this.activeCatchBoost.getBossBar().addPlayer(player);
+        }
+        if (this.activeExperienceBoost != null) {
+            this.activeExperienceBoost.getBossBar().addPlayer(player);
+        }
+        if (this.activeSpawnBucketBoost != null) {
+            this.activeSpawnBucketBoost.getBossBar().addPlayer(player);
+        }
+    }
+
+    public void onPlayerLeave(ServerPlayer player) {
+        if (this.activeShinyBoost != null) {
+            this.activeShinyBoost.getBossBar().removePlayer(player);
+        }
+        if (this.activeCatchBoost != null) {
+            this.activeCatchBoost.getBossBar().removePlayer(player);
+        }
+        if (this.activeExperienceBoost != null) {
+            this.activeExperienceBoost.getBossBar().removePlayer(player);
+        }
+        if (this.activeSpawnBucketBoost != null) {
+            this.activeSpawnBucketBoost.getBossBar().removePlayer(player);
         }
     }
 

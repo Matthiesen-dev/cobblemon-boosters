@@ -23,7 +23,7 @@ public class CheckQueuesGui extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserializeMC(
+        return TextUtils.deserialize(
                 TextUtils.parse("<green>All Boost Queues<reset>")
         );
     }

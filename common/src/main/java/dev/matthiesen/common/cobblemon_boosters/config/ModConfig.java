@@ -8,7 +8,7 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.data.*;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
-import net.kyori.adventure.bossbar.BossBar;
+import net.minecraft.world.BossEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,10 +127,10 @@ public class ModConfig {
 
     public static class ShinyMessagesConfig {
         @SerializedName("barColor")
-        public BossBar.Color barColor = BossBar.Color.YELLOW;
+        public BossEvent.BossBarColor barColor = BossEvent.BossBarColor.YELLOW;
 
         @SerializedName("barOverlay")
-        public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
+        public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
 
         @SerializedName("barText")
         public String barText = "<gold>%multiplier%x Shiny Boost <gray>| <green>%time_remaining% Remaining";
@@ -159,10 +159,10 @@ public class ModConfig {
 
     public static class CatchBoostMessagesConfig {
         @SerializedName("barColor")
-        public BossBar.Color barColor = BossBar.Color.PURPLE;
+        public BossEvent.BossBarColor barColor = BossEvent.BossBarColor.PURPLE;
 
         @SerializedName("barOverlay")
-        public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
+        public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
 
         @SerializedName("barText")
         public String barText = "<light_purple>%multiplier%x Catch Boost <gray>| <green>%time_remaining% Remaining";
@@ -191,10 +191,10 @@ public class ModConfig {
 
     public static class ExperienceBoostMessagesConfig {
         @SerializedName("barColor")
-        public BossBar.Color barColor = BossBar.Color.GREEN;
+        public BossEvent.BossBarColor barColor = BossEvent.BossBarColor.GREEN;
 
         @SerializedName("barOverlay")
-        public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
+        public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
 
         @SerializedName("barText")
         public String barText = "<green>%multiplier%x Experience Boost <gray>| <green>%time_remaining% Remaining";
@@ -223,10 +223,10 @@ public class ModConfig {
 
     public static class SpawnBucketBoostMessagesConfig {
         @SerializedName("barColor")
-        public BossBar.Color barColor = BossBar.Color.BLUE;
+        public BossEvent.BossBarColor barColor = BossEvent.BossBarColor.BLUE;
 
         @SerializedName("barOverlay")
-        public BossBar.Overlay barOverlay = BossBar.Overlay.PROGRESS;
+        public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
 
         @SerializedName("barText")
         public String barText = "<aqua>%bucket% Spawn Bucket Boost <gray>| <green>%time_remaining% Remaining";

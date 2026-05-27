@@ -23,6 +23,18 @@ version = resolvedModVersion
 repositories {
     mavenCentral()
     maven("https://artefacts.cobblemon.com/releases/")
+    maven("https://maven.matthiesen.dev/releases") {
+        name = "devMatthiesenMavenReleases"
+        content {
+            includeGroup("dev.matthiesen")
+        }
+    }
+    maven("https://maven.matthiesen.dev/snapshots") {
+        name = "devMatthiesenMavenSnapshots"
+        content {
+            includeGroup("dev.matthiesen")
+        }
+    }
     // for development builds
     maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
         name = "sonatype-oss-snapshots1"
@@ -32,7 +44,11 @@ repositories {
         name = "central-snapshots"
         mavenContent { snapshotsOnly() }
     }
-    maven("https://maven.impactdev.net/repository/development/")
+    maven("https://maven.impactdev.net/repository/development/") {
+        content {
+            excludeGroup("dev.matthiesen")
+        }
+    }
 }
 
 dependencies {

@@ -27,10 +27,6 @@ dependencies {
     mappings(loom.officialMojangMappings())
     neoForge(libs.neoforge)
 
-    add("implementation", libs.adventure.api)
-    add("implementation", libs.adventure.text.serializer.legacy)
-    add("modImplementation", include("net.kyori:adventure-platform-neoforge:6.0.0")!!)
-    add("modImplementation", "dev.architectury:architectury-neoforge:13.0.8")
     libs.bundles.neoforgeModImplementation.get().forEach { dependency ->
         modImplementation(dependency.copy()) { isTransitive = false }
     }

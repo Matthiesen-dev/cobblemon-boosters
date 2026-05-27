@@ -1,7 +1,7 @@
 package dev.matthiesen.common.cobblemon_boosters.interfaces;
 
-import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.text.Component;
+import dev.matthiesen.common.cobblemon_boosters.utils.BossBar;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public interface IBoost {
@@ -18,8 +18,5 @@ public interface IBoost {
 
 	Component getBossBarText();
 
-	String getBoostType();
-
-	ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore);
-	ItemStack getGUIItem();
+	ItemStack getGUIItem(Component[] lore);
 }

@@ -35,6 +35,13 @@ ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
+modId = "matthiesen_lib_api"
+mandatory = true
+versionRange = "[1.2.5,)"
+ordering = "AFTER"
+side = "SERVER"
+
+[[dependencies.${mod_id}]]
 modId = "gooeylibs"
 mandatory = false
 versionRange = "[3.1.1,)"

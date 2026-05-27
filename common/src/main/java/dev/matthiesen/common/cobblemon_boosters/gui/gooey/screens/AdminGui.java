@@ -24,7 +24,7 @@ public class AdminGui extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserializeMC(
+        return TextUtils.deserialize(
                 TextUtils.parse("<red>Admin Menu<reset>")
         );
     }

@@ -10,6 +10,7 @@ import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -44,32 +45,29 @@ public class Catch implements ISubCommand {
         float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
-        ServerPlayer player = ctx.getSource().getPlayer();
         int totalSeconds = Util.parseTotalSeconds(duration, unit);
 
         if (CobblemonBoosters.INSTANCE.activeCatchBoost == null) {
             CobblemonBoosters.INSTANCE.activeCatchBoost = new CatchBoost(multiplier, totalSeconds);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostStarted, CobblemonBoosters.INSTANCE.activeCatchBoost);
+            Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostStarted, CobblemonBoosters.INSTANCE.activeCatchBoost);
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
                     CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventStartEmbed,
                     CobblemonBoosters.INSTANCE.activeCatchBoost
             );
-            CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeCatchBoost.getBossBar());
+            CobblemonBoosters.INSTANCE.activeCatchBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
         } else {
             CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
             CobblemonBoosters.INSTANCE.queuedCatchBoosts.add(boost);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostAddedToQueued, boost);
+            Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostAddedToQueued, boost);
         }
         CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
         return 1;
     }
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
         try {
             Util.handleStopCommand(
                     ctx,
-                    player,
                     CobblemonBoosters.INSTANCE.activeCatchBoost,
                     CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostStopped
             );
@@ -80,10 +78,8 @@ public class Catch implements ISubCommand {
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
         Util.handleStatusCommand(
                 ctx,
-                player,
                 CobblemonBoosters.INSTANCE.activeCatchBoost,
                 CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostInfo,
                 CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.noActiveBoosts

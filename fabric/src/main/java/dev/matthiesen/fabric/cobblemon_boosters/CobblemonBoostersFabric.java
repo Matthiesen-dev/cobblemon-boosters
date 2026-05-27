@@ -6,6 +6,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
 
 public class CobblemonBoostersFabric implements ModInitializer {
@@ -16,12 +17,11 @@ public class CobblemonBoostersFabric implements ModInitializer {
         Constants.createInfoLog("Loading for Fabric Mod Loader");
         core.initialize();
         CommandRegistrationCallback.EVENT.register(core::registerCommands);
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            MinecraftServer runningServer = server.createCommandSourceStack().getServer();
-            core.onStartup(runningServer);
-        });
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> core.onStartup());
         ServerLifecycleEvents.SERVER_STARTED.register(server -> core.onServerStarted());
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> core.onShutdown());
         ServerTickEvents.END_SERVER_TICK.register(server -> core.onEndTick());
+        ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) -> core.onPlayerJoin(handler.getPlayer())));
+        ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> core.onPlayerLeave(handler.getPlayer())));
     }
 }
