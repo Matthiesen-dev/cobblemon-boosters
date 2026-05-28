@@ -33,6 +33,9 @@ dependencies {
     libs.bundles.neoforgeModRuntimeOnly.get().forEach { dependency ->
         modRuntimeOnly(dependency)
     }
+    modRuntimeOnly(libs.matthiesen.lib.webhooks.neoforge) {
+        isTransitive = false
+    }
 
     forgeRuntimeLibrary(libs.kotlinforforge) {
         exclude("net.neoforged.fancymodloader", "loader")

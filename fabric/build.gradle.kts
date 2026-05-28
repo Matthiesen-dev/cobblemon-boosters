@@ -29,6 +29,9 @@ dependencies {
     libs.bundles.fabricModRuntimeOnly.get().forEach { dependency ->
         modRuntimeOnly(dependency)
     }
+    modRuntimeOnly(libs.matthiesen.lib.webhooks.fabric) {
+        isTransitive = false
+    }
 
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
