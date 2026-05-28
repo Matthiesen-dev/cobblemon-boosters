@@ -69,8 +69,8 @@ public class CobblemonBoosters {
 
     public void initialize() {
         INSTANCE = this;
-        Constants.createInfoLog("Initialized");
         reload(false);
+        Constants.createInfoLog("Initialized");
         this.permissions = new ModPermissions();
         if (MatthiesenLibApi.isModLoaded("gooeylibs")) {
             this.guiAdapter = new GooeyGUIAdapter();
