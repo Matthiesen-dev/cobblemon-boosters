@@ -31,79 +31,79 @@ public class ModPermissions {
     public ModPermissions() {
         this.RELOAD_PERMISSION = toModPerm(
                 "command.boosters.reload",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.RELOAD_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.RELOAD_PERMISSION
         );
         this.CATCH_PERMISSION = toModPerm(
                 "command.boosters.catch",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.CATCH_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CATCH_PERMISSION
         );
         this.CATCH_START_PERMISSION = toModPerm(
                 "command.boosters.catch.start",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.CATCH_START_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CATCH_START_PERMISSION
         );
         this.CATCH_STOP_PERMISSION = toModPerm(
                 "command.boosters.catch.stop",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.CATCH_STOP_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CATCH_STOP_PERMISSION
         );
         this.CATCH_STATUS_PERMISSION = toModPerm(
                 "command.boosters.catch.status",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.CATCH_STATUS_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CATCH_STATUS_PERMISSION
         );
         this.EXPERIENCE_PERMISSION = toModPerm(
                 "command.boosters.experience",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.EXPERIENCE_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.EXPERIENCE_PERMISSION
         );
         this.EXPERIENCE_START_PERMISSION = toModPerm(
                 "command.boosters.experience.start",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.EXPERIENCE_START_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.EXPERIENCE_START_PERMISSION
         );
         this.EXPERIENCE_STOP_PERMISSION = toModPerm(
                 "command.boosters.experience.stop",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.EXPERIENCE_STOP_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.EXPERIENCE_STOP_PERMISSION
         );
         this.EXPERIENCE_STATUS_PERMISSION = toModPerm(
                 "command.boosters.experience.status",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.EXPERIENCE_STATUS_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.EXPERIENCE_STATUS_PERMISSION
         );
         this.SHINY_PERMISSION = toModPerm(
                 "command.boosters.shiny",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.SHINY_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.SHINY_PERMISSION
         );
         this.SHINY_START_PERMISSION = toModPerm(
                 "command.boosters.shiny.start",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.SHINY_START_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.SHINY_START_PERMISSION
         );
         this.SHINY_STOP_PERMISSION = toModPerm(
                 "command.boosters.shiny.stop",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.SHINY_STOP_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.SHINY_STOP_PERMISSION
         );
         this.SHINY_STATUS_PERMISSION = toModPerm(
                 "command.boosters.shiny.status",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.SHINY_STATUS_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.SHINY_STATUS_PERMISSION
         );
         this.BUCKET_PERMISSION = toModPerm(
                 "command.boosters.bucket",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.BUCKET_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.BUCKET_PERMISSION
         );
         this.BUCKET_START_PERMISSION = toModPerm(
                 "command.boosters.bucket.start",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.BUCKET_START_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.BUCKET_START_PERMISSION
         );
         this.BUCKET_STOP_PERMISSION = toModPerm(
                 "command.boosters.bucket.stop",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.BUCKET_STOP_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.BUCKET_STOP_PERMISSION
         );
         this.BUCKET_STATUS_PERMISSION = toModPerm(
                 "command.boosters.bucket.status",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.BUCKET_STATUS_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.BUCKET_STATUS_PERMISSION
         );
         this.CLEAR_QUEUES_PERMISSION = toModPerm(
                 "command.boosters.clear_queues",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.CLEAR_QUEUES_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CLEAR_QUEUES_PERMISSION
         );
         this.CHECK_QUEUE_PERMISSION = toModPerm(
                 "command.boosters.check_queue",
-                CobblemonBoosters.INSTANCE.config.permissionLevels.CHECK_QUEUE_PERMISSION
+                CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CHECK_QUEUE_PERMISSION
         );
     }
 

@@ -2,7 +2,7 @@ package dev.matthiesen.common.cobblemon_boosters.utils;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
-import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
+import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
 import dev.matthiesen.common.matthiesen_lib_webhooks.MatthiesenLibWebhooks;
@@ -20,15 +20,15 @@ public class DiscordWebhookService implements IWebhookService {
     }
 
     public MatthiesenLibWebhooks.Webhooks getClient() {
-        if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.enabled) return null;
-        if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl.startsWith("https://")) {
+        if (!CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.enabled) return null;
+        if (!CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.webhookUrl.startsWith("https://")) {
             Constants.createErrorLog("Discord webhooks are enabled but an invalid Discord Webhook URL is set! Please check your configuration. (Must start with 'https://')");
             return null;
         }
-        return new MatthiesenLibWebhooks.Webhooks(CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl);
+        return new MatthiesenLibWebhooks.Webhooks(CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.webhookUrl);
     }
 
-    public static Embed parseEventEmbed(ModConfig.DiscordEmbed embed, IBoost boost) {
+    public static Embed parseEventEmbed(WebhooksConfig.DiscordEmbed embed, IBoost boost) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         if (embed.title != null)
             embedBuilder.withTitle(TextUtils.parse(embed.title, boost));
@@ -40,7 +40,7 @@ public class DiscordWebhookService implements IWebhookService {
             embedBuilder.withTimestamp(TextUtils.parse(embed.timestamp, boost));
         List<Embed.EmbedField> fields = new ArrayList<>();
         if (embed.fields != null) {
-            for (ModConfig.DiscordEmbedField field : embed.fields) {
+            for (WebhooksConfig.DiscordEmbedField field : embed.fields) {
                 Embed.EmbedField embedField = new Embed.EmbedField();
                 if (field.name != null)
                     embedField.setName(TextUtils.parse(field.name, boost));
@@ -62,7 +62,7 @@ public class DiscordWebhookService implements IWebhookService {
     }
 
     @Override
-    public void sendMessage(ModConfig.DiscordEmbed embed, IBoost boost) {
+    public void sendMessage(WebhooksConfig.DiscordEmbed embed, IBoost boost) {
         if (webhooks == null) return;
         String userName = embed.author != null && embed.author.name != null
                 ? embed.author.name

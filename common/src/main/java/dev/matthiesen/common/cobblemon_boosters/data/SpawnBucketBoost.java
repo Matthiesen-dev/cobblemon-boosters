@@ -94,8 +94,8 @@ public class SpawnBucketBoost implements IBoost {
         return new BossBar(
                 getBossBarText(),
                 1F,
-                CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.barColor,
-                CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.barOverlay
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.barColor,
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.barOverlay
         );
     }
 
@@ -103,7 +103,7 @@ public class SpawnBucketBoost implements IBoost {
     public Component getBossBarText() {
         return TextUtils.deserialize(
                 TextUtils.parse(
-                        CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.barText,
+                        CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.barText,
                         this
                 )
         );

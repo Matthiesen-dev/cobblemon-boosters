@@ -19,6 +19,7 @@ import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.*;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
 import kotlin.Unit;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -32,8 +33,17 @@ public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
     public IGUIAdapter guiAdapter;
     public ModPermissions permissions;
-    public ModConfig config;
     public IWebhookService discordWebhookService;
+
+    // Configs
+    public ConfigManager<CacheConfig> CACHE_CONFIG_MANAGER =
+            new ConfigManager<>(CacheConfig.class, "cache", Constants.MOD_ID);
+    public ConfigManager<MessagesConfig> MESSAGES_CONFIG_MANAGER =
+            new ConfigManager<>(MessagesConfig.class, "messages", Constants.MOD_ID);
+    public ConfigManager<PermissionsConfig> PERMISSIONS_CONFIG_MANAGER =
+            new ConfigManager<>(PermissionsConfig.class, "permissions", Constants.MOD_ID);
+    public ConfigManager<WebhooksConfig> WEBHOOKS_CONFIG_MANAGER =
+            new ConfigManager<>(WebhooksConfig.class, "webhooks", Constants.MOD_ID);
 
     // Shiny Boost Variables
     public ShinyBoost activeShinyBoost = null;
@@ -110,8 +120,9 @@ public class CobblemonBoosters {
 
     public void onShutdown() {
         Constants.createInfoLog("Server stopping, shutting down");
-        new ModConfig().saveGlobalBoostData();
-        new ConfigManager().updateConfig(this.config);
+
+        CacheConfig.setGlobalBoostData();
+        CACHE_CONFIG_MANAGER.saveConfig();
         this.activeShinyBoost = null;
         this.activeCatchBoost = null;
         this.activeExperienceBoost = null;
@@ -180,9 +191,13 @@ public class CobblemonBoosters {
 
     public void reload(boolean fromCommand) {
         if (fromCommand) {
-            new ModConfig().saveGlobalBoostData();
-            new ConfigManager().updateConfig(this.config);
+            CacheConfig.setGlobalBoostData();
+            CACHE_CONFIG_MANAGER.saveConfig();
         }
-        this.config = new ConfigManager().loadConfig();
+        CACHE_CONFIG_MANAGER.loadConfig();
+        MESSAGES_CONFIG_MANAGER.loadConfig();
+        PERMISSIONS_CONFIG_MANAGER.loadConfig();
+        WEBHOOKS_CONFIG_MANAGER.loadConfig();
+        Constants.createInfoLog("Reloaded Cobblemon Boosters configs");
     }
 }

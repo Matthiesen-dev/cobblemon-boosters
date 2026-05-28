@@ -22,7 +22,7 @@ public class Reload implements ISubCommand {
 
     public int cmd(CommandContext<CommandSourceStack> ctx) {
         CobblemonBoosters.INSTANCE.reload(true);
-        Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.config.messages.commandReload);
+        Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.commandReload);
         return 1;
     }
 }

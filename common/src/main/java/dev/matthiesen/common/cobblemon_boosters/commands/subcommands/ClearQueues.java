@@ -4,6 +4,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
+import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import net.minecraft.commands.CommandSourceStack;
@@ -24,24 +25,24 @@ public class ClearQueues implements ISubCommand {
         Util.handleQueueClear(
                 ctx,
                 CobblemonBoosters.INSTANCE.queuedShinyBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.shinyMessages.boostQueueCleared
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
                 CobblemonBoosters.INSTANCE.queuedCatchBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostQueueCleared
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
                 CobblemonBoosters.INSTANCE.queuedExperienceBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.boostQueueCleared
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
                 CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostQueueCleared
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
         );
-        CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
+        CacheConfig.setGlobalBoostData();
         return 1;
     }
 }

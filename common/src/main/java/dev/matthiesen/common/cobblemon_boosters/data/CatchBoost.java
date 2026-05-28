@@ -66,8 +66,8 @@ public class CatchBoost implements IBoost {
         return new BossBar(
                 getBossBarText(),
                 1F,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.barColor,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.barOverlay
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.barColor,
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.barOverlay
         );
     }
 
@@ -75,7 +75,7 @@ public class CatchBoost implements IBoost {
     public Component getBossBarText() {
         return TextUtils.deserialize(
                 TextUtils.parse(
-                        CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.barText,
+                        CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.barText,
                         this
                 )
         );

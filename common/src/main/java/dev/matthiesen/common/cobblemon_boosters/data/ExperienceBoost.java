@@ -66,8 +66,8 @@ public class ExperienceBoost implements IBoost {
         return new BossBar(
                 getBossBarText(),
                 1F,
-                CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.barColor,
-                CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.barOverlay
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.barColor,
+                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.barOverlay
         );
     }
 
@@ -75,7 +75,7 @@ public class ExperienceBoost implements IBoost {
     public Component getBossBarText() {
         return TextUtils.deserialize(
                 TextUtils.parse(
-                        CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.barText,
+                        CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.barText,
                         this
                 )
         );
