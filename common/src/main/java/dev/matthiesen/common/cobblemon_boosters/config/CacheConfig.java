@@ -41,6 +41,7 @@ public class CacheConfig {
     @SerializedName("queuedSpawnBucketBoosts")
     public List<SpawnBucketBoost> queuedSpawnBucketBoosts = new ArrayList<>();
 
+    @SuppressWarnings("unused")
     public CacheConfig() {}
 
     public CacheConfig(

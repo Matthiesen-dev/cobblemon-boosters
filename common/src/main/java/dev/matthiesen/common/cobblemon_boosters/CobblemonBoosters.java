@@ -122,6 +122,10 @@ public class CobblemonBoosters {
 
         CacheConfig.setGlobalBoostData();
         CACHE_CONFIG_MANAGER.saveConfig();
+        MESSAGES_CONFIG_MANAGER.saveConfig();
+        PERMISSIONS_CONFIG_MANAGER.saveConfig();
+        WEBHOOKS_CONFIG_MANAGER.saveConfig();
+
         this.activeShinyBoost = null;
         this.activeCatchBoost = null;
         this.activeExperienceBoost = null;
