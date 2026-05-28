@@ -6,7 +6,7 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
@@ -14,7 +14,7 @@ public class ClearQueues implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         return Commands.literal("clear-queues")
-                .requires(src -> ModPermissions.checkPermission(
+                .requires(src -> PermissionRegistry.checkPermission(
                         src,
                         CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION
                 ))

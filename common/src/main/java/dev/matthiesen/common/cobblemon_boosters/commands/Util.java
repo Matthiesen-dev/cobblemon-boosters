@@ -9,7 +9,9 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.permissions.*;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
+import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.jetbrains.annotations.NotNull;
@@ -88,50 +90,50 @@ public class Util {
 
     public static LiteralArgumentBuilder<CommandSourceStack> newBasicMultiplierBoosterCommand(
             String rootCommandName,
-            ModPermission rootPermission,
+            Permission rootPermission,
             Command<CommandSourceStack> gui,
             Command<CommandSourceStack> startCommand,
             float maxMultiplier,
-            ModPermission startPermission,
+            Permission startPermission,
             Command<CommandSourceStack> stopCommand,
-            ModPermission stopPermission,
+            Permission stopPermission,
             Command<CommandSourceStack> statusCommand,
-            ModPermission statusPermission
+            Permission statusPermission
     ) {
         return Commands.literal(rootCommandName)
-                .requires(src -> ModPermissions.checkPermission(src, rootPermission))
+                .requires(src -> PermissionRegistry.checkPermission(src, rootPermission))
                 .executes(gui)
                 .then(Commands.literal("start")
-                        .requires(src -> ModPermissions.checkPermission(src, startPermission))
+                        .requires(src -> PermissionRegistry.checkPermission(src, startPermission))
                         .then(Commands.argument("multiplier", FloatArgumentType.floatArg(1, maxMultiplier))
                                 .then(newDurationAndUnitArgs(startCommand))
                         )
                 )
                 .then(Commands.literal("stop")
-                        .requires(src -> ModPermissions.checkPermission(src, stopPermission))
+                        .requires(src -> PermissionRegistry.checkPermission(src, stopPermission))
                         .executes(stopCommand)
                 )
                 .then(Commands.literal("status")
-                        .requires(src -> ModPermissions.checkPermission(src, statusPermission))
+                        .requires(src -> PermissionRegistry.checkPermission(src, statusPermission))
                         .executes(statusCommand)
                 );
     }
 
     public static LiteralArgumentBuilder<CommandSourceStack> newBucketBoosterCommand(
-            ModPermission rootPermission,
+            Permission rootPermission,
             Command<CommandSourceStack> gui,
             Command<CommandSourceStack> startCommand,
-            ModPermission startPermission,
+            Permission startPermission,
             Command<CommandSourceStack> stopCommand,
-            ModPermission stopPermission,
+            Permission stopPermission,
             Command<CommandSourceStack> statusCommand,
-            ModPermission statusPermission
+            Permission statusPermission
     ) {
         return Commands.literal("bucket")
-                .requires(src -> ModPermissions.checkPermission(src, rootPermission))
+                .requires(src -> PermissionRegistry.checkPermission(src, rootPermission))
                 .executes(gui)
                 .then(Commands.literal("start")
-                        .requires(src -> ModPermissions.checkPermission(src, startPermission))
+                        .requires(src -> PermissionRegistry.checkPermission(src, startPermission))
                         .then(Commands.argument("bucket", StringArgumentType.string())
                                 .suggests((ctx, builder) -> {
                                     builder.suggest("common");
@@ -146,11 +148,11 @@ public class Util {
                         )
                 )
                 .then(Commands.literal("stop")
-                        .requires(src -> ModPermissions.checkPermission(src, stopPermission))
+                        .requires(src -> PermissionRegistry.checkPermission(src, stopPermission))
                         .executes(stopCommand)
                 )
                 .then(Commands.literal("status")
-                        .requires(src -> ModPermissions.checkPermission(src, statusPermission))
+                        .requires(src -> PermissionRegistry.checkPermission(src, statusPermission))
                         .executes(statusCommand)
                 );
     }

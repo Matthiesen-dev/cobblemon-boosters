@@ -7,7 +7,7 @@ import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
@@ -70,7 +70,7 @@ public class AdminGui extends BaseMenuGuiTemplate {
         List<Button> buttons = new ArrayList<>();
 
         // Reload
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getReloadItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
@@ -87,7 +87,7 @@ public class AdminGui extends BaseMenuGuiTemplate {
             );
 
         // Clear Queues
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getClearQueueItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(

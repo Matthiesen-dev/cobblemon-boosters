@@ -7,7 +7,7 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,13 +16,13 @@ public class CheckQueues implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         return Commands.literal("check-queues")
-                .requires(src -> ModPermissions.checkPermission(
+                .requires(src -> PermissionRegistry.checkPermission(
                         src,
                         CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
                 ))
                 .executes(this::openGUI)
                 .then(Commands.argument("booster", StringArgumentType.string())
-                        .requires(src -> ModPermissions.checkPermission(
+                        .requires(src -> PermissionRegistry.checkPermission(
                                 src,
                                 CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
                         ))

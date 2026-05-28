@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
@@ -13,7 +13,7 @@ public class Reload implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         return Commands.literal("reload")
-                .requires(src -> ModPermissions.checkPermission(
+                .requires(src -> PermissionRegistry.checkPermission(
                         src,
                         CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION)
                 )

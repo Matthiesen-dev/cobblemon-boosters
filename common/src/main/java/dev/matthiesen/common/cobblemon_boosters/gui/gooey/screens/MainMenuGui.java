@@ -13,7 +13,7 @@ import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.Buc
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BoostersGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
@@ -192,7 +192,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
         List<Button> buttons = new ArrayList<>();
 
         // Bucket Booster
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.BUCKET_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.BUCKET_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getBucketItem())
                     .onClick(() -> openBucketGui(player))
@@ -200,7 +200,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Catch Booster
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CATCH_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CATCH_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getCatchItem())
                     .onClick(() -> openCatchGUI(player))
@@ -208,7 +208,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Experience Booster
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getExperienceItem())
                     .onClick(() -> openExperienceGUI(player))
@@ -216,7 +216,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Shiny Booster
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.SHINY_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.SHINY_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getShinyItem())
                     .onClick(() -> openShinyGUI(player))
@@ -224,7 +224,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Check Queues
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getQueueItem("All", true))
                     .onClick(() -> new CheckQueuesGui(player).open())
@@ -232,8 +232,8 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Admin Options
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION) ||
-                ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION) ||
+                PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getAdminItem())
                     .onClick(() -> new AdminGui(player).open())

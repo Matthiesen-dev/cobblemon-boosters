@@ -16,12 +16,13 @@ public class CobblemonBoostersFabric implements ModInitializer {
     public void onInitialize() {
         Constants.createInfoLog("Loading for Fabric Mod Loader");
         core.initialize();
-        CommandRegistrationCallback.EVENT.register(core::registerCommands);
         ServerLifecycleEvents.SERVER_STARTING.register(server -> core.onStartup());
         ServerLifecycleEvents.SERVER_STARTED.register(server -> core.onServerStarted());
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> core.onShutdown());
         ServerTickEvents.END_SERVER_TICK.register(server -> core.onEndTick());
-        ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) -> core.onPlayerJoin(handler.getPlayer())));
-        ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) -> core.onPlayerLeave(handler.getPlayer())));
+        ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) ->
+                core.onPlayerJoin(handler.getPlayer())));
+        ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) ->
+                core.onPlayerLeave(handler.getPlayer())));
     }
 }

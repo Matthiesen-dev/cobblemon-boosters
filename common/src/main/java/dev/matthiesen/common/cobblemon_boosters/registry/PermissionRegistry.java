@@ -1,120 +1,121 @@
-package dev.matthiesen.common.cobblemon_boosters.permissions;
+package dev.matthiesen.common.cobblemon_boosters.registry;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.api.permission.PermissionLevel;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.permission.AbstractPermission;
+import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
+import dev.matthiesen.common.matthiesen_lib_api.permission.PermissionLevel;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
-public class ModPermissions {
-    public final ModPermission RELOAD_PERMISSION;
-    public final ModPermission CATCH_PERMISSION;
-    public final ModPermission CATCH_START_PERMISSION;
-    public final ModPermission CATCH_STOP_PERMISSION;
-    public final ModPermission CATCH_STATUS_PERMISSION;
-    public final ModPermission EXPERIENCE_PERMISSION;
-    public final ModPermission EXPERIENCE_START_PERMISSION;
-    public final ModPermission EXPERIENCE_STOP_PERMISSION;
-    public final ModPermission EXPERIENCE_STATUS_PERMISSION;
-    public final ModPermission SHINY_PERMISSION;
-    public final ModPermission SHINY_START_PERMISSION;
-    public final ModPermission SHINY_STOP_PERMISSION;
-    public final ModPermission SHINY_STATUS_PERMISSION;
-    public final ModPermission BUCKET_PERMISSION;
-    public final ModPermission BUCKET_START_PERMISSION;
-    public final ModPermission BUCKET_STOP_PERMISSION;
-    public final ModPermission BUCKET_STATUS_PERMISSION;
-    public final ModPermission CLEAR_QUEUES_PERMISSION;
-    public final ModPermission CHECK_QUEUE_PERMISSION;
+public class PermissionRegistry {
+    private static final Permissions PERMISSIONS = new Permissions();
 
-    public ModPermissions() {
-        this.RELOAD_PERMISSION = toModPerm(
+    public static class Permissions {
+        public Permission RELOAD_PERMISSION = toModPerm(
                 "command.boosters.reload",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.RELOAD_PERMISSION
         );
-        this.CATCH_PERMISSION = toModPerm(
+        public Permission CATCH_PERMISSION = toModPerm(
                 "command.boosters.catch",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CATCH_PERMISSION
         );
-        this.CATCH_START_PERMISSION = toModPerm(
+        public Permission CATCH_START_PERMISSION = toModPerm(
                 "command.boosters.catch.start",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CATCH_START_PERMISSION
         );
-        this.CATCH_STOP_PERMISSION = toModPerm(
+        public Permission CATCH_STOP_PERMISSION = toModPerm(
                 "command.boosters.catch.stop",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CATCH_STOP_PERMISSION
         );
-        this.CATCH_STATUS_PERMISSION = toModPerm(
+        public Permission CATCH_STATUS_PERMISSION = toModPerm(
                 "command.boosters.catch.status",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CATCH_STATUS_PERMISSION
         );
-        this.EXPERIENCE_PERMISSION = toModPerm(
+        public Permission EXPERIENCE_PERMISSION = toModPerm(
                 "command.boosters.experience",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.EXPERIENCE_PERMISSION
         );
-        this.EXPERIENCE_START_PERMISSION = toModPerm(
+        public Permission EXPERIENCE_START_PERMISSION = toModPerm(
                 "command.boosters.experience.start",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.EXPERIENCE_START_PERMISSION
         );
-        this.EXPERIENCE_STOP_PERMISSION = toModPerm(
+        public Permission EXPERIENCE_STOP_PERMISSION = toModPerm(
                 "command.boosters.experience.stop",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.EXPERIENCE_STOP_PERMISSION
         );
-        this.EXPERIENCE_STATUS_PERMISSION = toModPerm(
+        public Permission EXPERIENCE_STATUS_PERMISSION = toModPerm(
                 "command.boosters.experience.status",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.EXPERIENCE_STATUS_PERMISSION
         );
-        this.SHINY_PERMISSION = toModPerm(
+        public Permission SHINY_PERMISSION = toModPerm(
                 "command.boosters.shiny",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.SHINY_PERMISSION
         );
-        this.SHINY_START_PERMISSION = toModPerm(
+        public Permission SHINY_START_PERMISSION = toModPerm(
                 "command.boosters.shiny.start",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.SHINY_START_PERMISSION
         );
-        this.SHINY_STOP_PERMISSION = toModPerm(
+        public Permission SHINY_STOP_PERMISSION = toModPerm(
                 "command.boosters.shiny.stop",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.SHINY_STOP_PERMISSION
         );
-        this.SHINY_STATUS_PERMISSION = toModPerm(
+        public Permission SHINY_STATUS_PERMISSION = toModPerm(
                 "command.boosters.shiny.status",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.SHINY_STATUS_PERMISSION
         );
-        this.BUCKET_PERMISSION = toModPerm(
+        public Permission BUCKET_PERMISSION = toModPerm(
                 "command.boosters.bucket",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.BUCKET_PERMISSION
         );
-        this.BUCKET_START_PERMISSION = toModPerm(
+        public Permission BUCKET_START_PERMISSION = toModPerm(
                 "command.boosters.bucket.start",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.BUCKET_START_PERMISSION
         );
-        this.BUCKET_STOP_PERMISSION = toModPerm(
+        public Permission BUCKET_STOP_PERMISSION = toModPerm(
                 "command.boosters.bucket.stop",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.BUCKET_STOP_PERMISSION
         );
-        this.BUCKET_STATUS_PERMISSION = toModPerm(
+        public Permission BUCKET_STATUS_PERMISSION = toModPerm(
                 "command.boosters.bucket.status",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.BUCKET_STATUS_PERMISSION
         );
-        this.CLEAR_QUEUES_PERMISSION = toModPerm(
+        public Permission CLEAR_QUEUES_PERMISSION = toModPerm(
                 "command.boosters.clear_queues",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CLEAR_QUEUES_PERMISSION
         );
-        this.CHECK_QUEUE_PERMISSION = toModPerm(
+        public Permission CHECK_QUEUE_PERMISSION = toModPerm(
                 "command.boosters.check_queue",
                 CobblemonBoosters.INSTANCE.PERMISSIONS_CONFIG_MANAGER.getConfig().permissionLevels.CHECK_QUEUE_PERMISSION
         );
     }
 
-    public ModPermission toModPerm(String permission, int level) {
-        return new ModPermission(
-                Constants.MOD_ID + "." + permission,
-                toPermLevel(level)
-        );
+    public static Permissions getPermissions() {
+        return PERMISSIONS;
     }
 
-    public PermissionLevel toPermLevel(int permLevel) {
+    private PermissionRegistry() {
+    }
+
+    public static void init() {}
+
+    public static boolean checkPermission(CommandSourceStack source, Permission permission) {
+        return MatthiesenLibApi.getPermissionValidator().hasPermission(source, permission);
+    }
+
+    public static boolean checkPermission(ServerPlayer source, Permission permission) {
+        return MatthiesenLibApi.getPermissionValidator().hasPermission(source, permission);
+    }
+
+    private static Permission toModPerm(String permission, int level) {
+        return register(modPermission(
+                Constants.MOD_ID + "." + permission,
+                toPermLevel(level)
+        ));
+    }
+
+    public static PermissionLevel toPermLevel(int permLevel) {
         for (PermissionLevel value : PermissionLevel.values()) {
             if (value.ordinal() == permLevel) {
                 return value;
@@ -123,11 +124,22 @@ public class ModPermissions {
         return PermissionLevel.CHEAT_COMMANDS_AND_COMMAND_BLOCKS;
     }
 
-    public static boolean checkPermission(CommandSourceStack source, ModPermission permission) {
-        return Cobblemon.INSTANCE.getPermissionValidator().hasPermission(source, permission);
+    private static Permission register(Permission permission) {
+        MatthiesenLibApi.registerPermission(permission);
+        return permission;
     }
 
-    public static boolean checkPermission(ServerPlayer player, ModPermission permission) {
-        return Cobblemon.INSTANCE.getPermissionValidator().hasPermission(player, permission);
+    private static Permission modPermission(String node, PermissionLevel level) {
+        return new AbstractPermission(node, level) {
+            @Override
+            protected String getModId() {
+                return Constants.MOD_ID;
+            }
+
+            @Override
+            protected String getPermissionNamespace() {
+                return "CobblemonBoosters";
+            }
+        };
     }
 }

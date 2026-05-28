@@ -8,22 +8,18 @@ import com.cobblemon.mod.common.api.events.pokemon.ExperienceGainedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
-import com.mojang.brigadier.CommandDispatcher;
-import dev.matthiesen.common.cobblemon_boosters.commands.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.config.*;
 import dev.matthiesen.common.cobblemon_boosters.data.*;
 import dev.matthiesen.common.cobblemon_boosters.gui.FallbackGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.GooeyGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.registry.CommandRegistry;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.*;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
 import kotlin.Unit;
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
@@ -32,7 +28,7 @@ import java.util.Queue;
 public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
     public IGUIAdapter guiAdapter;
-    public ModPermissions permissions;
+    public PermissionRegistry.Permissions permissions;
     public IWebhookService discordWebhookService;
 
     // Configs
@@ -70,8 +66,11 @@ public class CobblemonBoosters {
     public void initialize() {
         INSTANCE = this;
         reload(false);
+        PermissionRegistry.init();
+        this.permissions = PermissionRegistry.getPermissions();
+        CommandRegistry.init();
+
         Constants.createInfoLog("Initialized");
-        this.permissions = new ModPermissions();
         if (MatthiesenLibApi.isModLoaded("gooeylibs")) {
             this.guiAdapter = new GooeyGUIAdapter();
         } else {
@@ -143,11 +142,6 @@ public class CobblemonBoosters {
         if (this.spawnBucketSubscription != null) {
             this.spawnBucketSubscription.unsubscribe();
         }
-    }
-
-    public void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registry, Commands.CommandSelection context) {
-        Constants.createInfoLog("Registering Commands");
-        CommandRegistry.init(dispatcher, registry, context);
     }
 
     public void onEndTick() {
