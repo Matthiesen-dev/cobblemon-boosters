@@ -30,6 +30,7 @@ public class CobblemonBoosters {
     public IGUIAdapter guiAdapter;
     public PermissionRegistry.Permissions permissions;
     public IWebhookService discordWebhookService;
+    public boolean COBBREEDING_AVAILABLE;
 
     // Configs
     public ConfigManager<CacheConfig> CACHE_CONFIG_MANAGER =
@@ -70,17 +71,25 @@ public class CobblemonBoosters {
         this.permissions = PermissionRegistry.getPermissions();
         CommandRegistry.init();
 
+        loadCompat();
         Constants.createInfoLog("Initialized");
-        if (MatthiesenLibApi.isModLoaded("gooeylibs")) {
-            this.guiAdapter = new GooeyGUIAdapter();
+    }
+
+    public void loadCompat() {
+        if (MatthiesenLibApi.isModLoaded(Constants.COMPAT.GOOEYLIBS)) {
+            guiAdapter = new GooeyGUIAdapter();
+            Constants.createInfoLog("GooeyLibs detected, using GooeyLibs for GUI");
         } else {
-            this.guiAdapter = new FallbackGUIAdapter();
+            guiAdapter = new FallbackGUIAdapter();
         }
-        if (MatthiesenLibApi.isModLoaded("matthiesen_lib_webhooks")) {
-            this.discordWebhookService = new DiscordWebhookService();
+        if (MatthiesenLibApi.isModLoaded(Constants.COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
+            discordWebhookService = new DiscordWebhookService();
+            Constants.createInfoLog("Matthiesen Lib Webhooks detected, using it for Discord Webhook integration");
         } else {
-            this.discordWebhookService = new NoOpWebhookService();
+            discordWebhookService = new NoOpWebhookService();
         }
+
+        COBBREEDING_AVAILABLE = MatthiesenLibApi.isModLoaded(Constants.COMPAT.COBBREEDING);
     }
 
     public void onStartup() {

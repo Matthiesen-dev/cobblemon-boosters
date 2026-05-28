@@ -1,5 +1,6 @@
 package dev.matthiesen.common.cobblemon_boosters;
 
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +15,13 @@ public class Constants {
             "experience",
             "shiny"
     );
+
+    public static class COMPAT {
+        public static final String GOOEYLIBS = "gooeylibs";
+        public static final String MATTHIESEN_LIB_WEBHOOKS = "matthiesen_lib_webhooks";
+        public static final String COBBREEDING = "cobbreeding";
+        public static final ResourceLocation COBBREEDING_EGG = ResourceLocation.parse("cobbreeding:manaphy_egg");
+    }
 
     public static Logger LOGGER = LogManager.getLogger(ModName);
 

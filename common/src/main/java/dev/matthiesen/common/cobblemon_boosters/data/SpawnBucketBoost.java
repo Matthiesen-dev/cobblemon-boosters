@@ -3,7 +3,7 @@ package dev.matthiesen.common.cobblemon_boosters.data;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.utils.BossBar;
-import dev.matthiesen.common.cobblemon_boosters.utils.ItemBuilder;
+import dev.matthiesen.common.cobblemon_boosters.utils.BoostersItemBuilder;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
@@ -111,7 +111,7 @@ public class SpawnBucketBoost implements IBoost {
 
     @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
-        return new ItemBuilder(MenuUtils.getBucketItem())
+        return new BoostersItemBuilder(MenuUtils.getBucketItem())
                 .hideAdditional()
                 .setCustomName(TextUtils.deserialize(TextUtils.parse("&a%bucket% Spawn Bucket Boost&r", this)))
                 .addLore(lore)
