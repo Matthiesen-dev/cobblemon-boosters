@@ -35,7 +35,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
     public static void openBucketGui(ServerPlayer player) {
         String boostType = "Spawn Bucket";
         new BoostersGuiTemplate(
-                "<aqua>Spawn Bucket Boosts<reset>",
+                "&bSpawn Bucket Boosts&r",
                 boostType,
                 player,
                 CobblemonBoosters.INSTANCE.activeSpawnBucketBoost,
@@ -73,7 +73,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
     public static void openCatchGUI(ServerPlayer player) {
         String boostType = "Catch";
         new BoostersGuiTemplate(
-                "<light_purple>Catch Boosts<reset>",
+                "&dCatch Boosts&r",
                 boostType,
                 player,
                 CobblemonBoosters.INSTANCE.activeCatchBoost,
@@ -112,7 +112,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
     public static void openExperienceGUI(ServerPlayer player) {
         String boostType = "Experience";
         new BoostersGuiTemplate(
-                "<green>Experience Boosts<reset>",
+                "&aExperience Boosts&r",
                 boostType,
                 player,
                 CobblemonBoosters.INSTANCE.activeExperienceBoost,
@@ -151,7 +151,7 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
     public static void openShinyGUI(ServerPlayer player) {
         String boostType = "Shiny";
         new BoostersGuiTemplate(
-                "<gold>Shiny Boosts<reset>",
+                "&6Shiny Boosts&r",
                 boostType,
                 player,
                 CobblemonBoosters.INSTANCE.activeShinyBoost,

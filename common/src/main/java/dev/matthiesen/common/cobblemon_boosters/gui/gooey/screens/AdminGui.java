@@ -26,7 +26,7 @@ public class AdminGui extends BaseMenuGuiTemplate {
     @Override
     public Component getTitle() {
         return TextUtils.deserialize(
-                TextUtils.parse("<red>Admin Menu<reset>")
+                TextUtils.parse("&cAdmin Menu&r")
         );
     }
 
@@ -75,7 +75,7 @@ public class AdminGui extends BaseMenuGuiTemplate {
                     .display(MenuUtils.getReloadItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
                             player,
-                            "<red>Confirm to reload",
+                            "&cConfirm to reload",
                             () -> {
                                 CobblemonBoosters.INSTANCE.reload(true);
                                 sendPlayerMessage(CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.commandReload);
@@ -92,7 +92,7 @@ public class AdminGui extends BaseMenuGuiTemplate {
                     .display(MenuUtils.getClearQueueItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
                             player,
-                            "<red>Confirm to clear all Queues",
+                            "&cConfirm to clear all Queues",
                             () -> {
                                 getQueuesAndClear();
                                 close();

@@ -72,7 +72,7 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
                 .display(MenuUtils.getStopButton(activeBoost != null))
                 .onClick(() -> new CancelConfirmGuiBuilder(
                         player,
-                        "<red>Confirm to stop active boost!",
+                        "&cConfirm to stop active boost!",
                         () -> {
                             if (activeBoost != null) {
                                 activeBoost.setTimeRemaining(1);

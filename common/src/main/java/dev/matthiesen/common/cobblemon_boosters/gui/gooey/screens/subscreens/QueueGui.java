@@ -27,7 +27,7 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
 
     public Component getTitle() {
         return TextUtils.deserialize(
-                TextUtils.parse("<aqua>" + queueName + " Queue")
+                TextUtils.parse("&b" + queueName + " Queue")
         );
     }
 
@@ -66,10 +66,10 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
             for (IBoost boost : boosts) {
                 List<Component> loreComponents = new ArrayList<>();
 
-                loreComponents.add(TextUtils.deserialize(TextUtils.parse("<white>Duration: <green>%duration%", boost)));
+                loreComponents.add(TextUtils.deserialize(TextUtils.parse("&fDuration: &a%duration%", boost)));
 
                 if (boost instanceof SpawnBucketBoost && ((SpawnBucketBoost) boost).bucket != null) {
-                    loreComponents.add(TextUtils.deserialize(TextUtils.parse("<green>Bucket: <red>%bucket%", boost)));
+                    loreComponents.add(TextUtils.deserialize(TextUtils.parse("&aBucket: &c%bucket%", boost)));
                 }
 
                 Component[] lore = new Component[loreComponents.size()];

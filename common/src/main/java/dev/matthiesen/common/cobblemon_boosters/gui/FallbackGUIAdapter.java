@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class FallbackGUIAdapter implements IGUIAdapter {
 
     public Component getDefaultComponent() {
-        String defaultMessage = TextUtils.parse("%prefix% <gray>GUI not available, please use command arguments instead.</gray>");
+        String defaultMessage = TextUtils.parse("%prefix% &7GUI not available, please use command arguments instead.&r");
         return TextUtils.deserialize(defaultMessage);
     }
 

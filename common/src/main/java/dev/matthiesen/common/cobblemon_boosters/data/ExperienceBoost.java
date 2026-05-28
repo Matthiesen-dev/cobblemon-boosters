@@ -85,7 +85,7 @@ public class ExperienceBoost implements IBoost {
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
         return new ItemBuilder(MenuUtils.EXPERIENCE_ITEM)
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize(TextUtils.parse("<green>%multiplier%x Experience Boost</green>", this)))
+                .setCustomName(TextUtils.deserialize(TextUtils.parse("&a%multiplier%x Experience Boost&r", this)))
                 .addLore(lore)
                 .build();
     }

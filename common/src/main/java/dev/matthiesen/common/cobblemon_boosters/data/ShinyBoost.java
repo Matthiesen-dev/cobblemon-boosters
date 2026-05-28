@@ -85,7 +85,7 @@ public class ShinyBoost implements IBoost {
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
         return new ItemBuilder(MenuUtils.SHINY_ITEM)
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize(TextUtils.parse("<green>%multiplier%x Shiny Boost</green>", this)))
+                .setCustomName(TextUtils.deserialize(TextUtils.parse("&a%multiplier%x Shiny Boost&r", this)))
                 .addLore(lore)
                 .build();
     }

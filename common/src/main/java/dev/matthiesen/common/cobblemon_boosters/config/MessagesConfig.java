@@ -11,10 +11,10 @@ public class MessagesConfig {
 
     public static class GeneralMessagesConfig {
         @SerializedName("prefix")
-        public String prefix = "<gray>[<gold>Boosters<gray>]";
+        public String prefix = "&7[&6Boosters&7]";
 
         @SerializedName("commandReload")
-        public String commandReload = "%prefix% <green>Reloaded the config!";
+        public String commandReload = "%prefix% &aReloaded the config!";
 
         @SerializedName("shinyMessages")
         public ShinyMessagesConfig shinyMessages = new ShinyMessagesConfig();
@@ -37,28 +37,28 @@ public class MessagesConfig {
         public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
 
         @SerializedName("barText")
-        public String barText = "<gold>%multiplier%x Shiny Boost <gray>| <green>%time_remaining% Remaining";
+        public String barText = "&6%multiplier%x Shiny Boost &7| &a%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
-        public String noActiveBoosts = "%prefix% <green>There are currently no active Shiny Boosts!";
+        public String noActiveBoosts = "%prefix% &aThere are currently no active Shiny Boosts!";
 
         @SerializedName("boostStarted")
-        public String boostStarted = "%prefix% <green>Started a Shiny %multiplier%x boost for %duration%!";
+        public String boostStarted = "%prefix% &aStarted a Shiny %multiplier%x boost for %duration%!";
 
         @SerializedName("boostAddedToQueued")
-        public String boostAddedToQueued = "%prefix% <green>Added a Shiny %multiplier%x boost with a %duration% duration to queue!";
+        public String boostAddedToQueued = "%prefix% &aAdded a Shiny %multiplier%x boost with a %duration% duration to queue!";
 
         @SerializedName("boostStopped")
-        public String boostStopped = "%prefix% <green>Stopped the current Shiny boost!";
+        public String boostStopped = "%prefix% &aStopped the current Shiny boost!";
 
         @SerializedName("boostQueueCleared")
-        public String boostQueueCleared = "%prefix% <green>Cleared the Shiny queued boosts!";
+        public String boostQueueCleared = "%prefix% &aCleared the Shiny queued boosts!";
 
         @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><gold>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+        public String boostInfo = "%prefix% &f&lMultiplier: &r&6%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%";
 
         @SerializedName("noQueuedBoosts")
-        public String noQueuedBoosts = "%prefix% <green>There are currently no Shiny Boosts in the queue!";
+        public String noQueuedBoosts = "%prefix% &aThere are currently no Shiny Boosts in the queue!";
     }
 
     public static class CatchBoostMessagesConfig {
@@ -69,28 +69,28 @@ public class MessagesConfig {
         public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
 
         @SerializedName("barText")
-        public String barText = "<light_purple>%multiplier%x Catch Boost <gray>| <green>%time_remaining% Remaining";
+        public String barText = "&d%multiplier%x Catch Boost &7| &a%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
-        public String noActiveBoosts = "%prefix% <green>There are currently no active Catch Boosts!";
+        public String noActiveBoosts = "%prefix% &aThere are currently no active Catch Boosts!";
 
         @SerializedName("boostStarted")
-        public String boostStarted = "%prefix% <green>Started a Catch %multiplier%x boost for %duration%!";
+        public String boostStarted = "%prefix% &aStarted a Catch %multiplier%x boost for %duration%!";
 
         @SerializedName("boostAddedToQueued")
-        public String boostAddedToQueued = "%prefix% <green>Added a Catch %multiplier%x boost with a %duration% duration to queue!";
+        public String boostAddedToQueued = "%prefix% &aAdded a Catch %multiplier%x boost with a %duration% duration to queue!";
 
         @SerializedName("boostStopped")
-        public String boostStopped = "%prefix% <green>Stopped the current Catch boost!";
+        public String boostStopped = "%prefix% &aStopped the current Catch boost!";
 
         @SerializedName("boostQueueCleared")
-        public String boostQueueCleared = "%prefix% <green>Cleared the Catch queued boosts!";
+        public String boostQueueCleared = "%prefix% &aCleared the Catch queued boosts!";
 
         @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><light_purple>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+        public String boostInfo = "%prefix% &f&lMultiplier: &r&d%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%";
 
         @SerializedName("noQueuedBoosts")
-        public String noQueuedBoosts = "%prefix% <green>There are currently no Catch Boosts in the queue!";
+        public String noQueuedBoosts = "%prefix% &aThere are currently no Catch Boosts in the queue!";
     }
 
     public static class ExperienceBoostMessagesConfig {
@@ -101,28 +101,28 @@ public class MessagesConfig {
         public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
 
         @SerializedName("barText")
-        public String barText = "<green>%multiplier%x Experience Boost <gray>| <green>%time_remaining% Remaining";
+        public String barText = "&a%multiplier%x Experience Boost &7| &a%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
-        public String noActiveBoosts = "%prefix% <green>There are currently no active Experience Boosts!";
+        public String noActiveBoosts = "%prefix% &aThere are currently no active Experience Boosts!";
 
         @SerializedName("boostStarted")
-        public String boostStarted = "%prefix% <green>Started a Experience %multiplier%x boost for %duration%!";
+        public String boostStarted = "%prefix% &aStarted a Experience %multiplier%x boost for %duration%!";
 
         @SerializedName("boostAddedToQueued")
-        public String boostAddedToQueued = "%prefix% <green>Added a Experience %multiplier%x boost with a %duration% duration to queue!";
+        public String boostAddedToQueued = "%prefix% &aAdded a Experience %multiplier%x boost with a %duration% duration to queue!";
 
         @SerializedName("boostStopped")
-        public String boostStopped = "%prefix% <green>Stopped the current Experience boost!";
+        public String boostStopped = "%prefix% &aStopped the current Experience boost!";
 
         @SerializedName("boostQueueCleared")
-        public String boostQueueCleared = "%prefix% <green>Cleared the Experience queued boosts!";
+        public String boostQueueCleared = "%prefix% &aCleared the Experience queued boosts!";
 
         @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% <white><bold>Multiplier: <reset><green>%multiplier%x <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+        public String boostInfo = "%prefix% &f&lMultiplier: &r&a%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%";
 
         @SerializedName("noQueuedBoosts")
-        public String noQueuedBoosts = "%prefix% <green>There are currently no Experience Boosts in the queue!";
+        public String noQueuedBoosts = "%prefix% &aThere are currently no Experience Boosts in the queue!";
     }
 
     public static class SpawnBucketBoostMessagesConfig {
@@ -133,28 +133,28 @@ public class MessagesConfig {
         public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
 
         @SerializedName("barText")
-        public String barText = "<aqua>%bucket% Spawn Bucket Boost <gray>| <green>%time_remaining% Remaining";
+        public String barText = "&b%bucket% Spawn Bucket Boost &7| &a%time_remaining% Remaining";
 
         @SerializedName("noActiveBoosts")
-        public String noActiveBoosts = "%prefix% <green>There are currently no active Spawn Bucket Boosts!";
+        public String noActiveBoosts = "%prefix% &aThere are currently no active Spawn Bucket Boosts!";
 
         @SerializedName("boostStarted")
-        public String boostStarted = "%prefix% <green>Started a %bucket% Spawn Bucket Boost for %duration%!";
+        public String boostStarted = "%prefix% &aStarted a %bucket% Spawn Bucket Boost for %duration%!";
 
         @SerializedName("boostAddedToQueued")
-        public String boostAddedToQueued = "%prefix% <green>Added a %bucket% Spawn Bucket Boost with a %duration% duration to queue!";
+        public String boostAddedToQueued = "%prefix% &aAdded a %bucket% Spawn Bucket Boost with a %duration% duration to queue!";
 
         @SerializedName("boostStopped")
-        public String boostStopped = "%prefix% <green>Stopped the current Spawn Bucket boost!";
+        public String boostStopped = "%prefix% &aStopped the current Spawn Bucket boost!";
 
         @SerializedName("boostQueueCleared")
-        public String boostQueueCleared = "%prefix% <green>Cleared the Spawn Bucket queued boosts!";
+        public String boostQueueCleared = "%prefix% &aCleared the Spawn Bucket queued boosts!";
 
         @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% <white><bold>Bucket: <reset><aqua>%bucket% <gray><bold>| <reset><white><bold>Timer: <reset><green>%time_remaining% <gray>/ <green>%duration%";
+        public String boostInfo = "%prefix% &f&lBucket: &r&b%bucket% &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%";
 
         @SerializedName("noQueuedBoosts")
-        public String noQueuedBoosts = "%prefix% <green>There are currently no Spawn Bucket Boosts in the queue!";
+        public String noQueuedBoosts = "%prefix% &aThere are currently no Spawn Bucket Boosts in the queue!";
     }
 
     @SuppressWarnings("unused")

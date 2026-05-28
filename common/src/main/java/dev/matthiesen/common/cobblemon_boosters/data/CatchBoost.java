@@ -85,7 +85,7 @@ public class CatchBoost implements IBoost {
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
         return new ItemBuilder(MenuUtils.CATCH_ITEM)
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize(TextUtils.parse("<green>%multiplier%x Catch Boost</green>", this)))
+                .setCustomName(TextUtils.deserialize(TextUtils.parse("&a%multiplier%x Catch Boost&r", this)))
                 .addLore(lore)
                 .build();
     }

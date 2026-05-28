@@ -4,13 +4,15 @@ import com.cobblemon.mod.common.Cobblemon;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import net.minecraft.network.chat.Component;
 
 import java.time.Instant;
 
 public class TextUtils {
     public static Component deserialize(String text) {
-        return Component.literal(text);
+        return MatthiesenLibApi.getTextParser(MatthiesenLibBuiltInTextParsers.VANILLA).parse(text);
     }
 
     public static String getCurrentTimestampForDiscordEmbed() {

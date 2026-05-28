@@ -113,7 +113,7 @@ public class SpawnBucketBoost implements IBoost {
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
         return new ItemBuilder(MenuUtils.getBucketItem())
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize(TextUtils.parse("<green>%bucket% Spawn Bucket Boost</green>", this)))
+                .setCustomName(TextUtils.deserialize(TextUtils.parse("&a%bucket% Spawn Bucket Boost&r", this)))
                 .addLore(lore)
                 .build();
     }
