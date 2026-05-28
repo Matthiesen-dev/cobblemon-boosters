@@ -21,6 +21,7 @@
     "matthiesen_lib_api": ">=1.2.5 <2.0.0"
   },
   "suggests": {
-    "cobbreeding": ">=2.0.0"
+    "cobbreeding": ">=2.0.0",
+    "matthiesen_lib_webhooks": "*"
   }
 }

@@ -15,6 +15,7 @@ discord-webhook-client = "0.3.0"
 junit = "5.1.0"
 publish = "0.35.0"
 matthiesen_lib_api = "1.2.5"
+matthiesen_lib_webhooks = "PR-1-SNAPSHOT"
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
@@ -46,13 +47,16 @@ junit-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", ver
 matthiesen-lib-api-common = { group = "dev.matthiesen", name = "matthiesen-lib-api-common", version.ref = "matthiesen_lib_api" }
 matthiesen-lib-api-fabric = { group = "dev.matthiesen", name = "matthiesen-lib-api-fabric", version.ref = "matthiesen_lib_api" }
 matthiesen-lib-api-neoforge = { group = "dev.matthiesen", name = "matthiesen-lib-api-neoforge", version.ref = "matthiesen_lib_api" }
+matthiesen-lib-webhooks-common = { group = "dev.matthiesen", name = "matthiesen-lib-webhooks-common", version.ref = "matthiesen_lib_webhooks" }
+matthiesen-lib-webhooks-fabric = { group = "dev.matthiesen", name = "matthiesen-lib-webhooks-fabric", version.ref = "matthiesen_lib_webhooks" }
+matthiesen-lib-webhooks-neoforge = { group = "dev.matthiesen", name = "matthiesen-lib-webhooks-neoforge", version.ref = "matthiesen_lib_webhooks" }
 
 [bundles]
 commonImplementation = ["discord-webhook-client"]
-commonModImplementation = ["cobblemon-common", "gooeylibs-api", "matthiesen-lib-api-common"]
-fabricModImplementation = ["fabric-loader", "fabric-api", "fabric-language-kotlin", "cobblemon-fabric", "matthiesen-lib-api-fabric"]
+commonModImplementation = ["cobblemon-common", "gooeylibs-api", "matthiesen-lib-api-common", "matthiesen-lib-webhooks-common"]
+fabricModImplementation = ["fabric-loader", "fabric-api", "fabric-language-kotlin", "cobblemon-fabric", "matthiesen-lib-api-fabric", "matthiesen-lib-webhooks-fabric"]
 fabricModRuntimeOnly = ["gooeylibs-fabric"]
-neoforgeModImplementation = ["cobblemon-neoforge", "kotlinforforge", "matthiesen-lib-api-neoforge"]
+neoforgeModImplementation = ["cobblemon-neoforge", "matthiesen-lib-api-neoforge", "matthiesen-lib-webhooks-neoforge", "kotlinforforge"]
 neoforgeModRuntimeOnly = ["gooeylibs-neoforge"]
 
 

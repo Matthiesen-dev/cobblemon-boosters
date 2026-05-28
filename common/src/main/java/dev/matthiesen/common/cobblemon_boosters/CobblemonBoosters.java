@@ -15,6 +15,7 @@ import dev.matthiesen.common.cobblemon_boosters.data.*;
 import dev.matthiesen.common.cobblemon_boosters.gui.FallbackGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.GooeyGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
 import dev.matthiesen.common.cobblemon_boosters.utils.*;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
@@ -32,7 +33,7 @@ public class CobblemonBoosters {
     public IGUIAdapter guiAdapter;
     public ModPermissions permissions;
     public ModConfig config;
-    public DiscordWebhookService discordWebhookService = new DiscordWebhookService();
+    public IWebhookService discordWebhookService;
 
     // Shiny Boost Variables
     public ShinyBoost activeShinyBoost = null;
@@ -65,6 +66,11 @@ public class CobblemonBoosters {
             this.guiAdapter = new GooeyGUIAdapter();
         } else {
             this.guiAdapter = new FallbackGUIAdapter();
+        }
+        if (MatthiesenLibApi.isModLoaded("matthiesen_lib_webhooks")) {
+            this.discordWebhookService = new DiscordWebhookService();
+        } else {
+            this.discordWebhookService = new NoOpWebhookService();
         }
     }
 

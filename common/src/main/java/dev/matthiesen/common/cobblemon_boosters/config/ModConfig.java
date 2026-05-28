@@ -3,11 +3,11 @@ package dev.matthiesen.common.cobblemon_boosters.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import com.n1netails.n1netails.discord.DiscordColor;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.data.*;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.matthiesen_lib_webhooks.discord.DiscordColor;
 import net.minecraft.world.BossEvent;
 
 import java.util.ArrayList;
@@ -436,7 +436,7 @@ public class ModConfig {
         public String description;
 
         @SerializedName("color")
-        public String color;
+        public Integer color;
 
         @SerializedName("author")
         public DiscordAuthor author;
@@ -450,7 +450,7 @@ public class ModConfig {
         public DiscordEmbed create(
                 String title,
                 String description,
-                String color,
+                Integer color,
                 DiscordAuthor author,
                 List<DiscordEmbedField> fields,
                 String timestamp

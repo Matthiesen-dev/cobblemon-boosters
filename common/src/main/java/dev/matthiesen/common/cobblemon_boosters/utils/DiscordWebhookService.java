@@ -1,27 +1,31 @@
 package dev.matthiesen.common.cobblemon_boosters.utils;
 
-import com.n1netails.n1netails.discord.api.DiscordWebhookClient;
-import com.n1netails.n1netails.discord.exception.DiscordWebhookException;
-import com.n1netails.n1netails.discord.internal.DiscordWebhookClientImpl;
-import com.n1netails.n1netails.discord.model.*;
-import com.n1netails.n1netails.discord.service.WebhookService;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.config.ModConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
+import dev.matthiesen.common.matthiesen_lib_webhooks.MatthiesenLibWebhooks;
+import dev.matthiesen.common.matthiesen_lib_webhooks.discord.model.Embed;
+import dev.matthiesen.common.matthiesen_lib_webhooks.discord.model.EmbedBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiscordWebhookService {
-    private static DiscordWebhookClient webhookClient;
+public class DiscordWebhookService implements IWebhookService {
+    private static MatthiesenLibWebhooks.Webhooks webhooks;
 
     public DiscordWebhookService() {
-        webhookClient = new DiscordWebhookClientImpl(new WebhookService());
+        webhooks = getClient();
     }
 
-    public static DiscordWebhookClient getWebhookClient() {
-        return webhookClient;
+    public MatthiesenLibWebhooks.Webhooks getClient() {
+        if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.enabled) return null;
+        if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl.startsWith("https://")) {
+            Constants.createErrorLog("Discord webhooks are enabled but an invalid Discord Webhook URL is set! Please check your configuration. (Must start with 'https://')");
+            return null;
+        }
+        return new MatthiesenLibWebhooks.Webhooks(CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl);
     }
 
     public static Embed parseEventEmbed(ModConfig.DiscordEmbed embed, IBoost boost) {
@@ -50,28 +54,27 @@ public class DiscordWebhookService {
         if (embed.author != null) {
             Embed.Author author = new Embed.Author();
             if (embed.author.name != null) author.setName(TextUtils.parse(embed.author.name, boost));
-            if (embed.author.icon_url != null) author.setIcon_url(TextUtils.parse(embed.author.icon_url, boost));
+            if (embed.author.icon_url != null) author.setIconUrl(TextUtils.parse(embed.author.icon_url, boost));
             if (embed.author.url != null) author.setUrl(TextUtils.parse(embed.author.url, boost));
             embedBuilder.withAuthor(author);
         }
         return embedBuilder.build();
     }
 
+    @Override
     public void sendMessage(ModConfig.DiscordEmbed embed, IBoost boost) {
-        if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.enabled) return;
-        if (!CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl.startsWith("https://")) {
-            Constants.createErrorLog("Discord webhooks are enabled but an invalid Discord Webhook URL is set! Please check your configuration. (Must start with 'https://')");
-            return;
-        }
-        WebhookMessage message = new WebhookMessageBuilder()
-                .withAvatarUrl(TextUtils.parse(embed.author.icon_url, boost))
-                .withUsername(TextUtils.parse(embed.author.name, boost))
+        if (webhooks == null) return;
+        String userName = embed.author != null && embed.author.name != null
+                ? embed.author.name
+                : "Cobblemon Boosters";
+        String avatarUrl = embed.author != null && embed.author.icon_url != null
+                ? embed.author.icon_url
+                : "https://raw.githubusercontent.com/Matthiesen-dev/cobblemon-boosters/refs/heads/main/assets/logo.png";
+
+        webhooks.sendMessage(message -> message
+                .withUsername(TextUtils.parse(userName, boost))
+                .withAvatarUrl(TextUtils.parse(avatarUrl, boost))
                 .withEmbeds(List.of(parseEventEmbed(embed, boost)))
-                .build();
-        try {
-            getWebhookClient().sendMessage(CobblemonBoosters.INSTANCE.config.discordWebhookConfig.webhookUrl, message);
-        } catch (DiscordWebhookException e) {
-            Constants.LOGGER.error("Failed to send Discord webhook message", e);
-        }
+        );
     }
 }
