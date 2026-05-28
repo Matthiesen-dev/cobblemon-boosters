@@ -52,12 +52,13 @@ matthiesen-lib-webhooks-fabric = { group = "dev.matthiesen", name = "matthiesen-
 matthiesen-lib-webhooks-neoforge = { group = "dev.matthiesen", name = "matthiesen-lib-webhooks-neoforge", version.ref = "matthiesen_lib_webhooks" }
 
 [bundles]
-commonImplementation = ["discord-webhook-client"]
-commonModImplementation = ["cobblemon-common", "gooeylibs-api", "matthiesen-lib-api-common", "matthiesen-lib-webhooks-common"]
-fabricModImplementation = ["fabric-loader", "fabric-api", "fabric-language-kotlin", "cobblemon-fabric", "matthiesen-lib-api-fabric", "matthiesen-lib-webhooks-fabric"]
-fabricModRuntimeOnly = ["gooeylibs-fabric"]
-neoforgeModImplementation = ["cobblemon-neoforge", "matthiesen-lib-api-neoforge", "matthiesen-lib-webhooks-neoforge", "kotlinforforge"]
-neoforgeModRuntimeOnly = ["gooeylibs-neoforge"]
+commonCompileOnly = ["matthiesen-lib-webhooks-common"]
+commonImplementation = []
+commonModImplementation = ["cobblemon-common", "gooeylibs-api", "matthiesen-lib-api-common"]
+fabricModImplementation = ["fabric-loader", "fabric-api", "fabric-language-kotlin", "cobblemon-fabric", "matthiesen-lib-api-fabric"]
+fabricModRuntimeOnly = ["gooeylibs-fabric", "matthiesen-lib-webhooks-fabric"]
+neoforgeModImplementation = ["cobblemon-neoforge", "matthiesen-lib-api-neoforge", "kotlinforforge"]
+neoforgeModRuntimeOnly = ["gooeylibs-neoforge", "matthiesen-lib-webhooks-neoforge"]
 
 
 

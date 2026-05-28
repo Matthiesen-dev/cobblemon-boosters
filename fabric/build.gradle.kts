@@ -21,19 +21,13 @@ dependencies {
     add("modImplementation", fabricApi.module("fabric-lifecycle-events-v1", "0.116.6+1.21.1"))
     add("modImplementation", fabricApi.module("fabric-networking-api-v1", "0.116.6+1.21.1"))
     add("modImplementation", libs.fabric.language.kotlin)
+    add("modRuntimeOnly", libs.fabric.api)
+
     libs.bundles.fabricModImplementation.get().forEach { dependency ->
         modImplementation(dependency.copy()) { isTransitive = false }
     }
-
-    add("modRuntimeOnly", libs.fabric.api)
-    add("modRuntimeOnly", "dev.architectury:architectury-fabric:13.0.8") { isTransitive = false }
     libs.bundles.fabricModRuntimeOnly.get().forEach { dependency ->
         modRuntimeOnly(dependency)
-    }
-
-    implementation(libs.discord.webhook.client)
-    shadowCommon(libs.discord.webhook.client) {
-        isTransitive = true
     }
 
     implementation(project(":common", configuration = "namedElements"))

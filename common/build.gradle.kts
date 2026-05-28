@@ -12,6 +12,9 @@ dependencies {
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
 
+    libs.bundles.commonCompileOnly.get().forEach { dependency ->
+        compileOnly(dependency.copy())
+    }
     libs.bundles.commonModImplementation.get().forEach { dependency ->
         modImplementation(dependency.copy()) { isTransitive = false }
     }

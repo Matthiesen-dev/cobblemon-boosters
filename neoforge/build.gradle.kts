@@ -30,17 +30,13 @@ dependencies {
     libs.bundles.neoforgeModImplementation.get().forEach { dependency ->
         modImplementation(dependency.copy()) { isTransitive = false }
     }
-    forgeRuntimeLibrary(libs.kotlinforforge) {
-        exclude("net.neoforged.fancymodloader", "loader")
-    }
-
     libs.bundles.neoforgeModRuntimeOnly.get().forEach { dependency ->
         modRuntimeOnly(dependency)
     }
 
-    implementation(libs.discord.webhook.client)
-    shadowBundle(libs.discord.webhook.client)
-    forgeRuntimeLibrary(libs.discord.webhook.client)
+    forgeRuntimeLibrary(libs.kotlinforforge) {
+        exclude("net.neoforged.fancymodloader", "loader")
+    }
 
     implementation(project(":common", configuration = "namedElements"))
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
