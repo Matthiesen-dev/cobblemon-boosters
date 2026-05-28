@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
@@ -59,15 +60,16 @@ public class CacheConfig {
     }
 
     public static void setGlobalBoostData() {
+        BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
         CobblemonBoosters.INSTANCE.CACHE_CONFIG_MANAGER.setConfig(new CacheConfig(
-                CobblemonBoosters.INSTANCE.activeShinyBoost,
-                CobblemonBoosters.INSTANCE.activeCatchBoost,
-                CobblemonBoosters.INSTANCE.activeExperienceBoost,
-                CobblemonBoosters.INSTANCE.activeSpawnBucketBoost,
-                CobblemonBoosters.INSTANCE.queuedShinyBoosts.stream().toList(),
-                CobblemonBoosters.INSTANCE.queuedCatchBoosts.stream().toList(),
-                CobblemonBoosters.INSTANCE.queuedExperienceBoosts.stream().toList(),
-                CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts.stream().toList()
+                bm.getShinyBoostManager().getActive(),
+                bm.getCatchBoostManager().getActive(),
+                bm.getExperienceBoostManager().getActive(),
+                bm.getSpawnBucketBoostManager().getActive(),
+                bm.getShinyBoostManager().getQueue().stream().toList(),
+                bm.getCatchBoostManager().getQueue().stream().toList(),
+                bm.getExperienceBoostManager().getQueue().stream().toList(),
+                bm.getSpawnBucketBoostManager().getQueue().stream().toList()
         ));
     }
 

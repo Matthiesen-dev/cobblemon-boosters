@@ -11,6 +11,7 @@ import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,17 +46,19 @@ public class Bucket implements ISubCommand {
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = Util.parseTotalSeconds(duration, unit);
 
-        if (CobblemonBoosters.INSTANCE.activeSpawnBucketBoost == null) {
-            CobblemonBoosters.INSTANCE.activeSpawnBucketBoost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
-            Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostStarted, CobblemonBoosters.INSTANCE.activeSpawnBucketBoost);
+        BoostManager.IBoostManager<SpawnBucketBoost> manager = CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager();
+        if (manager.getActive() == null) {
+            SpawnBucketBoost boost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
+            manager.setActive(boost);
+            Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostStarted, boost);
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
                     CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.spawnBucketEventStartEmbed,
-                    CobblemonBoosters.INSTANCE.activeSpawnBucketBoost
+                    boost
             );
-            CobblemonBoosters.INSTANCE.activeSpawnBucketBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
+            boost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
         } else {
             SpawnBucketBoost boost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
-            CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts.add(boost);
+            manager.appendToQueue(boost);
             Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostAddedToQueued, boost);
         }
         CacheConfig.setGlobalBoostData();
@@ -66,7 +69,7 @@ public class Bucket implements ISubCommand {
         try {
             Util.handleStopCommand(
                     ctx,
-                    CobblemonBoosters.INSTANCE.activeSpawnBucketBoost,
+                    CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager().getActive(),
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostStopped
             );
         } catch (RuntimeException e) {
@@ -78,7 +81,7 @@ public class Bucket implements ISubCommand {
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
         Util.handleStatusCommand(
                 ctx,
-                CobblemonBoosters.INSTANCE.activeSpawnBucketBoost,
+                CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager().getActive(),
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostInfo,
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.noActiveBoosts
         );

@@ -6,6 +6,7 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -22,24 +23,25 @@ public class ClearQueues implements ISubCommand {
     }
 
     public int command(CommandContext<CommandSourceStack> ctx) {
+        BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
         Util.handleQueueClear(
                 ctx,
-                CobblemonBoosters.INSTANCE.queuedShinyBoosts,
+                bm.getShinyBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                CobblemonBoosters.INSTANCE.queuedCatchBoosts,
+                bm.getCatchBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                CobblemonBoosters.INSTANCE.queuedExperienceBoosts,
+                bm.getExperienceBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts,
+                bm.getSpawnBucketBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
         );
         CacheConfig.setGlobalBoostData();

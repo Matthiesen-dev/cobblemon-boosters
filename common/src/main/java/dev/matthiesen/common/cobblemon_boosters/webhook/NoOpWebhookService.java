@@ -1,4 +1,4 @@
-package dev.matthiesen.common.cobblemon_boosters.utils;
+package dev.matthiesen.common.cobblemon_boosters.webhook;
 
 import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;

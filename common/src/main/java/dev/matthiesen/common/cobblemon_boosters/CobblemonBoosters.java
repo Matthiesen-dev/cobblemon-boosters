@@ -1,29 +1,21 @@
 package dev.matthiesen.common.cobblemon_boosters;
 
-import com.cobblemon.mod.common.api.Priority;
-import com.cobblemon.mod.common.api.events.CobblemonEvents;
-import com.cobblemon.mod.common.api.events.entity.SpawnBucketChosenEvent;
-import com.cobblemon.mod.common.api.events.pokeball.PokemonCatchRateEvent;
-import com.cobblemon.mod.common.api.events.pokemon.ExperienceGainedEvent;
-import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
-import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
-import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import dev.matthiesen.common.cobblemon_boosters.config.*;
-import dev.matthiesen.common.cobblemon_boosters.data.*;
 import dev.matthiesen.common.cobblemon_boosters.gui.FallbackGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.GooeyGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
+import dev.matthiesen.common.cobblemon_boosters.managers.TickManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.*;
+import dev.matthiesen.common.cobblemon_boosters.webhook.DiscordWebhookService;
+import dev.matthiesen.common.cobblemon_boosters.webhook.NoOpWebhookService;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
-import kotlin.Unit;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
@@ -31,6 +23,7 @@ public class CobblemonBoosters {
     public PermissionRegistry.Permissions permissions;
     public IWebhookService discordWebhookService;
     public boolean COBBREEDING_AVAILABLE;
+    public BoostManager boostManager;
 
     // Configs
     public ConfigManager<CacheConfig> CACHE_CONFIG_MANAGER =
@@ -42,25 +35,6 @@ public class CobblemonBoosters {
     public ConfigManager<WebhooksConfig> WEBHOOKS_CONFIG_MANAGER =
             new ConfigManager<>(WebhooksConfig.class, "webhooks", Constants.MOD_ID);
 
-    // Shiny Boost Variables
-    public ShinyBoost activeShinyBoost = null;
-    public Queue<ShinyBoost> queuedShinyBoosts = new LinkedList<>();
-    private ObservableSubscription<ShinyChanceCalculationEvent> shinySubscription = null;
-
-    // Catch Boost Variables
-    public CatchBoost activeCatchBoost = null;
-    public Queue<CatchBoost> queuedCatchBoosts = new LinkedList<>();
-    private ObservableSubscription<PokemonCatchRateEvent> catchSubscription = null;
-
-    // Experience Boost Variables
-    public ExperienceBoost activeExperienceBoost = null;
-    public Queue<ExperienceBoost> queuedExperienceBoosts = new LinkedList<>();
-    private ObservableSubscription<ExperienceGainedEvent.Pre> experienceSubscription = null;
-
-    // Bucket Boost Variables
-    public SpawnBucketBoost activeSpawnBucketBoost = null;
-    public Queue<SpawnBucketBoost> queuedSpawnBucketBoosts = new LinkedList<>();
-    private ObservableSubscription<SpawnBucketChosenEvent> spawnBucketSubscription = null;
 
     public CobblemonBoosters() {}
 
@@ -72,6 +46,7 @@ public class CobblemonBoosters {
         CommandRegistry.init();
 
         loadCompat();
+        this.boostManager = new BoostManager();
         Constants.createInfoLog("Initialized");
     }
 
@@ -97,33 +72,7 @@ public class CobblemonBoosters {
     }
 
     public void onServerStarted() {
-        this.shinySubscription = CobblemonEvents.SHINY_CHANCE_CALCULATION.subscribe(Priority.NORMAL, event -> {
-            if (this.activeShinyBoost != null) {
-                event.addModificationFunction(((rate, player, pokemon) -> Math.max(rate / this.activeShinyBoost.getMultiplier(), 1)));
-            }
-            return Unit.INSTANCE;
-        });
-        this.catchSubscription = CobblemonEvents.POKEMON_CATCH_RATE.subscribe(Priority.NORMAL, event -> {
-            if (this.activeCatchBoost != null) {
-                float baseCatchRate = event.getCatchRate();
-                event.setCatchRate(Math.min(baseCatchRate * this.activeCatchBoost.getMultiplier(), 1F));
-            }
-            return Unit.INSTANCE;
-        });
-        this.experienceSubscription = CobblemonEvents.EXPERIENCE_GAINED_EVENT_PRE.subscribe(Priority.NORMAL, event -> {
-            if (this.activeExperienceBoost != null) {
-                int exp = event.getExperience();
-                event.setExperience(Math.round(exp * this.activeExperienceBoost.getMultiplier()));
-            }
-            return Unit.INSTANCE;
-        });
-        this.spawnBucketSubscription = CobblemonEvents.SPAWN_BUCKET_CHOSEN.subscribe(Priority.NORMAL, event -> {
-            if (this.activeSpawnBucketBoost != null) {
-                SpawnBucket newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, this.activeSpawnBucketBoost);
-                event.setBucket(newBucket);
-            }
-            return Unit.INSTANCE;
-        });
+        this.boostManager.setupSubscriptions();
     }
 
     public void onShutdown() {
@@ -135,26 +84,7 @@ public class CobblemonBoosters {
         PERMISSIONS_CONFIG_MANAGER.saveConfig();
         WEBHOOKS_CONFIG_MANAGER.saveConfig();
 
-        this.activeShinyBoost = null;
-        this.activeCatchBoost = null;
-        this.activeExperienceBoost = null;
-        this.activeSpawnBucketBoost = null;
-        this.queuedShinyBoosts.clear();
-        this.queuedCatchBoosts.clear();
-        this.queuedExperienceBoosts.clear();
-        this.queuedSpawnBucketBoosts.clear();
-        if (this.shinySubscription != null) {
-            this.shinySubscription.unsubscribe();
-        }
-        if (this.catchSubscription != null) {
-            this.catchSubscription.unsubscribe();
-        }
-        if (this.experienceSubscription != null) {
-            this.experienceSubscription.unsubscribe();
-        }
-        if (this.spawnBucketSubscription != null) {
-            this.spawnBucketSubscription.unsubscribe();
-        }
+        this.boostManager.teardownSubscriptions();
     }
 
     public void onEndTick() {
@@ -167,33 +97,11 @@ public class CobblemonBoosters {
     }
 
     public void onPlayerJoin(ServerPlayer player) {
-        if (this.activeShinyBoost != null) {
-            this.activeShinyBoost.getBossBar().addPlayer(player);
-        }
-        if (this.activeCatchBoost != null) {
-            this.activeCatchBoost.getBossBar().addPlayer(player);
-        }
-        if (this.activeExperienceBoost != null) {
-            this.activeExperienceBoost.getBossBar().addPlayer(player);
-        }
-        if (this.activeSpawnBucketBoost != null) {
-            this.activeSpawnBucketBoost.getBossBar().addPlayer(player);
-        }
+        this.boostManager.appendPlayer(player);
     }
 
     public void onPlayerLeave(ServerPlayer player) {
-        if (this.activeShinyBoost != null) {
-            this.activeShinyBoost.getBossBar().removePlayer(player);
-        }
-        if (this.activeCatchBoost != null) {
-            this.activeCatchBoost.getBossBar().removePlayer(player);
-        }
-        if (this.activeExperienceBoost != null) {
-            this.activeExperienceBoost.getBossBar().removePlayer(player);
-        }
-        if (this.activeSpawnBucketBoost != null) {
-            this.activeSpawnBucketBoost.getBossBar().removePlayer(player);
-        }
+        this.boostManager.clearPlayer(player);
     }
 
     public void reload(boolean fromCommand) {

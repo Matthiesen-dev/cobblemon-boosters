@@ -1,10 +1,11 @@
-package dev.matthiesen.common.cobblemon_boosters.utils;
+package dev.matthiesen.common.cobblemon_boosters.webhook;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
+import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import dev.matthiesen.common.matthiesen_lib_webhooks.MatthiesenLibWebhooks;
 import dev.matthiesen.common.matthiesen_lib_webhooks.discord.model.Embed;
 import dev.matthiesen.common.matthiesen_lib_webhooks.discord.model.EmbedBuilder;

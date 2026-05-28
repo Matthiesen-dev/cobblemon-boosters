@@ -41,21 +41,22 @@ public class AdminGui extends BaseMenuGuiTemplate {
     }
 
     private void getQueuesAndClear() {
+        var boostManager = CobblemonBoosters.INSTANCE.boostManager;
         List<QueueListEntry> queueEntries = new ArrayList<>();
         queueEntries.add(new QueueListEntry(
-                CobblemonBoosters.INSTANCE.queuedShinyBoosts,
+                boostManager.getShinyBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
-                CobblemonBoosters.INSTANCE.queuedCatchBoosts,
+                boostManager.getCatchBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
-                CobblemonBoosters.INSTANCE.queuedExperienceBoosts,
+                boostManager.getExperienceBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
-                CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts,
+                boostManager.getSpawnBucketBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
         ));
         for (QueueListEntry entry : queueEntries) {

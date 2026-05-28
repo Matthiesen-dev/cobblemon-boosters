@@ -7,6 +7,7 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -46,28 +47,29 @@ public class CheckQueues implements ISubCommand {
 
     public int command(CommandContext<CommandSourceStack> ctx) {
         String booster = StringArgumentType.getString(ctx, "booster").toLowerCase();
+        BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
         switch (booster) {
             case "bucket" -> Util.handleQueueResponse(
                     ctx,
-                    CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts,
+                    bm.getSpawnBucketBoostManager().getQueue(),
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.noQueuedBoosts,
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostInfo
             );
             case "catch" -> Util.handleQueueResponse(
                     ctx,
-                    CobblemonBoosters.INSTANCE.queuedCatchBoosts,
+                    bm.getCatchBoostManager().getQueue(),
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.noQueuedBoosts,
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostInfo
             );
             case "experience" -> Util.handleQueueResponse(
                     ctx,
-                    CobblemonBoosters.INSTANCE.queuedExperienceBoosts,
+                    bm.getExperienceBoostManager().getQueue(),
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.noQueuedBoosts,
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostInfo
             );
             case "shiny" -> Util.handleQueueResponse(
                     ctx,
-                    CobblemonBoosters.INSTANCE.queuedShinyBoosts,
+                    bm.getShinyBoostManager().getQueue(),
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.noQueuedBoosts,
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostInfo
             );
