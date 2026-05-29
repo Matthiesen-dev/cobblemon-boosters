@@ -10,6 +10,7 @@ import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
@@ -44,7 +45,7 @@ public class Bucket implements ISubCommand {
         float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
-        int totalSeconds = Util.parseTotalSeconds(duration, unit);
+        int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
 
         BoostManager.IBoostManager<SpawnBucketBoost> manager = CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager();
         if (manager.getActive() == null) {

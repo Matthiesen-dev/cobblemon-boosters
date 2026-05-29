@@ -60,17 +60,6 @@ public class Util {
         handleSendMessage(ctx, parsedMessage);
     }
 
-    public static int parseTotalSeconds(int duration, String unit) {
-        int totalSeconds;
-        switch (unit) {
-            case "minutes" -> totalSeconds = duration * 60;
-            case "hours" -> totalSeconds = duration * 3600;
-            case "days" -> totalSeconds = duration * 86400;
-            default -> totalSeconds = duration;
-        }
-        return totalSeconds;
-    }
-
     public static RequiredArgumentBuilder<CommandSourceStack, Integer> newDurationAndUnitArgs(
             Command<CommandSourceStack> executes
     ) {

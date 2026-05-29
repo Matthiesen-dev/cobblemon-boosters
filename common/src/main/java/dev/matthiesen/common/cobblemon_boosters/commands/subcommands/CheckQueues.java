@@ -73,7 +73,7 @@ public class CheckQueues implements ISubCommand {
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.noQueuedBoosts,
                     CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostInfo
             );
-            default -> Util.sendMessage(ctx, "%prefix% <red>Unknown booster type. Valid types are: " + String.join(", ", Constants.CURRENT_BOOSTERS) + ".");
+            default -> Util.sendMessage(ctx, "%prefix% &cUnknown booster type. Valid types are: " + String.join(", ", Constants.CURRENT_BOOSTERS) + ".");
         }
         return 1;
     }
