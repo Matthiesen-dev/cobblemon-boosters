@@ -173,7 +173,7 @@ jobs:
                     },
                     {
                         "name":  "Download on Modrinth",
-                        "value": "[Modrinth]("https://modrinth.com/mod/${{ secrets.MODRINTH_ID }}/")",
+                        "value": "[Modrinth](https://modrinth.com/mod/${{ secrets.MODRINTH_ID }}/)",
                         "inline": false
                     },
                     {
