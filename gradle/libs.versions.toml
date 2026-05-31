@@ -14,8 +14,8 @@ gooeylibs = "3.1.1-1.21.x"
 discord-webhook-client = "0.3.0"
 junit = "5.1.0"
 publish = "0.35.0"
-matthiesen_lib_api = "1.2.5"
-matthiesen_lib_webhooks = "PR-1-SNAPSHOT"
+matthiesen_lib_api = "1.2.6"
+matthiesen_lib_webhooks = "1.0.0"
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

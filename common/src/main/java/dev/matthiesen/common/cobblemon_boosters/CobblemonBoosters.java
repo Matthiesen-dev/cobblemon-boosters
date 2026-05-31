@@ -42,9 +42,9 @@ public class CobblemonBoosters {
         PermissionRegistry.init();
         this.permissions = PermissionRegistry.getPermissions();
         CommandRegistry.init();
-
         this.loadCompat();
         this.boostManager = new BoostManager();
+        MatthiesenLibApi.registerReloadRunnable(Constants.MOD_ID, () -> reload(true));
         Constants.createInfoLog("Initialized");
     }
 

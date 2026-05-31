@@ -37,14 +37,14 @@ side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "matthiesen_lib_api"
 mandatory = true
-versionRange = "[1.2.5,)"
+versionRange = "[1.2.6,)"
 ordering = "AFTER"
 side = "SERVER"
 
 [[dependencies.${mod_id}]]
 modId = "matthiesen_lib_webhooks"
 mandatory = false
-versionRange = "[PR-1-SNAPSHOT,)"
+versionRange = "[1.0.0,)"
 ordering = "AFTER"
 side = "SERVER"
 
