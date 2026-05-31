@@ -60,32 +60,22 @@ public class BoostManager {
                     }
             );
 
-    private final IBoostManager<ShinyBoost> shinyManager;
-    private final IBoostManager<CatchBoost> catchManager;
-    private final IBoostManager<ExperienceBoost> experienceManager;
-    private final IBoostManager<SpawnBucketBoost> spawnBucketManager;
-
-    public BoostManager() {
-        this.shinyManager = SHINY_RECORD.getManager();
-        this.catchManager = CATCH_RECORD.getManager();
-        this.experienceManager = EXPERIENCE_RECORD.getManager();
-        this.spawnBucketManager = SPAWN_BUCKET_RECORD.getManager();
-    }
+    public BoostManager() {}
 
     public IBoostManager<ShinyBoost> getShinyBoostManager() {
-        return shinyManager;
+        return SHINY_RECORD.getManager();
     }
 
     public IBoostManager<CatchBoost> getCatchBoostManager() {
-        return catchManager;
+        return CATCH_RECORD.getManager();
     }
 
     public IBoostManager<ExperienceBoost> getExperienceBoostManager() {
-        return experienceManager;
+        return EXPERIENCE_RECORD.getManager();
     }
 
     public IBoostManager<SpawnBucketBoost> getSpawnBucketBoostManager() {
-        return spawnBucketManager;
+        return SPAWN_BUCKET_RECORD.getManager();
     }
 
     public void appendPlayer(ServerPlayer player) {
@@ -120,9 +110,8 @@ public class BoostManager {
         private final EventObservable<K> observable;
         private ObservableSubscription<K> subscription;
         private final BiConsumer<T, K> eventHandler;
-
         private T active;
-        private Queue<T> queue;
+        private final Queue<T> queue;
         private final IBoostManager<T> manager;
 
         @SuppressWarnings("unused")
@@ -143,29 +132,17 @@ public class BoostManager {
             if (active != null) active.getBossBar().removePlayer(player);
         }
 
-        public void setQueue(Queue<T> queue) {
-            this.queue = queue;
-        }
-
-        public Queue<T> getQueue() {
-            return queue;
-        }
-
         public IBoostManager<T> getManager() {
             return manager;
         }
 
-        public Consumer<K> getSubscriptionHandler(IBoostManager<T> manager) {
-            return event -> {
+        public void setupSubscription() {
+            this.subscription = observable.subscribe(Priority.NORMAL, event -> {
                 T activeBoost = manager.getActive();
                 if (activeBoost != null) {
                     eventHandler.accept(activeBoost, event);
                 }
-            };
-        }
-
-        public void setupSubscription() {
-            this.subscription = observable.subscribe(Priority.NORMAL, getSubscriptionHandler(manager));
+            });
         }
 
         public void teardown() {
