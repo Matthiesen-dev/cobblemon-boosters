@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.api.events.entity.SpawnBucketChosenEvent;
 import com.cobblemon.mod.common.api.events.pokeball.PokemonCatchRateEvent;
 import com.cobblemon.mod.common.api.events.pokemon.ExperienceGainedEvent;
 import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
+import com.cobblemon.mod.common.api.reactive.EventObservable;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
@@ -18,48 +19,46 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class BoostManager {
-    private ShinyBoost activeShinyBoost = null;
-    private final Queue<ShinyBoost> queuedShinyBoosts = new LinkedList<>();
-    private ObservableSubscription<ShinyChanceCalculationEvent> shinySubscription = null;
-    private final Consumer<ShinyChanceCalculationEvent> shinyEventHandler = event -> {
-        if (this.activeShinyBoost != null) {
-            event.addModificationFunction(((rate, player, pokemon) -> Math.max(rate / this.activeShinyBoost.getMultiplier(), 1)));
-        }
-    };
-
-    private CatchBoost activeCatchBoost = null;
-    private final Queue<CatchBoost> queuedCatchBoosts = new LinkedList<>();
-    private ObservableSubscription<PokemonCatchRateEvent> catchSubscription = null;
-    private final Consumer<PokemonCatchRateEvent> catchEventHandler = event -> {
-        if (this.activeCatchBoost != null) {
-            float baseCatchRate = event.getCatchRate();
-            event.setCatchRate(Math.min(baseCatchRate * this.activeCatchBoost.getMultiplier(), 1F));
-        }
-    };
-
-    private ExperienceBoost activeExperienceBoost = null;
-    private final Queue<ExperienceBoost> queuedExperienceBoosts = new LinkedList<>();
-    private ObservableSubscription<ExperienceGainedEvent.Pre> experienceSubscription = null;
-    private final Consumer<ExperienceGainedEvent.Pre> experienceEventHandler = event -> {
-        if (this.activeExperienceBoost != null) {
-            int exp = event.getExperience();
-            event.setExperience(Math.round(exp * this.activeExperienceBoost.getMultiplier()));
-        }
-    };
-
-    private SpawnBucketBoost activeSpawnBucketBoost = null;
-    private final Queue<SpawnBucketBoost> queuedSpawnBucketBoosts = new LinkedList<>();
-    private ObservableSubscription<SpawnBucketChosenEvent> spawnBucketSubscription = null;
-    private final Consumer<SpawnBucketChosenEvent> spawnBucketEventHandler = event -> {
-        if (this.activeSpawnBucketBoost != null) {
-            SpawnBucket newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, this.activeSpawnBucketBoost);
-            event.setBucket(newBucket);
-        }
-    };
+    private static final BoostRecord<ShinyBoost, ShinyChanceCalculationEvent> SHINY_RECORD =
+            new BoostRecord<>(
+                    ShinyBoost.class,
+                    CobblemonEvents.SHINY_CHANCE_CALCULATION,
+                    (boost, event) ->
+                            event.addModificationFunction(((rate, player, pokemon) ->
+                                    Math.max(rate / boost.getMultiplier(), 1)))
+            );
+    private static final BoostRecord<CatchBoost, PokemonCatchRateEvent> CATCH_RECORD =
+            new BoostRecord<>(
+                    CatchBoost.class,
+                    CobblemonEvents.POKEMON_CATCH_RATE,
+                    (boost, event) -> {
+                        float baseCatchRate = event.getCatchRate();
+                        event.setCatchRate(Math.min(baseCatchRate * boost.getMultiplier(), 1F));
+                    }
+            );
+    private static final BoostRecord<ExperienceBoost, ExperienceGainedEvent.Pre> EXPERIENCE_RECORD =
+            new BoostRecord<>(
+                    ExperienceBoost.class,
+                    CobblemonEvents.EXPERIENCE_GAINED_EVENT_PRE,
+                    (boost, event) -> {
+                        int exp = event.getExperience();
+                        event.setExperience(Math.round(exp * boost.getMultiplier()));
+                    }
+            );
+    private static final BoostRecord<SpawnBucketBoost, SpawnBucketChosenEvent> SPAWN_BUCKET_RECORD =
+            new BoostRecord<>(
+                    SpawnBucketBoost.class,
+                    CobblemonEvents.SPAWN_BUCKET_CHOSEN,
+                    (boost, event) -> {
+                        SpawnBucket newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, boost);
+                        event.setBucket(newBucket);
+                    }
+            );
 
     private final IBoostManager<ShinyBoost> shinyManager;
     private final IBoostManager<CatchBoost> catchManager;
@@ -67,10 +66,10 @@ public class BoostManager {
     private final IBoostManager<SpawnBucketBoost> spawnBucketManager;
 
     public BoostManager() {
-        this.shinyManager = new IBoostManager<>(() -> activeShinyBoost, b -> activeShinyBoost = b, queuedShinyBoosts);
-        this.catchManager = new IBoostManager<>(() -> activeCatchBoost, b -> activeCatchBoost = b, queuedCatchBoosts);
-        this.experienceManager = new IBoostManager<>(() -> activeExperienceBoost, b -> activeExperienceBoost = b, queuedExperienceBoosts);
-        this.spawnBucketManager = new IBoostManager<>(() -> activeSpawnBucketBoost, b -> activeSpawnBucketBoost = b, queuedSpawnBucketBoosts);
+        this.shinyManager = SHINY_RECORD.getManager();
+        this.catchManager = CATCH_RECORD.getManager();
+        this.experienceManager = EXPERIENCE_RECORD.getManager();
+        this.spawnBucketManager = SPAWN_BUCKET_RECORD.getManager();
     }
 
     public IBoostManager<ShinyBoost> getShinyBoostManager() {
@@ -90,43 +89,90 @@ public class BoostManager {
     }
 
     public void appendPlayer(ServerPlayer player) {
-        if (activeShinyBoost != null) activeShinyBoost.getBossBar().addPlayer(player);
-        if (activeCatchBoost != null) activeCatchBoost.getBossBar().addPlayer(player);
-        if (activeExperienceBoost != null) activeExperienceBoost.getBossBar().addPlayer(player);
-        if (activeSpawnBucketBoost != null) activeSpawnBucketBoost.getBossBar().addPlayer(player);
+        SHINY_RECORD.addPlayer(player);
+        CATCH_RECORD.addPlayer(player);
+        EXPERIENCE_RECORD.addPlayer(player);
+        SPAWN_BUCKET_RECORD.addPlayer(player);
     }
 
     public void clearPlayer(ServerPlayer player) {
-        if (activeShinyBoost != null) activeShinyBoost.getBossBar().removePlayer(player);
-        if (activeCatchBoost != null) activeCatchBoost.getBossBar().removePlayer(player);
-        if (activeExperienceBoost != null) activeExperienceBoost.getBossBar().removePlayer(player);
-        if (activeSpawnBucketBoost != null) activeSpawnBucketBoost.getBossBar().removePlayer(player);
+        SHINY_RECORD.clearPlayer(player);
+        CATCH_RECORD.clearPlayer(player);
+        EXPERIENCE_RECORD.clearPlayer(player);
+        SPAWN_BUCKET_RECORD.clearPlayer(player);
     }
 
     public void setupSubscriptions() {
-        shinySubscription = CobblemonEvents.SHINY_CHANCE_CALCULATION.subscribe(Priority.NORMAL, this.shinyEventHandler);
-        catchSubscription = CobblemonEvents.POKEMON_CATCH_RATE.subscribe(Priority.NORMAL, this.catchEventHandler);
-        experienceSubscription = CobblemonEvents.EXPERIENCE_GAINED_EVENT_PRE.subscribe(Priority.NORMAL, this.experienceEventHandler);
-        spawnBucketSubscription = CobblemonEvents.SPAWN_BUCKET_CHOSEN.subscribe(Priority.NORMAL, this.spawnBucketEventHandler);
+        SHINY_RECORD.setupSubscription();
+        CATCH_RECORD.setupSubscription();
+        EXPERIENCE_RECORD.setupSubscription();
+        SPAWN_BUCKET_RECORD.setupSubscription();
     }
 
     public void teardownSubscriptions() {
-        activeShinyBoost = null;
-        queuedShinyBoosts.clear();
+        SHINY_RECORD.teardown();
+        CATCH_RECORD.teardown();
+        EXPERIENCE_RECORD.teardown();
+        SPAWN_BUCKET_RECORD.teardown();
+    }
 
-        activeCatchBoost = null;
-        queuedCatchBoosts.clear();
+    public static class BoostRecord<T extends IBoost, K> {
+        private final EventObservable<K> observable;
+        private ObservableSubscription<K> subscription;
+        private final BiConsumer<T, K> eventHandler;
 
-        activeExperienceBoost = null;
-        queuedExperienceBoosts.clear();
+        private T active;
+        private Queue<T> queue;
+        private final IBoostManager<T> manager;
 
-        activeSpawnBucketBoost = null;
-        queuedSpawnBucketBoosts.clear();
+        @SuppressWarnings("unused")
+        public BoostRecord(Class<T> boostClass, EventObservable<K> observable, BiConsumer<T, K> eventHandler) {
+            this.observable = observable;
+            this.eventHandler = eventHandler;
+            this.queue = new LinkedList<>();
+            this.active = null;
+            this.manager = new IBoostManager<>(() -> active, b -> active = b, this.queue);
+            this.subscription = null;
+        }
 
-        if (shinySubscription != null) shinySubscription.unsubscribe();
-        if (catchSubscription != null) catchSubscription.unsubscribe();
-        if (experienceSubscription != null) experienceSubscription.unsubscribe();
-        if (spawnBucketSubscription != null) spawnBucketSubscription.unsubscribe();
+        public void addPlayer(ServerPlayer player) {
+            if (active != null) active.getBossBar().addPlayer(player);
+        }
+
+        public void clearPlayer(ServerPlayer player) {
+            if (active != null) active.getBossBar().removePlayer(player);
+        }
+
+        public void setQueue(Queue<T> queue) {
+            this.queue = queue;
+        }
+
+        public Queue<T> getQueue() {
+            return queue;
+        }
+
+        public IBoostManager<T> getManager() {
+            return manager;
+        }
+
+        public Consumer<K> getSubscriptionHandler(IBoostManager<T> manager) {
+            return event -> {
+                T activeBoost = manager.getActive();
+                if (activeBoost != null) {
+                    eventHandler.accept(activeBoost, event);
+                }
+            };
+        }
+
+        public void setupSubscription() {
+            this.subscription = observable.subscribe(Priority.NORMAL, getSubscriptionHandler(manager));
+        }
+
+        public void teardown() {
+            this.active = null;
+            this.queue.clear();
+            if (this.subscription != null) subscription.unsubscribe();
+        }
     }
 
     public static class IBoostManager<T extends IBoost> {

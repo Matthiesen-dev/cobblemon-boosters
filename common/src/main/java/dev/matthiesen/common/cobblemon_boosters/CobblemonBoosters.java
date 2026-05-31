@@ -9,7 +9,6 @@ import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.managers.TickManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
-import dev.matthiesen.common.cobblemon_boosters.utils.*;
 import dev.matthiesen.common.cobblemon_boosters.webhook.DiscordWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.webhook.NoOpWebhookService;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
@@ -35,36 +34,35 @@ public class CobblemonBoosters {
     public ConfigManager<WebhooksConfig> WEBHOOKS_CONFIG_MANAGER =
             new ConfigManager<>(WebhooksConfig.class, "webhooks", Constants.MOD_ID);
 
-
     public CobblemonBoosters() {}
 
     public void initialize() {
         INSTANCE = this;
-        reload(false);
+        this.reload(false);
         PermissionRegistry.init();
         this.permissions = PermissionRegistry.getPermissions();
         CommandRegistry.init();
 
-        loadCompat();
+        this.loadCompat();
         this.boostManager = new BoostManager();
         Constants.createInfoLog("Initialized");
     }
 
     public void loadCompat() {
         if (MatthiesenLibApi.isModLoaded(Constants.COMPAT.GOOEYLIBS)) {
-            guiAdapter = new GooeyGUIAdapter();
+            this.guiAdapter = new GooeyGUIAdapter();
             Constants.createInfoLog("GooeyLibs detected, using GooeyLibs for GUI");
         } else {
-            guiAdapter = new FallbackGUIAdapter();
+            this.guiAdapter = new FallbackGUIAdapter();
         }
         if (MatthiesenLibApi.isModLoaded(Constants.COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
-            discordWebhookService = new DiscordWebhookService();
+            this.discordWebhookService = new DiscordWebhookService();
             Constants.createInfoLog("Matthiesen Lib Webhooks detected, using it for Discord Webhook integration");
         } else {
-            discordWebhookService = new NoOpWebhookService();
+            this.discordWebhookService = new NoOpWebhookService();
         }
 
-        COBBREEDING_AVAILABLE = MatthiesenLibApi.isModLoaded(Constants.COMPAT.COBBREEDING);
+        this.COBBREEDING_AVAILABLE = MatthiesenLibApi.isModLoaded(Constants.COMPAT.COBBREEDING);
     }
 
     public void onStartup() {
@@ -79,10 +77,10 @@ public class CobblemonBoosters {
         Constants.createInfoLog("Server stopping, shutting down");
 
         CacheConfig.setGlobalBoostData();
-        CACHE_CONFIG_MANAGER.saveConfig();
-        MESSAGES_CONFIG_MANAGER.saveConfig();
-        PERMISSIONS_CONFIG_MANAGER.saveConfig();
-        WEBHOOKS_CONFIG_MANAGER.saveConfig();
+        this.CACHE_CONFIG_MANAGER.saveConfig();
+        this.MESSAGES_CONFIG_MANAGER.saveConfig();
+        this.PERMISSIONS_CONFIG_MANAGER.saveConfig();
+        this.WEBHOOKS_CONFIG_MANAGER.saveConfig();
 
         this.boostManager.teardownSubscriptions();
     }
@@ -107,12 +105,12 @@ public class CobblemonBoosters {
     public void reload(boolean fromCommand) {
         if (fromCommand) {
             CacheConfig.setGlobalBoostData();
-            CACHE_CONFIG_MANAGER.saveConfig();
+            this.CACHE_CONFIG_MANAGER.saveConfig();
         }
-        CACHE_CONFIG_MANAGER.loadConfig();
-        MESSAGES_CONFIG_MANAGER.loadConfig();
-        PERMISSIONS_CONFIG_MANAGER.loadConfig();
-        WEBHOOKS_CONFIG_MANAGER.loadConfig();
+        this.CACHE_CONFIG_MANAGER.loadConfig();
+        this.MESSAGES_CONFIG_MANAGER.loadConfig();
+        this.PERMISSIONS_CONFIG_MANAGER.loadConfig();
+        this.WEBHOOKS_CONFIG_MANAGER.loadConfig();
         Constants.createInfoLog("Reloaded Cobblemon Boosters configs");
     }
 }
