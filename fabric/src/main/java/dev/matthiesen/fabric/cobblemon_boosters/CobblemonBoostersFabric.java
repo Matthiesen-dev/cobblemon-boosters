@@ -16,7 +16,6 @@ public class CobblemonBoostersFabric implements ModInitializer {
     public void onInitialize() {
         Constants.createInfoLog("Loading for Fabric Mod Loader");
         core.initialize();
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> core.onStartup());
         ServerLifecycleEvents.SERVER_STARTED.register(server -> core.onServerStarted());
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> core.onShutdown());
         ServerTickEvents.END_SERVER_TICK.register(server -> core.onEndTick());

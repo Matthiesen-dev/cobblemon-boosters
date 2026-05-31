@@ -65,10 +65,6 @@ public class CobblemonBoosters {
         this.COBBREEDING_AVAILABLE = MatthiesenLibApi.isModLoaded(Constants.COMPAT.COBBREEDING);
     }
 
-    public void onStartup() {
-        Constants.createInfoLog("Server starting, Setting up");
-    }
-
     public void onServerStarted() {
         this.boostManager.setupSubscriptions();
     }

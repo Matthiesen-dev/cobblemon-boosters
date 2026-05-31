@@ -24,11 +24,6 @@ public class CobblemonBoostersNeoForge {
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        core.onStartup();
-    }
-
-    @SubscribeEvent
     public void onServerStarted(ServerStartedEvent event) {
         core.onServerStarted();
     }
