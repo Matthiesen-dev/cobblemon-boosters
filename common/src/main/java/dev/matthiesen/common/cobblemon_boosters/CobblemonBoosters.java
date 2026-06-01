@@ -1,13 +1,13 @@
 package dev.matthiesen.common.cobblemon_boosters;
 
 import dev.matthiesen.common.cobblemon_boosters.config.*;
+import dev.matthiesen.common.cobblemon_boosters.event_handlers.ServerEventHandler;
 import dev.matthiesen.common.cobblemon_boosters.gui.FallbackGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.GooeyGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.event_handlers.PlayerEventHandler;
-import dev.matthiesen.common.cobblemon_boosters.managers.TickManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.webhook.DiscordWebhookService;
@@ -37,6 +37,7 @@ public class CobblemonBoosters {
         this.boostManager = new BoostManager();
         MatthiesenLibApi.registerReloadRunnable(Constants.MOD_ID, () -> reload(true));
         MatthiesenLibApi.registerPlayerEventHandler(Constants.MOD_ID, new PlayerEventHandler());
+        MatthiesenLibApi.registerServerEventHandler(Constants.MOD_ID, new ServerEventHandler());
         Constants.createInfoLog("Initialized");
     }
 
@@ -54,28 +55,6 @@ public class CobblemonBoosters {
         }
 
         this.COBBREEDING_AVAILABLE = MatthiesenLibApi.isModLoaded(Constants.COMPAT.COBBREEDING);
-    }
-
-    public void onServerStarted() {
-        this.boostManager.setupSubscriptions();
-    }
-
-    public void onShutdown() {
-        Constants.createInfoLog("Server stopping, shutting down");
-
-        CacheConfig.setGlobalBoostData();
-        BoostersConfigManager.saveAll();
-
-        this.boostManager.teardownSubscriptions();
-    }
-
-    public void onEndTick() {
-        try {
-            TickManager.tickBoosts();
-            TickManager.updateBossBars();
-        } catch (IllegalArgumentException e) {
-            Constants.LOGGER.error("Caught BossBar exception! ", e);
-        }
     }
 
     public void reload(boolean fromCommand) {
