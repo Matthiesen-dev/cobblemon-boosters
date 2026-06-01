@@ -44,14 +44,15 @@ public class TickManager {
 
     public static void tickBoosts() {
         BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
 
         BoostManager.IBoostManager<ShinyBoost> shiny = bm.getShinyBoostManager();
         handleBoostTick(
                 shiny.getActive(),
                 shiny.getQueue(),
                 shiny::setActive,
-                CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.shinyEventEndEmbed,
-                CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.shinyEventStartEmbed
+                webhooks.shinyEventEndEmbed,
+                webhooks.shinyEventStartEmbed
         );
 
         BoostManager.IBoostManager<CatchBoost> catch_ = bm.getCatchBoostManager();
@@ -59,8 +60,8 @@ public class TickManager {
                 catch_.getActive(),
                 catch_.getQueue(),
                 catch_::setActive,
-                CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.catchEventEndEmbed,
-                CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.catchEventStartEmbed
+                webhooks.catchEventEndEmbed,
+                webhooks.catchEventStartEmbed
         );
 
         BoostManager.IBoostManager<ExperienceBoost> experience = bm.getExperienceBoostManager();
@@ -68,8 +69,8 @@ public class TickManager {
                 experience.getActive(),
                 experience.getQueue(),
                 experience::setActive,
-                CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.experienceEventEndEmbed,
-                CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.experienceEventStartEmbed
+                webhooks.experienceEventEndEmbed,
+                webhooks.experienceEventStartEmbed
         );
 
         BoostManager.IBoostManager<SpawnBucketBoost> spawnBucket = bm.getSpawnBucketBoostManager();
@@ -77,8 +78,8 @@ public class TickManager {
                 spawnBucket.getActive(),
                 spawnBucket.getQueue(),
                 spawnBucket::setActive,
-                CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.spawnBucketEventEndEmbed,
-                CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.spawnBucketEventStartEmbed
+                webhooks.spawnBucketEventEndEmbed,
+                webhooks.spawnBucketEventStartEmbed
         );
     }
 

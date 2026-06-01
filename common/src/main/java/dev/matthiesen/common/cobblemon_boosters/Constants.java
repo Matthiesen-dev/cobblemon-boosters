@@ -1,5 +1,9 @@
 package dev.matthiesen.common.cobblemon_boosters;
 
+import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
+import dev.matthiesen.common.cobblemon_boosters.config.MessagesConfig;
+import dev.matthiesen.common.cobblemon_boosters.config.PermissionsConfig;
+import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +19,29 @@ public class Constants {
             "experience",
             "shiny"
     );
+
+    public enum CONFIGS {
+        CACHE("cache", CacheConfig.class),
+        MESSAGES("messages", MessagesConfig.class),
+        PERMISSIONS("permissions", PermissionsConfig.class),
+        WEBHOOKS("webhooks", WebhooksConfig.class);
+
+        private final String configName;
+        private final Class<?> configClass;
+
+        CONFIGS(String configName, Class<?> configClass) {
+            this.configName = configName;
+            this.configClass = configClass;
+        }
+
+        public String getConfigName() {
+            return configName;
+        }
+
+        public Class<?> getConfigClass() {
+            return configClass;
+        }
+    }
 
     public static class COMPAT {
         public static final String GOOEYLIBS = "gooeylibs";

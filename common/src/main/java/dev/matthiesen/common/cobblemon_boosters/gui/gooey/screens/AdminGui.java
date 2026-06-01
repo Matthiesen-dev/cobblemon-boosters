@@ -42,22 +42,23 @@ public class AdminGui extends BaseMenuGuiTemplate {
 
     private void getQueuesAndClear() {
         var boostManager = CobblemonBoosters.INSTANCE.boostManager;
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages;
         List<QueueListEntry> queueEntries = new ArrayList<>();
         queueEntries.add(new QueueListEntry(
                 boostManager.getShinyBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostQueueCleared
+                messages.shinyMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
                 boostManager.getCatchBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostQueueCleared
+                messages.catchBoostMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
                 boostManager.getExperienceBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.boostQueueCleared
+                messages.experienceBoostMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
                 boostManager.getSpawnBucketBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
+                messages.spawnBucketBoostMessages.boostQueueCleared
         ));
         for (QueueListEntry entry : queueEntries) {
             entry.queueEntry.clear();
@@ -79,7 +80,7 @@ public class AdminGui extends BaseMenuGuiTemplate {
                             "&cConfirm to reload",
                             () -> {
                                 CobblemonBoosters.INSTANCE.reload(true);
-                                sendPlayerMessage(CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.commandReload);
+                                sendPlayerMessage(CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.commandReload);
                                 close();
                             },
                             this::open

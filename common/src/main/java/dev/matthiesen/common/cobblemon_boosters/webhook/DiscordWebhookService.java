@@ -21,12 +21,12 @@ public class DiscordWebhookService implements IWebhookService {
     }
 
     public MatthiesenLibWebhooks.Webhooks getClient() {
-        if (!CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.enabled) return null;
-        if (!CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.webhookUrl.startsWith("https://")) {
+        if (!CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.enabled) return null;
+        if (!CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.webhookUrl.startsWith("https://")) {
             Constants.createErrorLog("Discord webhooks are enabled but an invalid Discord Webhook URL is set! Please check your configuration. (Must start with 'https://')");
             return null;
         }
-        return new MatthiesenLibWebhooks.Webhooks(CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.webhookUrl);
+        return new MatthiesenLibWebhooks.Webhooks(CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.webhookUrl);
     }
 
     public static Embed parseEventEmbed(WebhooksConfig.DiscordEmbed embed, IBoost boost) {

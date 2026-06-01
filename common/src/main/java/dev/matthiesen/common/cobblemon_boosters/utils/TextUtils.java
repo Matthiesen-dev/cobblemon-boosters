@@ -21,7 +21,7 @@ public class TextUtils {
 
     public static String parse(String text) {
         return text
-                .replaceAll("%prefix%", CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.prefix)
+                .replaceAll("%prefix%", CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.prefix)
                 .replaceAll("%base_shiny_rate%", String.valueOf(Cobblemon.config.getShinyRate()));
     }
 
@@ -34,8 +34,8 @@ public class TextUtils {
                 .replaceAll("%multiplier%", String.valueOf(boost.getMultiplier()))
                 .replaceAll("%duration%", hms(boost.getDuration()))
                 .replaceAll("%time_remaining%", hms(boost.getTimeRemaining() / 20L))
-                .replaceAll("%discord_webhook_author_name%", CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.discordAuthorName)
-                .replaceAll("%discord_webhook_author_icon_url%", CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.discordAuthorIconUrl)
+                .replaceAll("%discord_webhook_author_name%", CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.discordAuthorName)
+                .replaceAll("%discord_webhook_author_icon_url%", CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.discordAuthorIconUrl)
                 .replaceAll("%timestamp%", getCurrentTimestampForDiscordEmbed());
     }
 

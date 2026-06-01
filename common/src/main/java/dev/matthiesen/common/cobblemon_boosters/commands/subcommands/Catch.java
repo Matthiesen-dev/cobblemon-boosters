@@ -51,19 +51,22 @@ public class Catch implements ISubCommand {
         int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
 
         BoostManager.IBoostManager<CatchBoost> manager = CobblemonBoosters.INSTANCE.boostManager.getCatchBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
+
         if (manager.getActive() == null) {
             CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
             manager.setActive(boost);
-            Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostStarted, boost);
+            Util.sendMessage(ctx, messages.boostStarted, boost);
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                    CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.catchEventStartEmbed,
+                    webhooks.catchEventStartEmbed,
                     boost
             );
             boost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
         } else {
             CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
             manager.appendToQueue(boost);
-            Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostAddedToQueued, boost);
+            Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
         }
         CacheConfig.setGlobalBoostData();
         return 1;
@@ -71,10 +74,11 @@ public class Catch implements ISubCommand {
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
         try {
+            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
             Util.handleStopCommand(
                     ctx,
                     CobblemonBoosters.INSTANCE.boostManager.getCatchBoostManager().getActive(),
-                    CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostStopped
+                    messages.boostStopped
             );
         } catch (RuntimeException e) {
             Constants.LOGGER.error("Failed to stop catch boost", e);
@@ -83,11 +87,12 @@ public class Catch implements ISubCommand {
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
         Util.handleStatusCommand(
                 ctx,
                 CobblemonBoosters.INSTANCE.boostManager.getCatchBoostManager().getActive(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostInfo,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.noActiveBoosts
+                messages.boostInfo,
+                messages.noActiveBoosts
         );
         return 1;
     }

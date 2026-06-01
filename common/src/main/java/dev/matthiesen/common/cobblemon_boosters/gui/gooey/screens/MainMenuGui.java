@@ -35,15 +35,17 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
     public static void openBucketGui(ServerPlayer player) {
         String boostType = "Spawn Bucket";
         var spawnBucketManager = CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
         new BoostersGuiTemplate(
                 "&bSpawn Bucket Boosts&r",
                 boostType,
                 player,
                 spawnBucketManager.getActive(),
                 spawnBucketManager.getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.noActiveBoosts,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostStopped,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostInfo,
+                messages.noActiveBoosts,
+                messages.boostStopped,
+                messages.boostInfo,
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_START_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_STOP_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.BUCKET_STATUS_PERMISSION,
@@ -55,16 +57,16 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                             if (spawnBucketManager.getActive() == null) {
                                 SpawnBucketBoost activeBoost = new SpawnBucketBoost(boost.getMultiplier(), boost.getDuration()).setBucket(boost.getBucket());
                                 spawnBucketManager.setActive(activeBoost);
-                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostStarted, activeBoost);
+                                sendServerPlayerMessage(player, messages.boostStarted, activeBoost);
                                 CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                                        CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.spawnBucketEventStartEmbed,
+                                        webhooks.spawnBucketEventStartEmbed,
                                         activeBoost
                                 );
                                 activeBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
                             } else {
                                 SpawnBucketBoost newBoost = new SpawnBucketBoost(boost.getMultiplier(), boost.getDuration()).setBucket(boost.getBucket());
                                 spawnBucketManager.appendToQueue(newBoost);
-                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostAddedToQueued, newBoost);
+                                sendServerPlayerMessage(player, messages.boostAddedToQueued, newBoost);
                             }
                             CacheConfig.setGlobalBoostData();
                         }
@@ -75,15 +77,17 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
     public static void openCatchGUI(ServerPlayer player) {
         String boostType = "Catch";
         var catchBoostManager = CobblemonBoosters.INSTANCE.boostManager.getCatchBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
         new BoostersGuiTemplate(
                 "&dCatch Boosts&r",
                 boostType,
                 player,
                 catchBoostManager.getActive(),
                 catchBoostManager.getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.noActiveBoosts,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostStopped,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostInfo,
+                messages.noActiveBoosts,
+                messages.boostStopped,
+                messages.boostInfo,
                 CobblemonBoosters.INSTANCE.permissions.CATCH_START_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.CATCH_STOP_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.CATCH_STATUS_PERMISSION,
@@ -96,16 +100,16 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                             if (catchBoostManager.getActive() == null) {
                                 CatchBoost activeBoost = new CatchBoost(boost.getMultiplier(), boost.getDuration());
                                 catchBoostManager.setActive(activeBoost);
-                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostStarted, activeBoost);
+                                sendServerPlayerMessage(player, messages.boostStarted, activeBoost);
                                 CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                                        CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.catchEventStartEmbed,
+                                        webhooks.catchEventStartEmbed,
                                         activeBoost
                                 );
                                 activeBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
                             } else {
                                 CatchBoost newBoost = new CatchBoost(boost.getMultiplier(), boost.getDuration());
                                 catchBoostManager.appendToQueue(newBoost);
-                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostAddedToQueued, newBoost);
+                                sendServerPlayerMessage(player, messages.boostAddedToQueued, newBoost);
                             }
                             CacheConfig.setGlobalBoostData();
                         }
@@ -116,15 +120,17 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
     public static void openExperienceGUI(ServerPlayer player) {
         String boostType = "Experience";
         var experienceBoostManager = CobblemonBoosters.INSTANCE.boostManager.getExperienceBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
         new BoostersGuiTemplate(
                 "&aExperience Boosts&r",
                 boostType,
                 player,
                 experienceBoostManager.getActive(),
                 experienceBoostManager.getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.noActiveBoosts,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.boostStopped,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.boostInfo,
+                messages.noActiveBoosts,
+                messages.boostStopped,
+                messages.boostInfo,
                 CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_START_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STOP_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STATUS_PERMISSION,
@@ -137,16 +143,16 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                             if (experienceBoostManager.getActive() == null) {
                                 ExperienceBoost activeBoost = new ExperienceBoost(boost.getMultiplier(), boost.getDuration());
                                 experienceBoostManager.setActive(activeBoost);
-                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.boostStarted, activeBoost);
+                                sendServerPlayerMessage(player, messages.boostStarted, activeBoost);
                                 CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                                        CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.experienceEventStartEmbed,
+                                        webhooks.experienceEventStartEmbed,
                                         activeBoost
                                 );
                                 activeBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
                             } else {
                                 ExperienceBoost newBoost = new ExperienceBoost(boost.getMultiplier(), boost.getDuration());
                                 experienceBoostManager.appendToQueue(newBoost);
-                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.boostAddedToQueued, newBoost);
+                                sendServerPlayerMessage(player, messages.boostAddedToQueued, newBoost);
                             }
                             CacheConfig.setGlobalBoostData();
                         }
@@ -157,15 +163,17 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
     public static void openShinyGUI(ServerPlayer player) {
         String boostType = "Shiny";
         var shinyBoostManager = CobblemonBoosters.INSTANCE.boostManager.getShinyBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
         new BoostersGuiTemplate(
                 "&6Shiny Boosts&r",
                 boostType,
                 player,
                 shinyBoostManager.getActive(),
                 shinyBoostManager.getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.noActiveBoosts,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostStopped,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostInfo,
+                messages.noActiveBoosts,
+                messages.boostStopped,
+                messages.boostInfo,
                 CobblemonBoosters.INSTANCE.permissions.SHINY_START_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.SHINY_STOP_PERMISSION,
                 CobblemonBoosters.INSTANCE.permissions.SHINY_STATUS_PERMISSION,
@@ -178,16 +186,16 @@ public class MainMenuGui extends BaseMenuGuiTemplate {
                             if (shinyBoostManager.getActive() == null) {
                                 ShinyBoost activeBoost = new ShinyBoost(boost.getMultiplier(), boost.getDuration());
                                 shinyBoostManager.setActive(activeBoost);
-                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostStarted, activeBoost);
+                                sendServerPlayerMessage(player, messages.boostStarted, activeBoost);
                                 CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                                        CobblemonBoosters.INSTANCE.WEBHOOKS_CONFIG_MANAGER.getConfig().discordWebhookConfig.shinyEventStartEmbed,
+                                        webhooks.shinyEventStartEmbed,
                                         activeBoost
                                 );
                                 activeBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
                             } else {
                                 ShinyBoost newBoost = new ShinyBoost(boost.getMultiplier(), boost.getDuration());
                                 shinyBoostManager.appendToQueue(newBoost);
-                                sendServerPlayerMessage(player, CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostAddedToQueued, newBoost);
+                                sendServerPlayerMessage(player, messages.boostAddedToQueued, newBoost);
                             }
                             CacheConfig.setGlobalBoostData();
                         }

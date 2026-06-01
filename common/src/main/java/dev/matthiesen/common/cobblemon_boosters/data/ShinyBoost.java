@@ -66,8 +66,8 @@ public class ShinyBoost implements IBoost {
         return new BossBar(
                 getBossBarText(),
                 1F,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.barColor,
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.barOverlay
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.barColor,
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.barOverlay
         );
     }
 
@@ -75,7 +75,7 @@ public class ShinyBoost implements IBoost {
     public Component getBossBarText() {
         return TextUtils.deserialize(
                 TextUtils.parse(
-                        CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.barText,
+                        CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.barText,
                         this
                 )
         );

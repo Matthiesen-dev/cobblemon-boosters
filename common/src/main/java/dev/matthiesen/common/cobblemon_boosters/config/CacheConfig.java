@@ -61,7 +61,7 @@ public class CacheConfig {
 
     public static void setGlobalBoostData() {
         BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
-        CobblemonBoosters.INSTANCE.CACHE_CONFIG_MANAGER.setConfig(new CacheConfig(
+        CobblemonBoosters.INSTANCE.getCacheConfigManager().setConfig(new CacheConfig(
                 bm.getShinyBoostManager().getActive(),
                 bm.getCatchBoostManager().getActive(),
                 bm.getExperienceBoostManager().getActive(),

@@ -6,6 +6,7 @@ import dev.matthiesen.common.cobblemon_boosters.gui.gooey.GooeyGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
+import dev.matthiesen.common.cobblemon_boosters.event_handlers.PlayerEventHandler;
 import dev.matthiesen.common.cobblemon_boosters.managers.TickManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
@@ -13,8 +14,6 @@ import dev.matthiesen.common.cobblemon_boosters.webhook.DiscordWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.webhook.NoOpWebhookService;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
-import net.minecraft.server.level.ServerPlayer;
-
 
 public class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
@@ -24,20 +23,11 @@ public class CobblemonBoosters {
     public boolean COBBREEDING_AVAILABLE;
     public BoostManager boostManager;
 
-    // Configs
-    public ConfigManager<CacheConfig> CACHE_CONFIG_MANAGER =
-            new ConfigManager<>(CacheConfig.class, "cache", Constants.MOD_ID);
-    public ConfigManager<MessagesConfig> MESSAGES_CONFIG_MANAGER =
-            new ConfigManager<>(MessagesConfig.class, "messages", Constants.MOD_ID);
-    public ConfigManager<PermissionsConfig> PERMISSIONS_CONFIG_MANAGER =
-            new ConfigManager<>(PermissionsConfig.class, "permissions", Constants.MOD_ID);
-    public ConfigManager<WebhooksConfig> WEBHOOKS_CONFIG_MANAGER =
-            new ConfigManager<>(WebhooksConfig.class, "webhooks", Constants.MOD_ID);
-
     public CobblemonBoosters() {}
 
     public void initialize() {
         INSTANCE = this;
+        BoostersConfigManager.registerConfigs();
         this.reload(false);
         PermissionRegistry.init();
         this.permissions = PermissionRegistry.getPermissions();
@@ -45,6 +35,7 @@ public class CobblemonBoosters {
         this.loadCompat();
         this.boostManager = new BoostManager();
         MatthiesenLibApi.registerReloadRunnable(Constants.MOD_ID, () -> reload(true));
+        MatthiesenLibApi.registerPlayerEventHandler(Constants.MOD_ID, new PlayerEventHandler());
         Constants.createInfoLog("Initialized");
     }
 
@@ -73,10 +64,7 @@ public class CobblemonBoosters {
         Constants.createInfoLog("Server stopping, shutting down");
 
         CacheConfig.setGlobalBoostData();
-        this.CACHE_CONFIG_MANAGER.saveConfig();
-        this.MESSAGES_CONFIG_MANAGER.saveConfig();
-        this.PERMISSIONS_CONFIG_MANAGER.saveConfig();
-        this.WEBHOOKS_CONFIG_MANAGER.saveConfig();
+        BoostersConfigManager.saveAll();
 
         this.boostManager.teardownSubscriptions();
     }
@@ -90,23 +78,28 @@ public class CobblemonBoosters {
         }
     }
 
-    public void onPlayerJoin(ServerPlayer player) {
-        this.boostManager.appendPlayer(player);
-    }
-
-    public void onPlayerLeave(ServerPlayer player) {
-        this.boostManager.clearPlayer(player);
-    }
-
     public void reload(boolean fromCommand) {
         if (fromCommand) {
             CacheConfig.setGlobalBoostData();
-            this.CACHE_CONFIG_MANAGER.saveConfig();
+            getCacheConfigManager().saveConfig();
         }
-        this.CACHE_CONFIG_MANAGER.loadConfig();
-        this.MESSAGES_CONFIG_MANAGER.loadConfig();
-        this.PERMISSIONS_CONFIG_MANAGER.loadConfig();
-        this.WEBHOOKS_CONFIG_MANAGER.loadConfig();
+        BoostersConfigManager.loadAll();
         Constants.createInfoLog("Reloaded Cobblemon Boosters configs");
+    }
+
+    public ConfigManager<CacheConfig> getCacheConfigManager() {
+         return BoostersConfigManager.getCacheConfigManager();
+    }
+
+    public ConfigManager<MessagesConfig> getMessagesConfigManager() {
+         return BoostersConfigManager.getMessagesConfigManager();
+    }
+
+    public ConfigManager<PermissionsConfig> getPermissionsConfigManager() {
+         return BoostersConfigManager.getPermissionsConfigManager();
+    }
+
+    public ConfigManager<WebhooksConfig> getWebhooksConfigManager() {
+         return BoostersConfigManager.getWebhooksConfigManager();
     }
 }

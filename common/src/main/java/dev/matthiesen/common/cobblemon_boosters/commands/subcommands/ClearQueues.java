@@ -27,22 +27,22 @@ public class ClearQueues implements ISubCommand {
         Util.handleQueueClear(
                 ctx,
                 bm.getShinyBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostQueueCleared
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
                 bm.getCatchBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostQueueCleared
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
                 bm.getExperienceBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.boostQueueCleared
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
                 bm.getSpawnBucketBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
         );
         CacheConfig.setGlobalBoostData();
         return 1;

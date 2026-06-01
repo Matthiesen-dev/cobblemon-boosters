@@ -52,26 +52,26 @@ public class CheckQueues implements ISubCommand {
             case "bucket" -> Util.handleQueueResponse(
                     ctx,
                     bm.getSpawnBucketBoostManager().getQueue(),
-                    CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.noQueuedBoosts,
-                    CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.spawnBucketBoostMessages.boostInfo
+                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.noQueuedBoosts,
+                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.boostInfo
             );
             case "catch" -> Util.handleQueueResponse(
                     ctx,
                     bm.getCatchBoostManager().getQueue(),
-                    CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.noQueuedBoosts,
-                    CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostInfo
+                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.noQueuedBoosts,
+                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostInfo
             );
             case "experience" -> Util.handleQueueResponse(
                     ctx,
                     bm.getExperienceBoostManager().getQueue(),
-                    CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.experienceBoostMessages.noQueuedBoosts,
-                    CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.catchBoostMessages.boostInfo
+                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.noQueuedBoosts,
+                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostInfo
             );
             case "shiny" -> Util.handleQueueResponse(
                     ctx,
                     bm.getShinyBoostManager().getQueue(),
-                    CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.noQueuedBoosts,
-                    CobblemonBoosters.INSTANCE.MESSAGES_CONFIG_MANAGER.getConfig().messages.shinyMessages.boostInfo
+                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.noQueuedBoosts,
+                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.boostInfo
             );
             default -> Util.sendMessage(ctx, "%prefix% &cUnknown booster type. Valid types are: " + String.join(", ", Constants.CURRENT_BOOSTERS) + ".");
         }
