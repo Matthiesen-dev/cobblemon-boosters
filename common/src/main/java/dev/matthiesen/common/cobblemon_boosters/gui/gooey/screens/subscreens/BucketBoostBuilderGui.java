@@ -7,10 +7,10 @@ import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.BaseBoostBuilder;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
-import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -44,45 +44,18 @@ public class BucketBoostBuilderGui implements IGui {
         return this;
     }
 
-    public static class BoostBuilder {
+    public static class BoostBuilder extends BaseBoostBuilder {
         public String bucket;
-        public Float multiplier;
-        public Integer duration;
-        public String unit;
 
         public BoostBuilder setBucket(String bucket) {
             this.bucket = bucket;
             return this;
         }
 
-        public BoostBuilder setMultiplier(float multiplier) {
-            this.multiplier = multiplier;
-            return this;
-        }
-
-        public BoostBuilder setDuration(int duration) {
-            this.duration = duration;
-            return this;
-        }
-
-        public BoostBuilder setUnit(String unit) {
-            List<String> allowedUnits = Helpers.allowedUnits;
-            if (allowedUnits.contains(unit.toLowerCase())) {
-                this.unit = unit.toLowerCase();
-            } else {
-                this.unit = unit;
-            }
-            return this;
-        }
-
         public SpawnBucketBoost build() {
             try {
-                SpawnBucketBoost boost = new SpawnBucketBoost();
-                boost.setMultiplier(multiplier);
                 int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
-                boost.setDuration(totalSeconds);
-                boost.setBucket(bucket);
-                return boost;
+                return new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
             } catch (Exception e) {
                 throw new RuntimeException("Failed to build boost", e);
             }
@@ -109,7 +82,7 @@ public class BucketBoostBuilderGui implements IGui {
         this(player, boostType, setActiveBoost, new BoostBuilder());
     }
 
-    public void openUpdatedPage(BucketBoostBuilderGui boostBuilderGui) {
+    public Void openUpdatedPage(BucketBoostBuilderGui boostBuilderGui) {
         new BucketBoostBuilderGui(
                 boostBuilderGui.player,
                 boostBuilderGui.boostType,
@@ -118,49 +91,24 @@ public class BucketBoostBuilderGui implements IGui {
         )
                 .setCurrentMode(getCurrentMode())
                 .open();
+
+        return null;
     }
 
     public Component getTitle() {
-        return TextUtils.deserialize(
-                TextUtils.parse("Boost Builder")
-        );
+        return Helpers.getBoostBuilderTitle();
     }
 
-    public Button buildModeButton(
-            String label,
-            Object value
-    ) {
-        List<Component> lore = new ArrayList<>();
-
-        if (value != null) {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Current: &f" + value)));
-        } else {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Current: &cNot set")));
-        }
-
-        Component[] loreArray = new Component[lore.size()];
-        for  (int i = 0; i < lore.size(); i++) {
-            loreArray[i] = lore.get(i);
-        }
-
-        boolean isActive = getCurrentMode() != null && getCurrentMode().equals(label.toLowerCase());
-
-        return GooeyButton.builder()
-                .display(MenuUtils.getQueueEntryBuilder()
-                        .setCustomName(TextUtils.deserialize(TextUtils.parse(labelToColor.get(label) + label)))
-                        .addLore(loreArray)
-                        .setEnchanted(isActive)
-                        .build()
-                )
-                .onClick(() -> {
-                    if (isActive) {
-                        setCurrentMode(null);
-                    } else {
-                        setCurrentMode(label.toLowerCase());
-                    }
-                    openUpdatedPage(this);
-                })
-                .build();
+    public Button buildModeButton(String label, Object value) {
+        return Helpers.buildModeButton(
+                label,
+                value,
+                labelToColor,
+                this::getCurrentMode,
+                this::setCurrentMode,
+                this::openUpdatedPage,
+                this
+        );
     }
 
     public Button getMultiplierButton() {
@@ -194,89 +142,35 @@ public class BucketBoostBuilderGui implements IGui {
     public Button getDetailsButton() {
         List<Component> lore = new ArrayList<>();
 
-        lore.add(TextUtils.deserialize(TextUtils.parse("&7Boost Type: &f" + boostType)));
+        lore.add(Helpers.text("&7Boost Type: &f" + boostType));
 
         if (boostBuilder.bucket != null) {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Bucket: &f" + boostBuilder.bucket)));
+            lore.add(Helpers.text("&7Bucket: &f" + boostBuilder.bucket));
         } else {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Bucket: &cNot set")));
+            lore.add(Helpers.text("&7Bucket: &cNot set"));
         }
 
-        if (boostBuilder.multiplier != null) {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Multiplier: &f" + boostBuilder.multiplier)));
-        } else {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Multiplier: &cNot set")));
-        }
-
-        if (boostBuilder.duration != null) {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Duration: &f" + boostBuilder.duration)));
-        } else {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Duration: &cNot set")));
-        }
-
-        if (boostBuilder.unit != null) {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Unit: &f" + boostBuilder.unit)));
-        } else {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Unit: &cNot set")));
-        }
-
-        Component[] loreArray = new Component[lore.size()];
-        for (int i = 0; i < lore.size(); i++) {
-            loreArray[i] = lore.get(i);
-        }
-
-        return GooeyButton.builder()
-                .display(MenuUtils.getDetailsItemBuilder()
-                        .setCustomName(TextUtils.deserialize(TextUtils.parse("&6Details")))
-                        .addLore(loreArray)
-                        .build()
-                )
-                .build();
+        return Helpers.getDetailsButton(lore, boostBuilder);
     }
 
     public Button getAddButton() {
         return GooeyButton.builder()
                 .display(MenuUtils.getPlusItem())
                 .onClick(() -> {
-                    if (getCurrentMode() == null) {
-                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                    if (!Helpers.ensureModeSelected(getCurrentMode(), this::sendPlayerMessage)) {
                         return;
                     }
-                    switch (getCurrentMode()) {
-                        case "multiplier" -> {
-                            if (boostBuilder.multiplier == null) {
-                                boostBuilder = boostBuilder.setMultiplier(1.0f);
-                            } else {
-                                boostBuilder = boostBuilder.setMultiplier(boostBuilder.multiplier + 1.0f);
-                            }
-                        }
-                        case "duration" -> {
-                            if (boostBuilder.duration == null) {
-                                boostBuilder = boostBuilder.setDuration(1);
-                            } else {
-                                boostBuilder = boostBuilder.setDuration(boostBuilder.duration + 1);
-                            }
-                        }
-                        case "unit" -> {
-                            if (boostBuilder.unit == null) {
-                                boostBuilder = boostBuilder.setUnit("seconds");
-                            } else {
-                                int currentIndex = allowedUnits.indexOf(boostBuilder.unit);
-                                int nextIndex = (currentIndex + 1) % allowedUnits.size();
-                                boostBuilder = boostBuilder.setUnit(allowedUnits.get(nextIndex));
-                            }
-                        }
-                        case "bucket" -> {
-                            if (boostBuilder.bucket == null) {
-                                boostBuilder = boostBuilder.setBucket("common");
-                            } else {
-                                int currentIndex = allowedBuckets.indexOf(boostBuilder.bucket);
-                                int nextIndex = (currentIndex + 1) % allowedBuckets.size();
-                                boostBuilder = boostBuilder.setBucket(allowedBuckets.get(nextIndex));
-                            }
-                        }
-                        default -> sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                    if (Helpers.applyBaseAddForMode(getCurrentMode(), boostBuilder, allowedUnits)) {
+                        openUpdatedPage(this);
+                        return;
                     }
+
+                    if (getCurrentMode().equals("bucket")) {
+                        boostBuilder.setBucket(Helpers.nextCyclicValue(boostBuilder.bucket, allowedBuckets, "common"));
+                    } else {
+                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                    }
+
                     openUpdatedPage(this);
                 })
                 .build();
@@ -286,56 +180,27 @@ public class BucketBoostBuilderGui implements IGui {
         return GooeyButton.builder()
                 .display(MenuUtils.getMinusItem())
                 .onClick(() -> {
-                    if (getCurrentMode() == null) {
-                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                    if (!Helpers.ensureModeSelected(getCurrentMode(), this::sendPlayerMessage)) {
                         return;
                     }
-                    switch (getCurrentMode()) {
-                        case "multiplier" -> {
-                            if (boostBuilder.multiplier != null) {
-                                boostBuilder = boostBuilder.setMultiplier(boostBuilder.multiplier - 1.0f);
-                                if (boostBuilder.multiplier < 0) boostBuilder = boostBuilder.setMultiplier(1.0f);
-                            } else {
-                                boostBuilder = boostBuilder.setMultiplier(1.0f);
-                            }
-                        }
-                        case "duration" -> {
-                            if (boostBuilder.duration != null) {
-                                boostBuilder = boostBuilder.setDuration(boostBuilder.duration - 1);
-                                if (boostBuilder.duration < 0) boostBuilder = boostBuilder.setDuration(1);
-                            } else {
-                                boostBuilder = boostBuilder.setDuration(1);
-                            }
-                        }
-                        case "unit" -> {
-                            if (boostBuilder.unit != null) {
-                                int currentIndex = allowedUnits.indexOf(boostBuilder.unit);
-                                int nextIndex = (currentIndex - 1 + allowedUnits.size()) % allowedUnits.size();
-                                boostBuilder = boostBuilder.setUnit(allowedUnits.get(nextIndex));
-                            } else {
-                                boostBuilder = boostBuilder.setUnit("seconds");
-                            }
-                        }
-                        case "bucket" -> {
-                            if (boostBuilder.bucket != null) {
-                                int currentIndex = allowedBuckets.indexOf(boostBuilder.bucket);
-                                int nextIndex = (currentIndex - 1 + allowedBuckets.size()) % allowedBuckets.size();
-                                boostBuilder = boostBuilder.setBucket(allowedBuckets.get(nextIndex));
-                            } else {
-                                boostBuilder = boostBuilder.setBucket("common");
-                            }
-                        }
-                        default -> sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                    if (Helpers.applyBaseSubtractForMode(getCurrentMode(), boostBuilder, allowedUnits)) {
+                        openUpdatedPage(this);
+                        return;
                     }
+
+                    if (getCurrentMode().equals("bucket")) {
+                        boostBuilder.setBucket(Helpers.previousCyclicValue(boostBuilder.bucket, allowedBuckets, "common"));
+                    } else {
+                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                    }
+
                     openUpdatedPage(this);
                 })
                 .build();
     }
 
     public ChestTemplate.Builder addModifierButtons(ChestTemplate.Builder builder) {
-        builder = builder.set(1, 6, getSubtractButton());
-        builder = builder.set(1, 7, getAddButton());
-        return builder;
+        return Helpers.addModifierButtons(builder, getSubtractButton(), getAddButton());
     }
 
     public boolean isReadyToConfirm() {
@@ -401,6 +266,6 @@ public class BucketBoostBuilderGui implements IGui {
     }
 
     public void sendPlayerMessage(String rawMessage) {
-        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
+        Helpers.sendPlayerMessage(player, rawMessage);
     }
 }
