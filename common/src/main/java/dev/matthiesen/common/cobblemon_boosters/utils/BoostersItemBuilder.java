@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class BoostersItemBuilder {
+public final class BoostersItemBuilder {
     private final ItemBuilder libItemBuilder;
     private final List<Consumer<ItemStack>> customDataComponentMutators = new ArrayList<>();
 

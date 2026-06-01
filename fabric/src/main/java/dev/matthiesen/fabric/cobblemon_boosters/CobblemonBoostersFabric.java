@@ -4,7 +4,7 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import net.fabricmc.api.ModInitializer;
 
-public class CobblemonBoostersFabric implements ModInitializer {
+public final class CobblemonBoostersFabric implements ModInitializer {
     CobblemonBoosters core = new CobblemonBoosters();
 
     @Override

@@ -9,7 +9,7 @@ import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-public class Reload implements ISubCommand {
+public final class Reload implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         return Commands.literal("reload")

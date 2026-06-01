@@ -17,7 +17,7 @@ import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
-public class Bucket implements ISubCommand {
+public final class Bucket implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         return Util.newBucketBoosterCommand(

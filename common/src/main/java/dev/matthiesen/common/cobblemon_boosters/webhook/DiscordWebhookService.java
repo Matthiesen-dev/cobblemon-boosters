@@ -13,7 +13,7 @@ import dev.matthiesen.common.matthiesen_lib_webhooks.discord.model.EmbedBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiscordWebhookService implements IWebhookService {
+public final class DiscordWebhookService implements IWebhookService {
     private static MatthiesenLibWebhooks.Webhooks webhooks;
 
     public DiscordWebhookService() {

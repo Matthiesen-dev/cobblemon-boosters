@@ -5,7 +5,7 @@ import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.*;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import net.minecraft.server.level.ServerPlayer;
 
-public class GooeyGUIAdapter implements IGUIAdapter {
+public final class GooeyGUIAdapter implements IGUIAdapter {
     public GooeyGUIAdapter() {
         Constants.createInfoLog("GooeyLibs detected, using GooeyGUIAdapter for GUI integration");
     }

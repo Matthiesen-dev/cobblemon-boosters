@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.function.Consumer;
 
-public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
+public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     public final String guiTitle;
     public final String boostType;
     public final IBoost activeBoost;

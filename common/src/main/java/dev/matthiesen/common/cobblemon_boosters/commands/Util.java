@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Queue;
 
-public class Util {
+public final class Util {
     public static void handleStopCommand(CommandContext<CommandSourceStack> ctx, IBoost active, String message) {
         active.setTimeRemaining(1);
         sendMessage(ctx, message, active);

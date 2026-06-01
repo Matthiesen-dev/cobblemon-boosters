@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 
 import java.time.Instant;
 
-public class TextUtils {
+public final class TextUtils {
     public static Component deserialize(String text) {
         return MatthiesenLibApi.getTextParser(MatthiesenLibBuiltInTextParsers.VANILLA).parse(text);
     }

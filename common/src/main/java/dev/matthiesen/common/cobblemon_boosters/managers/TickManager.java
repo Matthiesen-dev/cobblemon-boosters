@@ -14,7 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import java.util.Queue;
 import java.util.function.Consumer;
 
-public class TickManager {
+public final class TickManager {
     private static <T extends IBoost> void handleBoostTick(
             T activeBoost,
             Queue<T> queue,

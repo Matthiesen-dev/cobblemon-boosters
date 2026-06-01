@@ -7,7 +7,7 @@ import dev.matthiesen.common.matthiesen_lib_webhooks.discord.DiscordColor;
 
 import java.util.List;
 
-public class WebhooksConfig {
+public final class WebhooksConfig {
     @SerializedName("discordWebhookConfig")
     public DiscordWebhookConfig discordWebhookConfig = new DiscordWebhookConfig();
 

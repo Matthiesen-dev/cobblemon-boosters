@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class Constants {
+public final class Constants {
     public static final String MOD_ID = "cobblemon_boosters";
     public static final String ModName = "Cobblemon Boosters";
     public static final List<String> CURRENT_BOOSTERS = List.of(

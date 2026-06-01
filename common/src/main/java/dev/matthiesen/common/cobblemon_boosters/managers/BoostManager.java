@@ -23,7 +23,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class BoostManager {
+public final class BoostManager {
     private static final BoostRecord<ShinyBoost, ShinyChanceCalculationEvent> SHINY_RECORD =
             new BoostRecord<>(
                     ShinyBoost.class,

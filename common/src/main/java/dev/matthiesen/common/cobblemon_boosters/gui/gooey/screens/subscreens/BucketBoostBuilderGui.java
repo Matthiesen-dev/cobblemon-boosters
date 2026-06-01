@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class BucketBoostBuilderGui implements IGui {
+public final class BucketBoostBuilderGui implements IGui {
     public final ServerPlayer player;
     public final String boostType;
     public BoostBuilder boostBuilder;

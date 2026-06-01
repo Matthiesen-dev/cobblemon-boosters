@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class CheckQueuesGui extends BaseMenuGuiTemplate {
+public final class CheckQueuesGui extends BaseMenuGuiTemplate {
 
     public CheckQueuesGui(ServerPlayer player) {
         super(player);

@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.BossEvent;
 
-public class BossBar {
+public final class BossBar {
     private static ServerBossEvent bossBar;
 
     public BossBar(Component component, float initialProgress, BossEvent.BossBarColor bossBarColor, BossEvent.BossBarOverlay bossBarOverlay) {

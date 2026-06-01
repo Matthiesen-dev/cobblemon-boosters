@@ -6,7 +6,7 @@ import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-public class FallbackGUIAdapter implements IGUIAdapter {
+public final class FallbackGUIAdapter implements IGUIAdapter {
 
     public FallbackGUIAdapter() {
         Constants.createInfoLog("No compatible GUI library detected, using fallback GUI adapter which sends messages to players instead of opening GUIs");

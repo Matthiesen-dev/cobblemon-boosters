@@ -5,7 +5,7 @@ import dev.matthiesen.common.cobblemon_boosters.Constants;
 import net.neoforged.fml.common.Mod;
 
 @Mod(Constants.MOD_ID)
-public class CobblemonBoostersNeoForge {
+public final class CobblemonBoostersNeoForge {
     CobblemonBoosters core = new CobblemonBoosters();
 
     public CobblemonBoostersNeoForge() {

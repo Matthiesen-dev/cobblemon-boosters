@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-public class AdminGui extends BaseMenuGuiTemplate {
+public final class AdminGui extends BaseMenuGuiTemplate {
 
     public AdminGui(ServerPlayer player) {
         super(player);

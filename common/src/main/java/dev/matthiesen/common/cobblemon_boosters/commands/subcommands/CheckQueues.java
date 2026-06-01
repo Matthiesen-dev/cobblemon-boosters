@@ -13,7 +13,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
-public class CheckQueues implements ISubCommand {
+public final class CheckQueues implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         return Commands.literal("check-queues")

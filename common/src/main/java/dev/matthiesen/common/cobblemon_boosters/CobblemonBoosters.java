@@ -15,7 +15,7 @@ import dev.matthiesen.common.cobblemon_boosters.webhook.NoOpWebhookService;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
 
-public class CobblemonBoosters {
+public final class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
     public IGUIAdapter guiAdapter;
     public PermissionRegistry.Permissions permissions;

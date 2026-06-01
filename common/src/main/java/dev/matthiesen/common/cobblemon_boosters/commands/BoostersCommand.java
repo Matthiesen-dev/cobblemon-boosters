@@ -10,7 +10,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
-public class BoostersCommand extends AbstractCommand {
+public final class BoostersCommand extends AbstractCommand {
     public BoostersCommand() {}
 
     // '/boosters reload' - Reload config

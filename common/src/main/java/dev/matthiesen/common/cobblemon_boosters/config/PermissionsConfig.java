@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import dev.matthiesen.common.matthiesen_lib_api.permission.PermissionLevel;
 
-public class PermissionsConfig {
+public final class PermissionsConfig {
     @SerializedName("permissionlevels")
     public PermissionLevels permissionLevels = new PermissionLevels();
 

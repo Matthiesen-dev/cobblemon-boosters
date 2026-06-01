@@ -11,7 +11,7 @@ import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-public class ClearQueues implements ISubCommand {
+public final class ClearQueues implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         return Commands.literal("clear-queues")

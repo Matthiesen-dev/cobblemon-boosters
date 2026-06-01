@@ -6,7 +6,7 @@ import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoostersConfigManager<T> extends ConfigManager<T> {
+public final class BoostersConfigManager<T> extends ConfigManager<T> {
     public BoostersConfigManager(Class<T> configClass, String configName) {
         super(configClass, configName, Constants.MOD_ID);
     }

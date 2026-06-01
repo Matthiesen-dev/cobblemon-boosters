@@ -9,7 +9,7 @@ import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class ShinyBoost implements IBoost {
+public final class ShinyBoost implements IBoost {
     public float multiplier;
     public int duration;
     public long timeRemaining;

@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
 
-public class SpawnBucketBoost implements IBoost {
+public final class SpawnBucketBoost implements IBoost {
     public float multiplier;
     public int duration;
     public long timeRemaining;

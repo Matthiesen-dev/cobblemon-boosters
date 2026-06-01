@@ -10,7 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public class MenuUtils {
+public final class MenuUtils {
     public static final Item BACKGROUND = Items.GRAY_STAINED_GLASS_PANE;
     public static final Item PAGE_PLACEHOLDER = Items.PAPER;
     public static final Item NAV_ITEM = Items.ARROW;

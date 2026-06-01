@@ -22,7 +22,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenuGui extends BaseMenuGuiTemplate {
+public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public MainMenuGui(ServerPlayer player) {
         super(player);

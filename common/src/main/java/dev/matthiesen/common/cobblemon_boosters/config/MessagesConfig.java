@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.world.BossEvent;
 
-public class MessagesConfig {
+public final class MessagesConfig {
     @SerializedName("messages")
     public GeneralMessagesConfig messages = new GeneralMessagesConfig();
 

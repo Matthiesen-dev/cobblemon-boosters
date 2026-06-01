@@ -8,7 +8,7 @@ import dev.matthiesen.common.cobblemon_boosters.managers.TickManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import net.minecraft.server.MinecraftServer;
 
-public class ServerEventHandler implements MatthiesenLibServerEventHandler {
+public final class ServerEventHandler implements MatthiesenLibServerEventHandler {
     @Override
     public void onServerStart(MinecraftServer server) {
         Constants.createInfoLog("Server started, initializing Cobblemon Boosters");

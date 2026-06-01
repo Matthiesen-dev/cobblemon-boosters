@@ -9,7 +9,7 @@ import dev.matthiesen.common.matthiesen_lib_api.permission.PermissionLevel;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
-public class PermissionRegistry {
+public final class PermissionRegistry {
     private static final Permissions PERMISSIONS = new Permissions();
 
     public static class Permissions {
