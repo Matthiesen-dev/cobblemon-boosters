@@ -13,23 +13,12 @@ public class BoostersConfigManager<T> extends ConfigManager<T> {
 
     // Static methods for Cobblemon Boosters configs
 
-    public static Map<Constants.CONFIGS, ConfigManager<?>> configManagers = new HashMap<>();
-
-    public static <T> void registerConfigManager(Class<T> configClass, Constants.CONFIGS configName) {
-        if (configManagers.containsKey(configName)) {
-            Constants.LOGGER.warn("Config manager for {} already exists, skipping registration", configName.getConfigName());
-            return;
-        }
-        BoostersConfigManager<T> manager = new BoostersConfigManager<>(configClass, configName.getConfigName());
-        configManagers.put(configName, manager);
-        Constants.LOGGER.info("Registered config manager for {}", configName);
-    }
+    private static final Map<Constants.CONFIGS, ConfigManager<?>> configManagers = new HashMap<>();
 
     public static void registerConfigs() {
-        registerConfigManager(CacheConfig.class, Constants.CONFIGS.CACHE);
-        registerConfigManager(MessagesConfig.class, Constants.CONFIGS.MESSAGES);
-        registerConfigManager(PermissionsConfig.class, Constants.CONFIGS.PERMISSIONS);
-        registerConfigManager(WebhooksConfig.class, Constants.CONFIGS.WEBHOOKS);
+        for (Constants.CONFIGS config : Constants.CONFIGS.values()) {
+            registerConfigManager(config);
+        }
     }
 
     public static void saveAll() {
@@ -46,14 +35,6 @@ public class BoostersConfigManager<T> extends ConfigManager<T> {
         }
     }
 
-    public static ConfigManager<?> getConfigManager(Constants.CONFIGS configName) {
-        if (!configManagers.containsKey(configName)) {
-            Constants.LOGGER.warn("Config manager for {} does not exist, returning null", configName.getConfigName());
-            return null;
-        }
-        return configManagers.get(configName);
-    }
-
     public static ConfigManager<CacheConfig> getCacheConfigManager() {
         return getTypedConfigManager(Constants.CONFIGS.CACHE);
     }
@@ -68,6 +49,28 @@ public class BoostersConfigManager<T> extends ConfigManager<T> {
 
     public static ConfigManager<WebhooksConfig> getWebhooksConfigManager() {
         return getTypedConfigManager(Constants.CONFIGS.WEBHOOKS);
+    }
+
+    private static void registerConfigManager(Constants.CONFIGS configName) {
+        if (configManagers.containsKey(configName)) {
+            Constants.LOGGER.warn("Config manager for {} already exists, skipping registration", configName.getConfigName());
+            return;
+        }
+        @SuppressWarnings("unchecked")
+        BoostersConfigManager<Object> manager = new BoostersConfigManager<>(
+                (Class<Object>) configName.getConfigClass(),
+                configName.getConfigName()
+        );
+        configManagers.put(configName, manager);
+        Constants.LOGGER.info("Registered config manager for {}", configName);
+    }
+
+    private static ConfigManager<?> getConfigManager(Constants.CONFIGS configName) {
+        if (!configManagers.containsKey(configName)) {
+            Constants.LOGGER.warn("Config manager for {} does not exist, returning null", configName.getConfigName());
+            return null;
+        }
+        return configManagers.get(configName);
     }
 
     @SuppressWarnings("unchecked")
