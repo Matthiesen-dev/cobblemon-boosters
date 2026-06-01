@@ -1,10 +1,15 @@
 package dev.matthiesen.common.cobblemon_boosters.gui.gooey;
 
+import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.*;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import net.minecraft.server.level.ServerPlayer;
 
 public class GooeyGUIAdapter implements IGUIAdapter {
+    public GooeyGUIAdapter() {
+        Constants.createInfoLog("GooeyLibs detected, using GooeyGUIAdapter for GUI integration");
+    }
+
     @Override
     public void openMainMenuGUI(ServerPlayer player) {
         new MainMenuGui(player).open();

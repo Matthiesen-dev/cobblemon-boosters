@@ -18,6 +18,7 @@ public class DiscordWebhookService implements IWebhookService {
 
     public DiscordWebhookService() {
         webhooks = getClient();
+        Constants.createInfoLog("Matthiesen Lib Webhooks detected, using it for Discord Webhook integration");
     }
 
     public MatthiesenLibWebhooks.Webhooks getClient() {

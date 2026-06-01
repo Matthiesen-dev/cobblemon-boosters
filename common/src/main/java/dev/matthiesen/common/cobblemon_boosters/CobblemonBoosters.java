@@ -42,13 +42,12 @@ public class CobblemonBoosters {
     public void loadCompat() {
         if (MatthiesenLibApi.isModLoaded(Constants.COMPAT.GOOEYLIBS)) {
             this.guiAdapter = new GooeyGUIAdapter();
-            Constants.createInfoLog("GooeyLibs detected, using GooeyLibs for GUI");
         } else {
             this.guiAdapter = new FallbackGUIAdapter();
         }
+
         if (MatthiesenLibApi.isModLoaded(Constants.COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
             this.discordWebhookService = new DiscordWebhookService();
-            Constants.createInfoLog("Matthiesen Lib Webhooks detected, using it for Discord Webhook integration");
         } else {
             this.discordWebhookService = new NoOpWebhookService();
         }
