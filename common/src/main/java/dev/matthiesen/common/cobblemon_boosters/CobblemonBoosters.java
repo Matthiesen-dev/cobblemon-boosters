@@ -35,10 +35,14 @@ public class CobblemonBoosters {
         CommandRegistry.init();
         this.loadCompat();
         this.boostManager = new BoostManager();
+        this.registerHandlers();
+        Constants.createInfoLog("Initialized");
+    }
+
+    public void registerHandlers() {
         MatthiesenLibApi.registerReloadRunnable(Constants.MOD_ID, () -> reload(true));
         MatthiesenLibApi.registerPlayerEventHandler(Constants.MOD_ID, new PlayerEventHandler());
         MatthiesenLibApi.registerServerEventHandler(Constants.MOD_ID, new ServerEventHandler());
-        Constants.createInfoLog("Initialized");
     }
 
     public void loadCompat() {
