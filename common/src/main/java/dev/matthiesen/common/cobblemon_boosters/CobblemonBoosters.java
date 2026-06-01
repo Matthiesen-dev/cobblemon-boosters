@@ -23,11 +23,12 @@ public class CobblemonBoosters {
     public boolean COBBREEDING_AVAILABLE;
     public BoostManager boostManager;
 
-    public CobblemonBoosters() {}
+    public CobblemonBoosters() {
+        BoostersConfigManager.registerConfigs();
+    }
 
     public void initialize() {
         INSTANCE = this;
-        BoostersConfigManager.registerConfigs();
         this.reload(false);
         PermissionRegistry.init();
         this.permissions = PermissionRegistry.getPermissions();
