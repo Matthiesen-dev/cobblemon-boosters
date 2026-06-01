@@ -2,16 +2,12 @@ plugins {
     id("com.gradleup.shadow")
     id("dev.architectury.loom")
     id("architectury-plugin")
+    id("boosters.shadow-platform-conventions")
 }
 
 architectury {
     platformSetupLoomIde()
     neoForge()
-}
-
-loom {
-    enableTransitiveAccessWideners.set(true)
-    silentMojangMappingsLicense()
 }
 
 repositories {
@@ -27,73 +23,40 @@ val shadowBundle: Configuration by configurations.creating {
 }
 
 dependencies {
-    minecraft("net.minecraft:minecraft:${property("minecraft_version")}")
+    minecraft(libs.minecraft.net)
     mappings(loom.officialMojangMappings())
-    neoForge("net.neoforged:neoforge:${property("neoforge_version")}")
+    neoForge(libs.neoforge)
 
-    implementation("net.kyori:adventure-api:${property("adventure_version")}")
-    implementation("net.kyori:adventure-text-serializer-legacy:${property("adventure_version")}")
-    modImplementation(include("net.kyori:adventure-platform-neoforge:${property("adventure_text_version")}")!!)
-    modImplementation("dev.architectury:architectury-neoforge:${property("architectury_version")}")
-    modImplementation("com.cobblemon:neoforge:${property("cobblemon_version")}") { isTransitive = false }
-    //Needed for cobblemon
-    forgeRuntimeLibrary("thedarkcolour:kotlinforforge-neoforge:${property("kotlin_for_forge_version")}") {
+    libs.bundles.neoforgeModImplementation.get().forEach { dependency ->
+        modImplementation(dependency.copy()) { isTransitive = false }
+    }
+    libs.bundles.neoforgeModRuntimeOnly.get().forEach { dependency ->
+        modRuntimeOnly(dependency)
+    }
+    modRuntimeOnly(libs.matthiesen.lib.webhooks.neoforge) {
+        isTransitive = false
+    }
+
+    forgeRuntimeLibrary(libs.kotlinforforge) {
         exclude("net.neoforged.fancymodloader", "loader")
     }
 
-    modRuntimeOnly("ca.landonjw.gooeylibs:neoforge:${property("gooeylibs_version")}")
-
-    implementation("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
-    shadowBundle("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
-    forgeRuntimeLibrary("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
     implementation(project(":common", configuration = "namedElements"))
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 }
 
 tasks {
-    test {
-        useJUnitPlatform()
-    }
-
     processResources {
-        inputs.property("mod_id", project.property("mod_id").toString())
-        inputs.property("version", project.version)
-
         filesMatching("META-INF/neoforge.mods.toml") {
             expand(project.properties)
         }
     }
 
-    jar {
-        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
-        archiveClassifier.set("dev-slim")
-    }
-
     shadowJar {
         exclude("fabric.mod.json")
-        archiveClassifier.set("dev-shadow")
-        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
         configurations = listOf(shadowBundle)
-    }
-
-    remapJar {
-        dependsOn(shadowJar)
-        inputFile.set(shadowJar.flatMap { it.archiveFile })
-        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
-        archiveVersion.set("${rootProject.version}")
-    }
-
-    remapSourcesJar {
-        dependsOn(shadowJar)
-        inputFile.set(shadowJar.flatMap { it.archiveFile })
-        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
-        archiveVersion.set("${project.version}")
-        archiveClassifier.set("sources")
     }
 }

@@ -3,10 +3,11 @@ package dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens;
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
@@ -24,8 +25,8 @@ public class AdminGui extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserializeMC(
-                TextUtils.parse("<red>Admin Menu<reset>")
+        return TextUtils.deserialize(
+                TextUtils.parse("&cAdmin Menu&r")
         );
     }
 
@@ -40,28 +41,30 @@ public class AdminGui extends BaseMenuGuiTemplate {
     }
 
     private void getQueuesAndClear() {
+        var boostManager = CobblemonBoosters.INSTANCE.boostManager;
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages;
         List<QueueListEntry> queueEntries = new ArrayList<>();
         queueEntries.add(new QueueListEntry(
-                CobblemonBoosters.INSTANCE.queuedShinyBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.shinyMessages.boostQueueCleared
+                boostManager.getShinyBoostManager().getQueue(),
+                messages.shinyMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
-                CobblemonBoosters.INSTANCE.queuedCatchBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostQueueCleared
+                boostManager.getCatchBoostManager().getQueue(),
+                messages.catchBoostMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
-                CobblemonBoosters.INSTANCE.queuedExperienceBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.boostQueueCleared
+                boostManager.getExperienceBoostManager().getQueue(),
+                messages.experienceBoostMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
-                CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostQueueCleared
+                boostManager.getSpawnBucketBoostManager().getQueue(),
+                messages.spawnBucketBoostMessages.boostQueueCleared
         ));
         for (QueueListEntry entry : queueEntries) {
             entry.queueEntry.clear();
             sendPlayerMessage(entry.clearedMessage);
         }
-        CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
+        CacheConfig.setGlobalBoostData();
     }
 
     @Override
@@ -69,15 +72,15 @@ public class AdminGui extends BaseMenuGuiTemplate {
         List<Button> buttons = new ArrayList<>();
 
         // Reload
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getReloadItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
                             player,
-                            "<red>Confirm to reload",
+                            "&cConfirm to reload",
                             () -> {
                                 CobblemonBoosters.INSTANCE.reload(true);
-                                sendPlayerMessage(CobblemonBoosters.INSTANCE.config.messages.commandReload);
+                                sendPlayerMessage(CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.commandReload);
                                 close();
                             },
                             this::open
@@ -86,12 +89,12 @@ public class AdminGui extends BaseMenuGuiTemplate {
             );
 
         // Clear Queues
-        if (ModPermissions.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getClearQueueItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
                             player,
-                            "<red>Confirm to clear all Queues",
+                            "&cConfirm to clear all Queues",
                             () -> {
                                 getQueuesAndClear();
                                 close();

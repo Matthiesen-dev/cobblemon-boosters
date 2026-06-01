@@ -9,8 +9,12 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
+import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -47,34 +51,37 @@ public class Shiny implements ISubCommand {
         float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
-        ServerPlayer player = ctx.getSource().getPlayer();
-        int totalSeconds = Util.parseTotalSeconds(duration, unit);
+        int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
 
-        if (CobblemonBoosters.INSTANCE.activeShinyBoost == null) {
-            CobblemonBoosters.INSTANCE.activeShinyBoost = new ShinyBoost(multiplier, totalSeconds);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyMessages.boostStarted, CobblemonBoosters.INSTANCE.activeShinyBoost);
+        BoostManager.IBoostManager<ShinyBoost> manager = CobblemonBoosters.INSTANCE.boostManager.getShinyBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
+
+        if (manager.getActive() == null) {
+            ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
+            manager.setActive(boost);
+            Util.sendMessage(ctx, messages.boostStarted, boost);
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.shinyEventStartEmbed,
-                    CobblemonBoosters.INSTANCE.activeShinyBoost
+                    webhooks.shinyEventStartEmbed,
+                    boost
             );
-            CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeShinyBoost.getBossBar());
+            boost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
         } else {
             ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
-            CobblemonBoosters.INSTANCE.queuedShinyBoosts.add(boost);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.shinyMessages.boostAddedToQueued, boost);
+            manager.appendToQueue(boost);
+            Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
         }
-        CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
+        CacheConfig.setGlobalBoostData();
         return 1;
     }
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
         try {
+            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
             Util.handleStopCommand(
                     ctx,
-                    player,
-                    CobblemonBoosters.INSTANCE.activeShinyBoost,
-                    CobblemonBoosters.INSTANCE.config.messages.shinyMessages.boostStopped
+                    CobblemonBoosters.INSTANCE.boostManager.getShinyBoostManager().getActive(),
+                    messages.boostStopped
             );
         } catch (RuntimeException e) {
             Constants.LOGGER.error("Failed to stop shiny boost", e);
@@ -83,13 +90,12 @@ public class Shiny implements ISubCommand {
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
         Util.handleStatusCommand(
                 ctx,
-                player,
-                CobblemonBoosters.INSTANCE.activeShinyBoost,
-                CobblemonBoosters.INSTANCE.config.messages.shinyMessages.boostInfo,
-                CobblemonBoosters.INSTANCE.config.messages.shinyMessages.noActiveBoosts
+                CobblemonBoosters.INSTANCE.boostManager.getShinyBoostManager().getActive(),
+                messages.boostInfo,
+                messages.noActiveBoosts
         );
         return 1;
     }

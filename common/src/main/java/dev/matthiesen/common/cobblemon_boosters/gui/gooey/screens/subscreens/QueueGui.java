@@ -10,7 +10,6 @@ import ca.landonjw.gooeylibs2.api.page.LinkedPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.slot.TemplateSlotDelegate;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
-import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
@@ -27,8 +26,8 @@ import java.util.Queue;
 public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IBoost> queuedBoosts) implements IGui {
 
     public Component getTitle() {
-        return TextUtils.deserializeMC(
-                TextUtils.parse("<aqua>" + queueName + " Queue")
+        return TextUtils.deserialize(
+                TextUtils.parse("&b" + queueName + " Queue")
         );
     }
 
@@ -67,10 +66,10 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
             for (IBoost boost : boosts) {
                 List<Component> loreComponents = new ArrayList<>();
 
-                loreComponents.add(TextUtils.deserializeMC(TextUtils.parse("<white>Duration: <green>%duration%", boost)));
+                loreComponents.add(TextUtils.deserialize(TextUtils.parse("&fDuration: &a%duration%", boost)));
 
                 if (boost instanceof SpawnBucketBoost && ((SpawnBucketBoost) boost).bucket != null) {
-                    loreComponents.add(TextUtils.deserializeMC(TextUtils.parse("<green>Bucket: <red>%bucket%", boost)));
+                    loreComponents.add(TextUtils.deserialize(TextUtils.parse("&aBucket: &c%bucket%", boost)));
                 }
 
                 Component[] lore = new Component[loreComponents.size()];
@@ -129,6 +128,6 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
 
     @Override
     public void sendPlayerMessage(String rawMessage) {
-        CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
+        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
     }
 }

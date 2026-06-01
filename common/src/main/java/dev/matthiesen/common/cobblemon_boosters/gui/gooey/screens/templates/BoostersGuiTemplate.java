@@ -6,10 +6,10 @@ import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.QueueGui;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermission;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
+import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -26,10 +26,10 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     public final String noActiveBoost;
     public final String stopBoostMsg;
     public final String boostInfo;
-    public final ModPermission startPermission;
-    public final ModPermission stopPermission;
-    public final ModPermission statusPermission;
-    public final ModPermission queuePermission;
+    public final Permission startPermission;
+    public final Permission stopPermission;
+    public final Permission statusPermission;
+    public final Permission queuePermission;
     public final Consumer<ButtonAction> startOnClick;
 
     public BoostersGuiTemplate(
@@ -41,10 +41,10 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
             String noActiveBoost,
             String stopBoostMsg,
             String boostInfo,
-            ModPermission startPermission,
-            ModPermission stopPermission,
-            ModPermission statusPermission,
-            ModPermission queuePermission,
+            Permission startPermission,
+            Permission stopPermission,
+            Permission statusPermission,
+            Permission queuePermission,
             Runnable startOnClick
     ) {
         super(player);
@@ -64,7 +64,7 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserializeMC(TextUtils.parse(guiTitle));
+        return TextUtils.deserialize(TextUtils.parse(guiTitle));
     }
 
     public Button getStopButton() {
@@ -72,14 +72,14 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
                 .display(MenuUtils.getStopButton(activeBoost != null))
                 .onClick(() -> new CancelConfirmGuiBuilder(
                         player,
-                        "<red>Confirm to stop active boost!",
+                        "&cConfirm to stop active boost!",
                         () -> {
                             if (activeBoost != null) {
                                 activeBoost.setTimeRemaining(1);
-                                player.sendSystemMessage(TextUtils.deserializeMC(TextUtils.parse(stopBoostMsg)));
+                                player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(stopBoostMsg)));
                                 close();
                             } else {
-                                player.sendSystemMessage(TextUtils.deserializeMC(TextUtils.parse(noActiveBoost)));
+                                player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(noActiveBoost)));
                                 close();
                             }
                         },
@@ -93,10 +93,10 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
                 .display(MenuUtils.getStatusItem(activeBoost != null))
                 .onClick(() -> {
                     if (activeBoost != null) {
-                        player.sendSystemMessage(TextUtils.deserializeMC(TextUtils.parse(boostInfo, activeBoost)));
+                        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(boostInfo, activeBoost)));
                         close();
                     } else {
-                        player.sendSystemMessage(TextUtils.deserializeMC(TextUtils.parse(noActiveBoost)));
+                        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(noActiveBoost)));
                         close();
                     }
                 })
@@ -125,16 +125,16 @@ public class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
 
-        if (ModPermissions.checkPermission(player, startPermission))
+        if (PermissionRegistry.checkPermission(player, startPermission))
             buttons.add(getStartButton());
 
-        if (ModPermissions.checkPermission(player, stopPermission))
+        if (PermissionRegistry.checkPermission(player, stopPermission))
             buttons.add(getStopButton());
 
-        if (ModPermissions.checkPermission(player, statusPermission))
+        if (PermissionRegistry.checkPermission(player, statusPermission))
             buttons.add(getStatusButton());
 
-        if (ModPermissions.checkPermission(player, queuePermission))
+        if (PermissionRegistry.checkPermission(player, queuePermission))
             buttons.add(getQueueButton());
 
         return buttons;

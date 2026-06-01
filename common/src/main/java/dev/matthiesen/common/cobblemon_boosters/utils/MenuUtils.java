@@ -1,16 +1,14 @@
 package dev.matthiesen.common.cobblemon_boosters.utils;
 
 import com.cobblemon.mod.common.CobblemonItems;
-import dev.architectury.platform.Platform;
+import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.Constants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-
-import java.util.Optional;
 
 public class MenuUtils {
     public static final Item BACKGROUND = Items.GRAY_STAINED_GLASS_PANE;
@@ -35,7 +33,7 @@ public class MenuUtils {
     public static final Item BUCKET_ITEM = Items.TURTLE_SPAWN_EGG;
 
     public static ItemStack getConfirmItem() {
-        return new ItemBuilder(BOOST_CONFIRM_ITEM)
+        return new BoostersItemBuilder(BOOST_CONFIRM_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Confirm Boost")
@@ -46,8 +44,8 @@ public class MenuUtils {
                 .build();
     }
 
-    public static ItemBuilder getQueueEntryBuilder() {
-        return new ItemBuilder(QUEUE_ENTRY_ITEM)
+    public static BoostersItemBuilder getQueueEntryBuilder() {
+        return new BoostersItemBuilder(QUEUE_ENTRY_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Boost Queue Entry")
@@ -57,8 +55,8 @@ public class MenuUtils {
                 );
     }
 
-    public static ItemBuilder getDetailsItemBuilder() {
-        return new ItemBuilder(STATUS_ITEM)
+    public static BoostersItemBuilder getDetailsItemBuilder() {
+        return new BoostersItemBuilder(STATUS_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("View Boost Details")
@@ -69,7 +67,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getPlusItem() {
-        return new ItemBuilder(PLUS_ITEM)
+        return new BoostersItemBuilder(PLUS_ITEM)
                 .hideAdditional()
                 .setCustomName(Component.literal("Increment")
                         .withStyle(
@@ -80,7 +78,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getMinusItem() {
-        return new ItemBuilder(MINUS_ITEM)
+        return new BoostersItemBuilder(MINUS_ITEM)
                 .hideAdditional()
                 .setCustomName(Component.literal("Decrement")
                         .withStyle(
@@ -91,7 +89,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getFrameItem() {
-        return new ItemBuilder(BACKGROUND)
+        return new BoostersItemBuilder(BACKGROUND)
                 .hideAdditional()
                 .setCustomName(Component.literal(" "))
                 .build();
@@ -100,12 +98,11 @@ public class MenuUtils {
     public static ItemStack getBucketItem() {
         Item item = BUCKET_ITEM;
 
-        if (Platform.isModLoaded("cobbreeding")) {
-            Optional<Item> hopeful = BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse("cobbreeding:manaphy_egg"));
-            item = hopeful.orElse(BUCKET_ITEM);
+        if (CobblemonBoosters.INSTANCE.COBBREEDING_AVAILABLE) {
+            item = BuiltInRegistries.ITEM.getOptional(Constants.COMPAT.COBBREEDING_EGG).orElse(BUCKET_ITEM);
         }
 
-        return new ItemBuilder(item)
+        return new BoostersItemBuilder(item)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Spawn Bucket Boosters")
@@ -117,7 +114,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getCatchItem() {
-        return new ItemBuilder(CATCH_ITEM)
+        return new BoostersItemBuilder(CATCH_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Catch Rate Boosters")
@@ -129,7 +126,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getExperienceItem() {
-        return new ItemBuilder(EXPERIENCE_ITEM)
+        return new BoostersItemBuilder(EXPERIENCE_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Experience Rate Boosters")
@@ -141,7 +138,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getShinyItem() {
-        return new ItemBuilder(SHINY_ITEM)
+        return new BoostersItemBuilder(SHINY_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Shiny Rate Boosters")
@@ -153,7 +150,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getQueueItemForSubscreen(String name) {
-        return new ItemBuilder(QUEUE_ITEM)
+        return new BoostersItemBuilder(QUEUE_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("View " + name + " Queue")
@@ -174,7 +171,7 @@ public class MenuUtils {
             case "Shiny" -> queueItem = getShinyItem().getItem();
         }
 
-        return new ItemBuilder(queueItem)
+        return new BoostersItemBuilder(queueItem)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("View " + name + " Queue" + (multiple ? "s" : ""))
@@ -190,7 +187,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getAdminItem() {
-        return new ItemBuilder(ADMIN_ITEM)
+        return new BoostersItemBuilder(ADMIN_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Admin Menu")
@@ -202,7 +199,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getReloadItem() {
-        return new ItemBuilder(RELOAD_ITEM)
+        return new BoostersItemBuilder(RELOAD_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Reload Config")
@@ -214,7 +211,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getClearQueueItem() {
-        return new ItemBuilder(CLEAR_QUEUE_ITEM)
+        return new BoostersItemBuilder(CLEAR_QUEUE_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Clear All Queues")
@@ -226,7 +223,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getNoItem() {
-        return new ItemBuilder(NO_ITEM)
+        return new BoostersItemBuilder(NO_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Cancel")
@@ -238,7 +235,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getYesItem() {
-        return new ItemBuilder(YES_ITEM)
+        return new BoostersItemBuilder(YES_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Confirm")
@@ -250,7 +247,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getStopButton(boolean active) {
-        return new ItemBuilder(STOP_ITEM)
+        return new BoostersItemBuilder(STOP_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Stop Active Boost")
@@ -263,7 +260,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getPageItem(int currentPage, int pageLength) {
-        return new ItemBuilder(PAGE_PLACEHOLDER)
+        return new BoostersItemBuilder(PAGE_PLACEHOLDER)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Page " + currentPage + "/" + pageLength).withStyle(style -> style.withColor(ChatFormatting.GOLD))
@@ -272,7 +269,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getNavItem(String label) {
-        return new ItemBuilder(NAV_ITEM)
+        return new BoostersItemBuilder(NAV_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal(label)
@@ -284,7 +281,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getStatusItem(boolean active) {
-        return new ItemBuilder(STATUS_ITEM)
+        return new BoostersItemBuilder(STATUS_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("View Active Boost")
@@ -297,7 +294,7 @@ public class MenuUtils {
     }
 
     public static ItemStack getCreateNewBoosterItem(String label) {
-        return new ItemBuilder(CREATE_NEW_BOOSTER_ITEM)
+        return new BoostersItemBuilder(CREATE_NEW_BOOSTER_ITEM)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("Start New " + label)

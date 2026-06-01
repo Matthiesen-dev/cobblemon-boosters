@@ -23,8 +23,8 @@ public class CheckQueuesGui extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserializeMC(
-                TextUtils.parse("<green>All Boost Queues<reset>")
+        return TextUtils.deserialize(
+                TextUtils.parse("&aAll Boost Queues&r")
         );
     }
 
@@ -42,11 +42,12 @@ public class CheckQueuesGui extends BaseMenuGuiTemplate {
     @Override
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
+        var boostManager = CobblemonBoosters.INSTANCE.boostManager;
 
-        buttons.add(getQueueButton("Spawn Bucket", CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts));
-        buttons.add(getQueueButton("Catch", CobblemonBoosters.INSTANCE.queuedCatchBoosts));
-        buttons.add(getQueueButton("Experience", CobblemonBoosters.INSTANCE.queuedExperienceBoosts));
-        buttons.add(getQueueButton("Shiny", CobblemonBoosters.INSTANCE.queuedShinyBoosts));
+        buttons.add(getQueueButton("Spawn Bucket", boostManager.getSpawnBucketBoostManager().getQueue()));
+        buttons.add(getQueueButton("Catch", boostManager.getCatchBoostManager().getQueue()));
+        buttons.add(getQueueButton("Experience", boostManager.getExperienceBoostManager().getQueue()));
+        buttons.add(getQueueButton("Shiny", boostManager.getShinyBoostManager().getQueue()));
 
         return buttons;
     }

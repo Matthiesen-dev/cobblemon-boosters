@@ -6,7 +6,6 @@ import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
-import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
@@ -30,10 +29,10 @@ public class BucketBoostBuilderGui implements IGui {
     public final List<String> allowedBuckets = Helpers.allowedBuckets;
     public final List<String> allowedUnits = Helpers.allowedUnits;
     public final Map<String, String> labelToColor = Map.of(
-            "Multiplier", "<green>",
-            "Duration", "<aqua>",
-            "Unit", "<yellow>",
-            "Bucket", "<gold>"
+            "Multiplier", "&a",
+            "Duration", "&b",
+            "Unit", "&e",
+            "Bucket", "&6"
     );
 
     public String getCurrentMode() {
@@ -122,7 +121,7 @@ public class BucketBoostBuilderGui implements IGui {
     }
 
     public Component getTitle() {
-        return TextUtils.deserializeMC(
+        return TextUtils.deserialize(
                 TextUtils.parse("Boost Builder")
         );
     }
@@ -134,9 +133,9 @@ public class BucketBoostBuilderGui implements IGui {
         List<Component> lore = new ArrayList<>();
 
         if (value != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Current: <white>" + value)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Current: &f" + value)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Current: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Current: &cNot set")));
         }
 
         Component[] loreArray = new Component[lore.size()];
@@ -148,7 +147,7 @@ public class BucketBoostBuilderGui implements IGui {
 
         return GooeyButton.builder()
                 .display(MenuUtils.getQueueEntryBuilder()
-                        .setCustomName(TextUtils.deserializeMC(TextUtils.parse(labelToColor.get(label) + label)))
+                        .setCustomName(TextUtils.deserialize(TextUtils.parse(labelToColor.get(label) + label)))
                         .addLore(loreArray)
                         .setEnchanted(isActive)
                         .build()
@@ -195,30 +194,30 @@ public class BucketBoostBuilderGui implements IGui {
     public Button getDetailsButton() {
         List<Component> lore = new ArrayList<>();
 
-        lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Boost Type: <white>" + boostType)));
+        lore.add(TextUtils.deserialize(TextUtils.parse("&7Boost Type: &f" + boostType)));
 
         if (boostBuilder.bucket != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Bucket: <white>" + boostBuilder.bucket)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Bucket: &f" + boostBuilder.bucket)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Bucket: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Bucket: &cNot set")));
         }
 
         if (boostBuilder.multiplier != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Multiplier: <white>" + boostBuilder.multiplier)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Multiplier: &f" + boostBuilder.multiplier)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Multiplier: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Multiplier: &cNot set")));
         }
 
         if (boostBuilder.duration != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Duration: <white>" + boostBuilder.duration)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Duration: &f" + boostBuilder.duration)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Duration: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Duration: &cNot set")));
         }
 
         if (boostBuilder.unit != null) {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Unit: <white>" + boostBuilder.unit)));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Unit: &f" + boostBuilder.unit)));
         } else {
-            lore.add(TextUtils.deserializeMC(TextUtils.parse("<gray>Unit: <red>Not set")));
+            lore.add(TextUtils.deserialize(TextUtils.parse("&7Unit: &cNot set")));
         }
 
         Component[] loreArray = new Component[lore.size()];
@@ -228,7 +227,7 @@ public class BucketBoostBuilderGui implements IGui {
 
         return GooeyButton.builder()
                 .display(MenuUtils.getDetailsItemBuilder()
-                        .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<gold>Details")))
+                        .setCustomName(TextUtils.deserialize(TextUtils.parse("&6Details")))
                         .addLore(loreArray)
                         .build()
                 )
@@ -240,7 +239,7 @@ public class BucketBoostBuilderGui implements IGui {
                 .display(MenuUtils.getPlusItem())
                 .onClick(() -> {
                     if (getCurrentMode() == null) {
-                        sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
+                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
                         return;
                     }
                     switch (getCurrentMode()) {
@@ -276,7 +275,7 @@ public class BucketBoostBuilderGui implements IGui {
                                 boostBuilder = boostBuilder.setBucket(allowedBuckets.get(nextIndex));
                             }
                         }
-                        default -> sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
+                        default -> sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
                     }
                     openUpdatedPage(this);
                 })
@@ -288,7 +287,7 @@ public class BucketBoostBuilderGui implements IGui {
                 .display(MenuUtils.getMinusItem())
                 .onClick(() -> {
                     if (getCurrentMode() == null) {
-                        sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
+                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
                         return;
                     }
                     switch (getCurrentMode()) {
@@ -326,7 +325,7 @@ public class BucketBoostBuilderGui implements IGui {
                                 boostBuilder = boostBuilder.setBucket("common");
                             }
                         }
-                        default -> sendPlayerMessage("<red>Please select a field to modify first by clicking on its button!");
+                        default -> sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
                     }
                     openUpdatedPage(this);
                 })
@@ -352,14 +351,14 @@ public class BucketBoostBuilderGui implements IGui {
                 .display(MenuUtils.getConfirmItem())
                 .onClick(() -> new CancelConfirmGuiBuilder(
                         player,
-                        "<green>Confirm to start/queue boost!",
+                        "&aConfirm to start/queue boost!",
                         () -> {
                             if (isReadyToConfirm()) {
                                 SpawnBucketBoost boost = boostBuilder.build();
                                 setActiveBoost.accept(boost);
                                 close();
                             } else {
-                                sendPlayerMessage("<red>You must fill out all fields before confirming!");
+                                sendPlayerMessage("&cYou must fill out all fields before confirming!");
                                 openUpdatedPage(this);
                             }
                         },
@@ -402,6 +401,6 @@ public class BucketBoostBuilderGui implements IGui {
     }
 
     public void sendPlayerMessage(String rawMessage) {
-        CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
+        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
     }
 }
