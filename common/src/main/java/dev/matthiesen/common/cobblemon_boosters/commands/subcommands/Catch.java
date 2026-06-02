@@ -13,6 +13,7 @@ import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
+import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -81,6 +82,7 @@ public final class Catch implements ISubCommand {
                     messages.boostStopped
             );
         } catch (RuntimeException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
             Constants.LOGGER.error("Failed to stop catch boost", e);
         }
         return 1;

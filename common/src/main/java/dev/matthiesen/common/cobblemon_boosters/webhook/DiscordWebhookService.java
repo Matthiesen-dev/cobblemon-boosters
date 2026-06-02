@@ -5,6 +5,7 @@ import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
+import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import dev.matthiesen.common.matthiesen_lib_webhooks.MatthiesenLibWebhooks;
 import dev.matthiesen.common.matthiesen_lib_webhooks.discord.model.Embed;
@@ -66,17 +67,22 @@ public final class DiscordWebhookService implements IWebhookService {
     @Override
     public void sendMessage(WebhooksConfig.DiscordEmbed embed, IBoost boost) {
         if (webhooks == null) return;
-        String userName = embed.author != null && embed.author.name != null
-                ? embed.author.name
-                : "Cobblemon Boosters";
-        String avatarUrl = embed.author != null && embed.author.icon_url != null
-                ? embed.author.icon_url
-                : "https://raw.githubusercontent.com/Matthiesen-dev/cobblemon-boosters/refs/heads/main/assets/logo.png";
+        try {
+            String userName = embed.author != null && embed.author.name != null
+                    ? embed.author.name
+                    : "Cobblemon Boosters";
+            String avatarUrl = embed.author != null && embed.author.icon_url != null
+                    ? embed.author.icon_url
+                    : "https://raw.githubusercontent.com/Matthiesen-dev/cobblemon-boosters/refs/heads/main/assets/logo.png";
 
-        webhooks.sendMessage(message -> message
-                .withUsername(TextUtils.parse(userName, boost))
-                .withAvatarUrl(TextUtils.parse(avatarUrl, boost))
-                .withEmbeds(List.of(parseEventEmbed(embed, boost)))
-        );
+            webhooks.sendMessage(message -> message
+                    .withUsername(TextUtils.parse(userName, boost))
+                    .withAvatarUrl(TextUtils.parse(avatarUrl, boost))
+                    .withEmbeds(List.of(parseEventEmbed(embed, boost)))
+            );
+        } catch (RuntimeException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
+            Constants.createErrorLog("Failed to send Discord webhook message! Check your webhook URL and ensure that your server can connect to Discord's servers.", e);
+        }
     }
 }

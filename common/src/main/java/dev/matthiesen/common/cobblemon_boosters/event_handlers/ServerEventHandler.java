@@ -4,6 +4,7 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.config.BoostersConfigManager;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
+import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
 import dev.matthiesen.common.cobblemon_boosters.managers.TickManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import net.minecraft.server.MinecraftServer;
@@ -22,6 +23,7 @@ public final class ServerEventHandler implements MatthiesenLibServerEventHandler
             TickManager.tickBoosts();
             TickManager.updateBossBars();
         } catch (IllegalArgumentException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
             Constants.LOGGER.error("Caught BossBar exception! ", e);
         }
     }

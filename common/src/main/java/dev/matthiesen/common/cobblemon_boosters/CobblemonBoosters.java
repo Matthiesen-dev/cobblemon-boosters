@@ -8,6 +8,7 @@ import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.event_handlers.PlayerEventHandler;
+import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.CommandRegistry;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.webhook.DiscordWebhookService;
@@ -36,6 +37,7 @@ public final class CobblemonBoosters {
         this.loadCompat();
         this.boostManager = new BoostManager();
         this.registerHandlers();
+        MetricManager.ready();
         Constants.createInfoLog("Initialized");
     }
 

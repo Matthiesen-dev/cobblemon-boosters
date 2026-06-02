@@ -4,6 +4,7 @@ import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.config.MessagesConfig;
 import dev.matthiesen.common.cobblemon_boosters.config.PermissionsConfig;
 import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
+import dev.matthiesen.libs.faststats.Token;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +14,7 @@ import java.util.List;
 public final class Constants {
     public static final String MOD_ID = "cobblemon_boosters";
     public static final String ModName = "Cobblemon Boosters";
+    public static @Token final String METRICS_TOKEN = "7f05d25cd8de7eb6d5b01f47dffee788";
     public static final List<String> CURRENT_BOOSTERS = List.of(
             "bucket",
             "catch",
@@ -58,5 +60,9 @@ public final class Constants {
 
     public static void createErrorLog(String message) {
         LOGGER.error(message);
+    }
+
+    public static void createErrorLog(String message, Throwable throwable) {
+        LOGGER.error(message, throwable);
     }
 }

@@ -1,6 +1,7 @@
 package dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils;
 
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class BaseBoostBuilder {
             return boostClass.getDeclaredConstructor(float.class, int.class)
                     .newInstance(multiplier, totalSeconds);
         } catch (Exception e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
             throw new RuntimeException("Failed to build boost", e);
         }
     }
