@@ -15,6 +15,7 @@ import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,17 +23,18 @@ import net.minecraft.server.level.ServerPlayer;
 public final class Shiny implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Util.newBasicMultiplierBoosterCommand(
                 "shiny",
-                CobblemonBoosters.INSTANCE.permissions.SHINY_PERMISSION,
+                permissions.SHINY_PERMISSION,
                 this::openGUI,
                 this::startCommand,
                 maxMultiplier(),
-                CobblemonBoosters.INSTANCE.permissions.SHINY_START_PERMISSION,
+                permissions.SHINY_START_PERMISSION,
                 this::stopCommand,
-                CobblemonBoosters.INSTANCE.permissions.SHINY_STOP_PERMISSION,
+                permissions.SHINY_STOP_PERMISSION,
                 this::statusCommand,
-                CobblemonBoosters.INSTANCE.permissions.SHINY_STATUS_PERMISSION
+                permissions.SHINY_STATUS_PERMISSION
         );
     }
 

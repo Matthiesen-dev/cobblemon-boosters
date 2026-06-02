@@ -19,7 +19,6 @@ import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
 public final class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
     public IGUIAdapter guiAdapter;
-    public PermissionRegistry.Permissions permissions;
     public IWebhookService discordWebhookService;
     public boolean COBBREEDING_AVAILABLE;
     public BoostManager boostManager;
@@ -30,14 +29,13 @@ public final class CobblemonBoosters {
 
     public void initialize() {
         INSTANCE = this;
+        MetricManager.ready();
         this.reload(false);
         PermissionRegistry.init();
-        this.permissions = PermissionRegistry.getPermissions();
         CommandRegistry.init();
         this.loadCompat();
         this.boostManager = new BoostManager();
         this.registerHandlers();
-        MetricManager.ready();
         Constants.createInfoLog("Initialized");
     }
 

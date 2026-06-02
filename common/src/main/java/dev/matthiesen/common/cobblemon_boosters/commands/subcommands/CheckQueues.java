@@ -16,16 +16,17 @@ import net.minecraft.server.level.ServerPlayer;
 public final class CheckQueues implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Commands.literal("check-queues")
                 .requires(src -> PermissionRegistry.checkPermission(
                         src,
-                        CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
+                        permissions.CHECK_QUEUE_PERMISSION
                 ))
                 .executes(this::openGUI)
                 .then(Commands.argument("booster", StringArgumentType.string())
                         .requires(src -> PermissionRegistry.checkPermission(
                                 src,
-                                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION
+                                permissions.CHECK_QUEUE_PERMISSION
                         ))
                         .suggests((ctx, builder) -> {
                             for (String entry : Constants.CURRENT_BOOSTERS) {

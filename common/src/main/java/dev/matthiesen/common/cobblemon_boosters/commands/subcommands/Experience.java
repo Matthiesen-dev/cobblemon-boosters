@@ -14,6 +14,7 @@ import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,17 +22,18 @@ import net.minecraft.server.level.ServerPlayer;
 public final class Experience implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Util.newBasicMultiplierBoosterCommand(
                 "experience",
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_PERMISSION,
+                permissions.EXPERIENCE_PERMISSION,
                 this::openGUI,
                 this::startCommand,
                 maxMultiplier,
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_START_PERMISSION,
+                permissions.EXPERIENCE_START_PERMISSION,
                 this::stopCommand,
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STOP_PERMISSION,
+                permissions.EXPERIENCE_STOP_PERMISSION,
                 this::statusCommand,
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STATUS_PERMISSION
+                permissions.EXPERIENCE_STATUS_PERMISSION
         );
     }
 

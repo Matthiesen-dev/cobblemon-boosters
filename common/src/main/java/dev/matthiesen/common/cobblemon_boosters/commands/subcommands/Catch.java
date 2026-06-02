@@ -14,6 +14,7 @@ import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,17 +22,18 @@ import net.minecraft.server.level.ServerPlayer;
 public final class Catch implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Util.newBasicMultiplierBoosterCommand(
                 "catch",
-                CobblemonBoosters.INSTANCE.permissions.CATCH_PERMISSION,
+                permissions.CATCH_PERMISSION,
                 this::openGUI,
                 this::startCommand,
                 maxMultiplier,
-                CobblemonBoosters.INSTANCE.permissions.CATCH_START_PERMISSION,
+                permissions.CATCH_START_PERMISSION,
                 this::stopCommand,
-                CobblemonBoosters.INSTANCE.permissions.CATCH_STOP_PERMISSION,
+                permissions.CATCH_STOP_PERMISSION,
                 this::statusCommand,
-                CobblemonBoosters.INSTANCE.permissions.CATCH_STATUS_PERMISSION
+                permissions.CATCH_STATUS_PERMISSION
         );
     }
 

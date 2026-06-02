@@ -12,10 +12,11 @@ import net.minecraft.commands.Commands;
 public final class Reload implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Commands.literal("reload")
                 .requires(src -> PermissionRegistry.checkPermission(
                         src,
-                        CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION)
+                        permissions.RELOAD_PERMISSION)
                 )
                 .executes(this::cmd);
     }

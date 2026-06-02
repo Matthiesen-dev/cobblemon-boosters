@@ -37,6 +37,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
         var spawnBucketManager = CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages;
         var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
+        var permissions = PermissionRegistry.getPermissions();
         new BoostersGuiTemplate(
                 "&bSpawn Bucket Boosts&r",
                 boostType,
@@ -46,10 +47,10 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
                 messages.noActiveBoosts,
                 messages.boostStopped,
                 messages.boostInfo,
-                CobblemonBoosters.INSTANCE.permissions.BUCKET_START_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.BUCKET_STOP_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.BUCKET_STATUS_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION,
+                permissions.BUCKET_START_PERMISSION,
+                permissions.BUCKET_STOP_PERMISSION,
+                permissions.BUCKET_STATUS_PERMISSION,
+                permissions.CHECK_QUEUE_PERMISSION,
                 () -> new BucketBoostBuilderGui(
                         player,
                         boostType,
@@ -79,6 +80,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
         var catchBoostManager = CobblemonBoosters.INSTANCE.boostManager.getCatchBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
         var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
+        var permissions = PermissionRegistry.getPermissions();
         new BoostersGuiTemplate(
                 "&dCatch Boosts&r",
                 boostType,
@@ -88,10 +90,10 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
                 messages.noActiveBoosts,
                 messages.boostStopped,
                 messages.boostInfo,
-                CobblemonBoosters.INSTANCE.permissions.CATCH_START_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CATCH_STOP_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CATCH_STATUS_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION,
+                permissions.CATCH_START_PERMISSION,
+                permissions.CATCH_STOP_PERMISSION,
+                permissions.CATCH_STATUS_PERMISSION,
+                permissions.CHECK_QUEUE_PERMISSION,
                 () -> new BoostBuilderGui(
                         player,
                         boostType,
@@ -122,6 +124,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
         var experienceBoostManager = CobblemonBoosters.INSTANCE.boostManager.getExperienceBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
         var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
+        var permissions = PermissionRegistry.getPermissions();
         new BoostersGuiTemplate(
                 "&aExperience Boosts&r",
                 boostType,
@@ -131,10 +134,10 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
                 messages.noActiveBoosts,
                 messages.boostStopped,
                 messages.boostInfo,
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_START_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STOP_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STATUS_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION,
+                permissions.EXPERIENCE_START_PERMISSION,
+                permissions.EXPERIENCE_STOP_PERMISSION,
+                permissions.EXPERIENCE_STATUS_PERMISSION,
+                permissions.CHECK_QUEUE_PERMISSION,
                 () -> new BoostBuilderGui(
                         player,
                         boostType,
@@ -165,6 +168,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
         var shinyBoostManager = CobblemonBoosters.INSTANCE.boostManager.getShinyBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
         var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
+        var permissions = PermissionRegistry.getPermissions();
         new BoostersGuiTemplate(
                 "&6Shiny Boosts&r",
                 boostType,
@@ -174,10 +178,10 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
                 messages.noActiveBoosts,
                 messages.boostStopped,
                 messages.boostInfo,
-                CobblemonBoosters.INSTANCE.permissions.SHINY_START_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.SHINY_STOP_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.SHINY_STATUS_PERMISSION,
-                CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION,
+                permissions.SHINY_START_PERMISSION,
+                permissions.SHINY_STOP_PERMISSION,
+                permissions.SHINY_STATUS_PERMISSION,
+                permissions.CHECK_QUEUE_PERMISSION,
                 () -> new BoostBuilderGui(
                         player,
                         boostType,
@@ -206,9 +210,10 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
     @Override
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
+        var permissions = PermissionRegistry.getPermissions();
 
         // Bucket Booster
-        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.BUCKET_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, permissions.BUCKET_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getBucketItem())
                     .onClick(() -> openBucketGui(player))
@@ -216,7 +221,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Catch Booster
-        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CATCH_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, permissions.CATCH_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getCatchItem())
                     .onClick(() -> openCatchGUI(player))
@@ -224,7 +229,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Experience Booster
-        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, permissions.EXPERIENCE_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getExperienceItem())
                     .onClick(() -> openExperienceGUI(player))
@@ -232,7 +237,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Shiny Booster
-        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.SHINY_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, permissions.SHINY_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getShinyItem())
                     .onClick(() -> openShinyGUI(player))
@@ -240,7 +245,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Check Queues
-        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CHECK_QUEUE_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, permissions.CHECK_QUEUE_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getQueueItem("All", true))
                     .onClick(() -> new CheckQueuesGui(player).open())
@@ -248,8 +253,8 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
             );
 
         // Admin Options
-        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION) ||
-                PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, permissions.RELOAD_PERMISSION) ||
+                PermissionRegistry.checkPermission(player, permissions.CLEAR_QUEUES_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getAdminItem())
                     .onClick(() -> new AdminGui(player).open())

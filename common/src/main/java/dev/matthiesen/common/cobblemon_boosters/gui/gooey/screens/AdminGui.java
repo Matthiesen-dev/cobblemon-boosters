@@ -70,9 +70,10 @@ public final class AdminGui extends BaseMenuGuiTemplate {
     @Override
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
+        var permissions = PermissionRegistry.getPermissions();
 
         // Reload
-        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.RELOAD_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, permissions.RELOAD_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getReloadItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
@@ -89,7 +90,7 @@ public final class AdminGui extends BaseMenuGuiTemplate {
             );
 
         // Clear Queues
-        if (PermissionRegistry.checkPermission(player, CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION))
+        if (PermissionRegistry.checkPermission(player, permissions.CLEAR_QUEUES_PERMISSION))
             buttons.add(GooeyButton.builder()
                     .display(MenuUtils.getClearQueueItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(

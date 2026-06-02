@@ -14,10 +14,11 @@ import net.minecraft.commands.Commands;
 public final class ClearQueues implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Commands.literal("clear-queues")
                 .requires(src -> PermissionRegistry.checkPermission(
                         src,
-                        CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION
+                        permissions.CLEAR_QUEUES_PERMISSION
                 ))
                 .executes(this::command);
     }
