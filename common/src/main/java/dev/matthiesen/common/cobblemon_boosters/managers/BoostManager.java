@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.EventObservable;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
+import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
@@ -79,31 +80,51 @@ public final class BoostManager {
     }
 
     public void appendPlayer(ServerPlayer player) {
-        SHINY_RECORD.addPlayer(player);
-        CATCH_RECORD.addPlayer(player);
-        EXPERIENCE_RECORD.addPlayer(player);
-        SPAWN_BUCKET_RECORD.addPlayer(player);
+        try {
+            SHINY_RECORD.addPlayer(player);
+            CATCH_RECORD.addPlayer(player);
+            EXPERIENCE_RECORD.addPlayer(player);
+            SPAWN_BUCKET_RECORD.addPlayer(player);
+        } catch (RuntimeException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
+            Constants.createErrorLog("Error appending player to boosts in BoostManager", e);
+        }
     }
 
     public void clearPlayer(ServerPlayer player) {
-        SHINY_RECORD.clearPlayer(player);
-        CATCH_RECORD.clearPlayer(player);
-        EXPERIENCE_RECORD.clearPlayer(player);
-        SPAWN_BUCKET_RECORD.clearPlayer(player);
+        try {
+            SHINY_RECORD.clearPlayer(player);
+            CATCH_RECORD.clearPlayer(player);
+            EXPERIENCE_RECORD.clearPlayer(player);
+            SPAWN_BUCKET_RECORD.clearPlayer(player);
+        } catch (RuntimeException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
+            Constants.createErrorLog("Error clearing player from boosts in BoostManager", e);
+        }
     }
 
     public void setupSubscriptions() {
-        SHINY_RECORD.setupSubscription();
-        CATCH_RECORD.setupSubscription();
-        EXPERIENCE_RECORD.setupSubscription();
-        SPAWN_BUCKET_RECORD.setupSubscription();
+        try {
+            SHINY_RECORD.setupSubscription();
+            CATCH_RECORD.setupSubscription();
+            EXPERIENCE_RECORD.setupSubscription();
+            SPAWN_BUCKET_RECORD.setupSubscription();
+        } catch (RuntimeException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
+            Constants.createErrorLog("Error setting up event subscriptions in BoostManager", e);
+        }
     }
 
     public void teardownSubscriptions() {
-        SHINY_RECORD.teardown();
-        CATCH_RECORD.teardown();
-        EXPERIENCE_RECORD.teardown();
-        SPAWN_BUCKET_RECORD.teardown();
+        try {
+            SHINY_RECORD.teardown();
+            CATCH_RECORD.teardown();
+            EXPERIENCE_RECORD.teardown();
+            SPAWN_BUCKET_RECORD.teardown();
+        } catch (RuntimeException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
+            Constants.createErrorLog("Error tearing down event subscriptions in BoostManager", e);
+        }
     }
 
     public static class BoostRecord<T extends IBoost, K> {

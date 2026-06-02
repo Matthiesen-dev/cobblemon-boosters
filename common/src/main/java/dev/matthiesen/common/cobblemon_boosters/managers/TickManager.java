@@ -1,6 +1,7 @@
 package dev.matthiesen.common.cobblemon_boosters.managers;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
+import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
@@ -15,31 +16,14 @@ import java.util.Queue;
 import java.util.function.Consumer;
 
 public final class TickManager {
-    private static <T extends IBoost> void handleBoostTick(
-            T activeBoost,
-            Queue<T> queue,
-            Consumer<T> setActiveBoost,
-            WebhooksConfig.DiscordEmbed boostEndEmbed,
-            WebhooksConfig.DiscordEmbed boostStartEmbed
-    ) {
-        if (activeBoost == null) return;
-        decrementBoost(activeBoost);
-        if (activeBoost.getTimeRemaining() > 0) return;
-        activeBoost.getBossBar().hideBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
-        CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                boostEndEmbed,
-                activeBoost
-        );
-        T nextBoost = queue.poll();
-        setActiveBoost.accept(nextBoost);
-        if (nextBoost != null) {
-            nextBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
-            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                    boostStartEmbed,
-                    nextBoost
-            );
+    public static void tick() {
+        try {
+            tickBoosts();
+            updateBossBars();
+        } catch (IllegalArgumentException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
+            Constants.LOGGER.error("Caught BossBar exception! ", e);
         }
-        CacheConfig.setGlobalBoostData();
     }
 
     public static void tickBoosts() {
@@ -94,6 +78,33 @@ public final class TickManager {
 
     private static void decrementBoost(IBoost boost) {
         boost.setTimeRemaining(boost.getTimeRemaining() - 1);
+    }
+
+    private static <T extends IBoost> void handleBoostTick(
+            T activeBoost,
+            Queue<T> queue,
+            Consumer<T> setActiveBoost,
+            WebhooksConfig.DiscordEmbed boostEndEmbed,
+            WebhooksConfig.DiscordEmbed boostStartEmbed
+    ) {
+        if (activeBoost == null) return;
+        decrementBoost(activeBoost);
+        if (activeBoost.getTimeRemaining() > 0) return;
+        activeBoost.getBossBar().hideBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
+        CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                boostEndEmbed,
+                activeBoost
+        );
+        T nextBoost = queue.poll();
+        setActiveBoost.accept(nextBoost);
+        if (nextBoost != null) {
+            nextBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
+            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                    boostStartEmbed,
+                    nextBoost
+            );
+        }
+        CacheConfig.setGlobalBoostData();
     }
 
     private static void updateBossBar(IBoost boost) {
