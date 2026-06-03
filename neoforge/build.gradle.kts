@@ -26,25 +26,15 @@ dependencies {
     minecraft(libs.minecraft.net)
     mappings(loom.officialMojangMappings())
     neoForge(libs.neoforge)
-
-    libs.bundles.neoforgeModImplementation.get().forEach { dependency ->
-        modImplementation(dependency.copy()) { isTransitive = false }
-    }
-    libs.bundles.neoforgeModRuntimeOnly.get().forEach { dependency ->
-        modRuntimeOnly(dependency)
-    }
-    modRuntimeOnly(libs.matthiesen.lib.webhooks.neoforge) {
-        isTransitive = false
-    }
-
+    modImplementation(libs.bundles.neoforgeModImplementation) { isTransitive = false }
+    modRuntimeOnly(libs.bundles.neoforgeModRuntimeOnly)
+    modRuntimeOnly(libs.matthiesen.lib.webhooks.neoforge) { isTransitive = false }
     forgeRuntimeLibrary(libs.kotlinforforge) {
         exclude("net.neoforged.fancymodloader", "loader")
     }
 
     implementation(project(":common", configuration = "namedElements"))
-    "developmentNeoForge"(project(":common", configuration = "namedElements")) {
-        isTransitive = false
-    }
+    "developmentNeoForge"(project(":common", configuration = "namedElements")) { isTransitive = false }
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 }
 

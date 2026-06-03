@@ -15,23 +15,9 @@ val shadowCommon: Configuration by configurations.creating
 dependencies {
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
-
-    add("modImplementation", libs.fabric.loader)
-    add("modImplementation", fabricApi.module("fabric-command-api-v2", "0.116.6+1.21.1"))
-    add("modImplementation", fabricApi.module("fabric-lifecycle-events-v1", "0.116.6+1.21.1"))
-    add("modImplementation", fabricApi.module("fabric-networking-api-v1", "0.116.6+1.21.1"))
-    add("modImplementation", libs.fabric.language.kotlin)
-    add("modRuntimeOnly", libs.fabric.api)
-
-    libs.bundles.fabricModImplementation.get().forEach { dependency ->
-        modImplementation(dependency.copy()) { isTransitive = false }
-    }
-    libs.bundles.fabricModRuntimeOnly.get().forEach { dependency ->
-        modRuntimeOnly(dependency)
-    }
-    modRuntimeOnly(libs.matthiesen.lib.webhooks.fabric) {
-        isTransitive = false
-    }
+    modImplementation(libs.bundles.fabricModImplementation) { isTransitive = false }
+    modRuntimeOnly(libs.bundles.fabricModRuntimeOnly)
+    modRuntimeOnly(libs.matthiesen.lib.webhooks.fabric) { isTransitive = false }
 
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
