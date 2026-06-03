@@ -2,14 +2,14 @@ package dev.matthiesen.common.cobblemon_boosters.data;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
-import dev.matthiesen.common.cobblemon_boosters.utils.ItemBuilder;
+import dev.matthiesen.common.cobblemon_boosters.utils.BossBar;
+import dev.matthiesen.common.cobblemon_boosters.utils.BoostersItemBuilder;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
-import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.text.Component;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class ExperienceBoost implements IBoost {
+public final class ExperienceBoost implements IBoost {
     public float multiplier;
     public int duration;
     public long timeRemaining;
@@ -63,11 +63,11 @@ public class ExperienceBoost implements IBoost {
     }
 
     private BossBar createBossBar() {
-        return BossBar.bossBar(
+        return new BossBar(
                 getBossBarText(),
                 1F,
-                CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.barColor,
-                CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.barOverlay
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.barColor,
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.barOverlay
         );
     }
 
@@ -75,30 +75,17 @@ public class ExperienceBoost implements IBoost {
     public Component getBossBarText() {
         return TextUtils.deserialize(
                 TextUtils.parse(
-                        CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.barText,
+                        CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.barText,
                         this
                 )
         );
     }
 
     @Override
-    public String getBoostType() {
-        return "Experience Boost";
-    }
-
-    @Override
-    public ItemStack getGUIItem() {
-        return new ItemBuilder(MenuUtils.EXPERIENCE_ITEM)
-                .hideAdditional()
-                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Experience Boost</green>", this)))
-                .build();
-    }
-
-    @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
-        return new ItemBuilder(MenuUtils.EXPERIENCE_ITEM)
+        return new BoostersItemBuilder(MenuUtils.EXPERIENCE_ITEM)
                 .hideAdditional()
-                .setCustomName(TextUtils.deserializeMC(TextUtils.parse("<green>%multiplier%x Experience Boost</green>", this)))
+                .setCustomName(TextUtils.deserialize(TextUtils.parse("&a%multiplier%x Experience Boost&r", this)))
                 .addLore(lore)
                 .build();
     }

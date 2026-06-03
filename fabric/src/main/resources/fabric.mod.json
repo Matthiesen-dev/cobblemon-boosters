@@ -17,6 +17,11 @@
   },
   "depends": {
     "minecraft": "1.21.1",
-    "cobblemon": ">=1.7.3 <1.8.0"
+    "cobblemon": ">=1.7.3 <1.8.0",
+    "matthiesen_lib_api": ">=1.5.1 <2.0.0"
+  },
+  "suggests": {
+    "cobbreeding": ">=2.0.0",
+    "matthiesen_lib_webhooks": ">=1.5.1 <2.0.0"
   }
 }

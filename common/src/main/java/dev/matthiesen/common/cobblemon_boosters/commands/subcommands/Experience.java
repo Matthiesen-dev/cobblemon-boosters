@@ -8,25 +8,32 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
+import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
+import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
-public class Experience implements ISubCommand {
+public final class Experience implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Util.newBasicMultiplierBoosterCommand(
                 "experience",
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_PERMISSION,
+                permissions.EXPERIENCE_PERMISSION,
                 this::openGUI,
                 this::startCommand,
                 maxMultiplier,
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_START_PERMISSION,
+                permissions.EXPERIENCE_START_PERMISSION,
                 this::stopCommand,
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STOP_PERMISSION,
+                permissions.EXPERIENCE_STOP_PERMISSION,
                 this::statusCommand,
-                CobblemonBoosters.INSTANCE.permissions.EXPERIENCE_STATUS_PERMISSION
+                permissions.EXPERIENCE_STATUS_PERMISSION
         );
     }
 
@@ -44,49 +51,52 @@ public class Experience implements ISubCommand {
         float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
-        ServerPlayer player = ctx.getSource().getPlayer();
-        int totalSeconds = Util.parseTotalSeconds(duration, unit);
+        int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
 
-        if (CobblemonBoosters.INSTANCE.activeExperienceBoost == null) {
-            CobblemonBoosters.INSTANCE.activeExperienceBoost = new ExperienceBoost(multiplier, totalSeconds);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.boostStarted, CobblemonBoosters.INSTANCE.activeExperienceBoost);
+        BoostManager.IBoostManager<ExperienceBoost> manager = CobblemonBoosters.INSTANCE.boostManager.getExperienceBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
+
+        if (manager.getActive() == null) {
+            ExperienceBoost boost = new ExperienceBoost(multiplier, totalSeconds);
+            manager.setActive(boost);
+            Util.sendMessage(ctx, messages.boostStarted, boost);
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.experienceEventStartEmbed,
-                    CobblemonBoosters.INSTANCE.activeExperienceBoost
+                    webhooks.experienceEventStartEmbed,
+                    boost
             );
-            CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeExperienceBoost.getBossBar());
+            boost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
         } else {
             ExperienceBoost boost = new ExperienceBoost(multiplier, totalSeconds);
-            CobblemonBoosters.INSTANCE.queuedExperienceBoosts.add(boost);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.boostAddedToQueued, boost);
+            manager.appendToQueue(boost);
+            Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
         }
-        CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
+        CacheConfig.setGlobalBoostData();
         return 1;
     }
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
         try {
+            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
             Util.handleStopCommand(
                     ctx,
-                    player,
-                    CobblemonBoosters.INSTANCE.activeExperienceBoost,
-                    CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.boostStopped
+                    CobblemonBoosters.INSTANCE.boostManager.getExperienceBoostManager().getActive(),
+                    messages.boostStopped
             );
         } catch (RuntimeException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
             Constants.LOGGER.error("Failed to stop experience boost", e);
         }
         return 1;
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
         Util.handleStatusCommand(
                 ctx,
-                player,
-                CobblemonBoosters.INSTANCE.activeExperienceBoost,
-                CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.boostInfo,
-                CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.noActiveBoosts
+                CobblemonBoosters.INSTANCE.boostManager.getExperienceBoostManager().getActive(),
+                messages.boostInfo,
+                messages.noActiveBoosts
         );
         return 1;
     }

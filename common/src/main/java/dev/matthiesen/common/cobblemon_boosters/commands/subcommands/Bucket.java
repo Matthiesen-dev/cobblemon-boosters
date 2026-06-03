@@ -8,23 +8,30 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
+import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
+import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
-public class Bucket implements ISubCommand {
+public final class Bucket implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Util.newBucketBoosterCommand(
-                CobblemonBoosters.INSTANCE.permissions.BUCKET_PERMISSION,
+                permissions.BUCKET_PERMISSION,
                 this::openGUI,
                 this::startCommand,
-                CobblemonBoosters.INSTANCE.permissions.BUCKET_START_PERMISSION,
+                permissions.BUCKET_START_PERMISSION,
                 this::stopCommand,
-                CobblemonBoosters.INSTANCE.permissions.BUCKET_STOP_PERMISSION,
+                permissions.BUCKET_STOP_PERMISSION,
                 this::statusCommand,
-                CobblemonBoosters.INSTANCE.permissions.BUCKET_STATUS_PERMISSION
+                permissions.BUCKET_STATUS_PERMISSION
         );
     }
 
@@ -41,49 +48,52 @@ public class Bucket implements ISubCommand {
         float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
-        ServerPlayer player = ctx.getSource().getPlayer();
-        int totalSeconds = Util.parseTotalSeconds(duration, unit);
+        int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
 
-        if (CobblemonBoosters.INSTANCE.activeSpawnBucketBoost == null) {
-            CobblemonBoosters.INSTANCE.activeSpawnBucketBoost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostStarted, CobblemonBoosters.INSTANCE.activeSpawnBucketBoost);
+        BoostManager.IBoostManager<SpawnBucketBoost> manager = CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
+
+        if (manager.getActive() == null) {
+            SpawnBucketBoost boost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
+            manager.setActive(boost);
+            Util.sendMessage(ctx, messages.boostStarted, boost);
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.spawnBucketEventStartEmbed,
-                    CobblemonBoosters.INSTANCE.activeSpawnBucketBoost
+                    webhooks.spawnBucketEventStartEmbed,
+                    boost
             );
-            CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeSpawnBucketBoost.getBossBar());
+            boost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
         } else {
             SpawnBucketBoost boost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
-            CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts.add(boost);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostAddedToQueued, boost);
+            manager.appendToQueue(boost);
+            Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
         }
-        CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
+        CacheConfig.setGlobalBoostData();
         return 1;
     }
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
         try {
+            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages;
             Util.handleStopCommand(
                     ctx,
-                    player,
-                    CobblemonBoosters.INSTANCE.activeSpawnBucketBoost,
-                    CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostStopped
+                    CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager().getActive(),
+                    messages.boostStopped
             );
         } catch (RuntimeException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
             Constants.LOGGER.error("Failed to stop bucket boost", e);
         }
         return 1;
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages;
         Util.handleStatusCommand(
                 ctx,
-                player,
-                CobblemonBoosters.INSTANCE.activeSpawnBucketBoost,
-                CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostInfo,
-                CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.noActiveBoosts
+                CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager().getActive(),
+                messages.boostInfo,
+                messages.noActiveBoosts
         );
         return 1;
     }

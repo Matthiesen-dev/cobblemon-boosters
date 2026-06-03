@@ -1,17 +1,16 @@
 package dev.matthiesen.common.cobblemon_boosters.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.commands.subcommands.*;
-import dev.matthiesen.common.cobblemon_boosters.interfaces.ICommand;
+import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
-public class BoostersCommand implements ICommand {
+public final class BoostersCommand extends AbstractCommand {
     public BoostersCommand() {}
 
     // '/boosters reload' - Reload config
@@ -39,7 +38,7 @@ public class BoostersCommand implements ICommand {
     @Override
     public void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registry, Commands.CommandSelection context) {
         dispatcher.register(
-                getCmd()
+                Commands.literal("boosters").executes(this::action)
                     .then(new Reload().getCmd())
                     .then(new Catch().getCmd())
                     .then(new Experience().getCmd())
@@ -51,12 +50,8 @@ public class BoostersCommand implements ICommand {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
-        return Commands.literal("boosters").executes(this::openGUI);
-    }
-
-    public int openGUI(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
+    public int action(CommandContext<CommandSourceStack> context) {
+        ServerPlayer player = context.getSource().getPlayer();
         if (player != null) {
             CobblemonBoosters.INSTANCE.guiAdapter.openMainMenuGUI(player);
         }

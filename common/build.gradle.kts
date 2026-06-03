@@ -1,40 +1,27 @@
 plugins {
     id("dev.architectury.loom")
     id("architectury-plugin")
+    id("boosters.minecraft-module-conventions")
 }
 
 architectury {
     common("neoforge", "fabric")
 }
 
-loom {
-    silentMojangMappingsLicense()
-}
-
 dependencies {
-    minecraft("com.mojang:minecraft:${property("minecraft_version")}")
+    minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
-
-    implementation("com.n1netails:n1netails-discord-webhook-client:${property("discord_webhook_client_version")}")
-
-    modApi("dev.architectury:architectury:${property("architectury_version")}") { isTransitive = false }
-    modImplementation("com.cobblemon:mod:${property("cobblemon_version")}") { isTransitive = false }
-    modCompileOnly("ca.landonjw.gooeylibs:api:${property("gooeylibs_version")}")
-
-    compileOnly("net.kyori:adventure-platform-mod-shared:${property("adventure_text_version")}")
-
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
+    modImplementation(libs.bundles.commonModImplementation) { isTransitive = false }
+    implementation(libs.bundles.commonImplementation)
+    compileOnly(libs.bundles.commonCompileOnly)
 }
 
 tasks {
-    test {
-        useJUnitPlatform()
-    }
-
-    remapSourcesJar {
-        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
-        archiveVersion.set("${project.version}")
-        archiveClassifier.set("sources")
+    processResources {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        inputs.property("mod_name", project.property("mod_name").toString())
+        filesMatching("pack.mcmeta") {
+            expand(project.properties)
+        }
     }
 }

@@ -7,10 +7,8 @@ import ca.landonjw.gooeylibs2.api.page.GooeyPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import com.google.common.collect.Lists;
-import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
-import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -24,9 +22,7 @@ public class BaseMenuGuiTemplate implements IGui {
     }
 
     public Component getTitle() {
-        return TextUtils.deserializeMC(
-                TextUtils.parse("<gold>Cobblemon Boosters<reset>")
-        );
+        return Helpers.text("&6Cobblemon Boosters&r");
     }
 
     public List<Button> getButtons() {
@@ -36,18 +32,7 @@ public class BaseMenuGuiTemplate implements IGui {
     public Page getPage() {
         List<Button> buttons = getButtons();
 
-        ChestTemplate template = ChestTemplate.builder(3)
-                .row(0, Helpers.getFrame())
-                .row(1, Helpers.getFrame())
-                .set(1, 1, Helpers.getPlaceholder())
-                .set(1, 2, Helpers.getPlaceholder())
-                .set(1, 3, Helpers.getPlaceholder())
-                .set(1, 4, Helpers.getPlaceholder())
-                .set(1, 5, Helpers.getPlaceholder())
-                .set(1, 6, Helpers.getPlaceholder())
-                .set(1, 7, Helpers.getPlaceholder())
-                .row(2, Helpers.getFrame())
-                .build();
+        ChestTemplate template = Helpers.getBaseChestTemplate().build();
 
         GooeyPage page = PaginationHelper.createPagesFromPlaceholders(template, buttons, null);
         page.setTitle(getTitle());
@@ -66,6 +51,6 @@ public class BaseMenuGuiTemplate implements IGui {
 
     @Override
     public void sendPlayerMessage(String rawMessage) {
-        CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
+        Helpers.sendPlayerMessage(player, rawMessage);
     }
 }

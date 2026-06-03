@@ -1,15 +1,20 @@
 package dev.matthiesen.common.cobblemon_boosters.gui;
 
+import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-public class FallbackGUIAdapter implements IGUIAdapter {
+public final class FallbackGUIAdapter implements IGUIAdapter {
+
+    public FallbackGUIAdapter() {
+        Constants.createInfoLog("No compatible GUI library detected, using fallback GUI adapter which sends messages to players instead of opening GUIs");
+    }
 
     public Component getDefaultComponent() {
-        String defaultMessage = TextUtils.parse("%prefix% <gray>GUI not available, please use command arguments instead.</gray>");
-        return TextUtils.deserializeMC(defaultMessage);
+        String defaultMessage = TextUtils.parse("%prefix% &7GUI not available, please use command arguments instead.&r");
+        return TextUtils.deserialize(defaultMessage);
     }
 
     @Override

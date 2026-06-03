@@ -1,0 +1,61 @@
+[versions]
+kotlin = "2.2.20"
+shadow = "9.3.1"
+architectury-loom = "1.13-SNAPSHOT"
+architectury-plugin = "3.4-SNAPSHOT"
+minecraft = "1.21.1"
+fabric-loader = "0.17.2"
+fabric-api = "0.116.6+1.21.1"
+fabric-kotlin = "1.13.6+kotlin.2.2.20"
+neoforge = "21.1.182"
+kotlin-for-forge = "5.10.0"
+cobblemon = "1.7.3+1.21.1"
+gooeylibs = "3.1.1-1.21.x"
+publish = "0.35.0"
+matthiesen_lib_api = "1.5.1"
+matthiesen_lib_webhooks = "1.0.0"
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }
+architectury-plugin = { id = "architectury-plugin", version.ref = "architectury-plugin" }
+
+[libraries]
+publish = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "publish" }
+kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+architectury-loom = { group = "dev.architectury", name = "architectury-loom", version.ref = "architectury-loom" }
+architectury-plugin = { group = "architectury-plugin", name = "architectury-plugin.gradle.plugin", version.ref = "architectury-plugin" }
+shadow-gradle = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
+minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
+minecraft-net = { group = "net.minecraft", name = "minecraft", version.ref = "minecraft" }
+fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric-loader" }
+fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric-api" }
+fabric-language-kotlin = { group = "net.fabricmc", name = "fabric-language-kotlin", version.ref = "fabric-kotlin" }
+neoforge = { group = "net.neoforged", name = "neoforge", version.ref = "neoforge" }
+kotlinforforge = { group = "thedarkcolour", name = "kotlinforforge-neoforge", version.ref = "kotlin-for-forge" }
+cobblemon-common = { group = "com.cobblemon", name = "mod", version.ref = "cobblemon" }
+cobblemon-fabric = { group = "com.cobblemon", name = "fabric", version.ref = "cobblemon" }
+cobblemon-neoforge = { group = "com.cobblemon", name = "neoforge", version.ref = "cobblemon" }
+gooeylibs-api = { group = "ca.landonjw.gooeylibs", name = "api", version.ref = "gooeylibs" }
+gooeylibs-fabric = { group = "ca.landonjw.gooeylibs", name = "fabric", version.ref = "gooeylibs" }
+gooeylibs-neoforge = { group = "ca.landonjw.gooeylibs", name = "neoforge", version.ref = "gooeylibs" }
+matthiesen-lib-api-common = { group = "dev.matthiesen", name = "matthiesen-lib-api-common", version.ref = "matthiesen_lib_api" }
+matthiesen-lib-api-fabric = { group = "dev.matthiesen", name = "matthiesen-lib-api-fabric", version.ref = "matthiesen_lib_api" }
+matthiesen-lib-api-neoforge = { group = "dev.matthiesen", name = "matthiesen-lib-api-neoforge", version.ref = "matthiesen_lib_api" }
+matthiesen-lib-webhooks-common = { group = "dev.matthiesen", name = "matthiesen-lib-webhooks-common", version.ref = "matthiesen_lib_webhooks" }
+matthiesen-lib-webhooks-fabric = { group = "dev.matthiesen", name = "matthiesen-lib-webhooks-fabric", version.ref = "matthiesen_lib_webhooks" }
+matthiesen-lib-webhooks-neoforge = { group = "dev.matthiesen", name = "matthiesen-lib-webhooks-neoforge", version.ref = "matthiesen_lib_webhooks" }
+
+[bundles]
+commonCompileOnly = ["matthiesen-lib-webhooks-common"]
+commonImplementation = []
+commonModImplementation = ["cobblemon-common", "gooeylibs-api", "matthiesen-lib-api-common"]
+fabricModImplementation = ["fabric-loader", "fabric-api", "fabric-language-kotlin", "cobblemon-fabric", "matthiesen-lib-api-fabric"]
+fabricModRuntimeOnly = ["gooeylibs-fabric"]
+neoforgeModImplementation = ["cobblemon-neoforge", "matthiesen-lib-api-neoforge", "kotlinforforge"]
+neoforgeModRuntimeOnly = ["gooeylibs-neoforge"]
+
+
+
+
+

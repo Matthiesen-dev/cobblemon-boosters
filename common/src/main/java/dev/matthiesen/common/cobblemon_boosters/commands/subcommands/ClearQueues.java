@@ -4,50 +4,48 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
+import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
-import dev.matthiesen.common.cobblemon_boosters.permissions.ModPermissions;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.server.level.ServerPlayer;
 
-public class ClearQueues implements ISubCommand {
+public final class ClearQueues implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Commands.literal("clear-queues")
-                .requires(src -> ModPermissions.checkPermission(
+                .requires(src -> PermissionRegistry.checkPermission(
                         src,
-                        CobblemonBoosters.INSTANCE.permissions.CLEAR_QUEUES_PERMISSION
+                        permissions.CLEAR_QUEUES_PERMISSION
                 ))
                 .executes(this::command);
     }
 
     public int command(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
+        BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
         Util.handleQueueClear(
                 ctx,
-                player,
-                CobblemonBoosters.INSTANCE.queuedShinyBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.shinyMessages.boostQueueCleared
+                bm.getShinyBoostManager().getQueue(),
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                player,
-                CobblemonBoosters.INSTANCE.queuedCatchBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostQueueCleared
+                bm.getCatchBoostManager().getQueue(),
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                player,
-                CobblemonBoosters.INSTANCE.queuedExperienceBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.experienceBoostMessages.boostQueueCleared
+                bm.getExperienceBoostManager().getQueue(),
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                player,
-                CobblemonBoosters.INSTANCE.queuedSpawnBucketBoosts,
-                CobblemonBoosters.INSTANCE.config.messages.spawnBucketBoostMessages.boostQueueCleared
+                bm.getSpawnBucketBoostManager().getQueue(),
+                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
         );
-        CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
+        CacheConfig.setGlobalBoostData();
         return 1;
     }
 }

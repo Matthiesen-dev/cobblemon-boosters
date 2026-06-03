@@ -1,13 +1,20 @@
 package dev.matthiesen.common.cobblemon_boosters;
 
+import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
+import dev.matthiesen.common.cobblemon_boosters.config.MessagesConfig;
+import dev.matthiesen.common.cobblemon_boosters.config.PermissionsConfig;
+import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
+import dev.matthiesen.libs.faststats.Token;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class Constants {
+public final class Constants {
     public static final String MOD_ID = "cobblemon_boosters";
     public static final String ModName = "Cobblemon Boosters";
+    public static @Token final String METRICS_TOKEN = "7f05d25cd8de7eb6d5b01f47dffee788";
     public static final List<String> CURRENT_BOOSTERS = List.of(
             "bucket",
             "catch",
@@ -15,22 +22,34 @@ public class Constants {
             "shiny"
     );
 
-    public enum PERMISSION_LEVELS {
-        NONE(0),
-        SPAWN_PROTECTION_BYPASS(1),
-        CHEAT_COMMANDS_AND_COMMAND_BLOCKS(2),
-        MULTIPLAYER_MANAGEMENT(3),
-        ALL_COMMANDS(4);
+    public enum CONFIGS {
+        CACHE("cache", CacheConfig.class),
+        MESSAGES("messages", MessagesConfig.class),
+        PERMISSIONS("permissions", PermissionsConfig.class),
+        WEBHOOKS("webhooks", WebhooksConfig.class);
 
-        private final int level;
+        private final String configName;
+        private final Class<?> configClass;
 
-        PERMISSION_LEVELS(int level) {
-            this.level = level;
+        CONFIGS(String configName, Class<?> configClass) {
+            this.configName = configName;
+            this.configClass = configClass;
         }
 
-        public int getLevel() {
-            return level;
+        public String getConfigName() {
+            return configName;
         }
+
+        public Class<?> getConfigClass() {
+            return configClass;
+        }
+    }
+
+    public static class COMPAT {
+        public static final String GOOEYLIBS = "gooeylibs";
+        public static final String MATTHIESEN_LIB_WEBHOOKS = "matthiesen_lib_webhooks";
+        public static final String COBBREEDING = "cobbreeding";
+        public static final ResourceLocation COBBREEDING_EGG = ResourceLocation.parse("cobbreeding:manaphy_egg");
     }
 
     public static Logger LOGGER = LogManager.getLogger(ModName);
@@ -41,5 +60,9 @@ public class Constants {
 
     public static void createErrorLog(String message) {
         LOGGER.error(message);
+    }
+
+    public static void createErrorLog(String message, Throwable throwable) {
+        LOGGER.error(message, throwable);
     }
 }

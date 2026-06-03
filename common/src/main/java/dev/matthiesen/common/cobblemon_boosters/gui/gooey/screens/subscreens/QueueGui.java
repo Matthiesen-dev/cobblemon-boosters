@@ -10,13 +10,11 @@ import ca.landonjw.gooeylibs2.api.page.LinkedPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.slot.TemplateSlotDelegate;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
-import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGui;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
-import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -27,9 +25,7 @@ import java.util.Queue;
 public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IBoost> queuedBoosts) implements IGui {
 
     public Component getTitle() {
-        return TextUtils.deserializeMC(
-                TextUtils.parse("<aqua>" + queueName + " Queue")
-        );
+        return Helpers.text("&b" + queueName + " Queue");
     }
 
     private Button getInfoButton(int currentPage, int pageLength) {
@@ -67,16 +63,13 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
             for (IBoost boost : boosts) {
                 List<Component> loreComponents = new ArrayList<>();
 
-                loreComponents.add(TextUtils.deserializeMC(TextUtils.parse("<white>Duration: <green>%duration%", boost)));
+                loreComponents.add(Helpers.text("&fDuration: &a%duration%", boost));
 
                 if (boost instanceof SpawnBucketBoost && ((SpawnBucketBoost) boost).bucket != null) {
-                    loreComponents.add(TextUtils.deserializeMC(TextUtils.parse("<green>Bucket: <red>%bucket%", boost)));
+                    loreComponents.add(Helpers.text("&aBucket: &c%bucket%", boost));
                 }
 
-                Component[] lore = new Component[loreComponents.size()];
-                for (int i = 0; i < loreComponents.size(); i++) {
-                    lore[i] = loreComponents.get(i);
-                }
+                Component[] lore = Helpers.toComponentArray(loreComponents);
 
                 Button boostButton = GooeyButton.builder()
                         .display(boost.getGUIItem(lore))
@@ -96,17 +89,7 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
                 .linkType(LinkType.Next)
                 .build();
 
-        ChestTemplate template = ChestTemplate.builder(3)
-                .row(0, Helpers.getFrame())
-                .row(1, Helpers.getFrame())
-                .set(1, 1, Helpers.getPlaceholder())
-                .set(1, 2, Helpers.getPlaceholder())
-                .set(1, 3, Helpers.getPlaceholder())
-                .set(1, 4, Helpers.getPlaceholder())
-                .set(1, 5, Helpers.getPlaceholder())
-                .set(1, 6, Helpers.getPlaceholder())
-                .set(1, 7, Helpers.getPlaceholder())
-                .row(2, Helpers.getFrame())
+        ChestTemplate template = Helpers.getBaseChestTemplate()
                 .set(2, 0, previous)
                 .set(2, 4, getInfoButton(1, 1))
                 .set(2, 8, next)
@@ -129,6 +112,6 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
 
     @Override
     public void sendPlayerMessage(String rawMessage) {
-        CobblemonBoosters.INSTANCE.getAdventure().player(player.getUUID()).sendMessage(TextUtils.deserialize(TextUtils.parse(rawMessage)));
+        Helpers.sendPlayerMessage(player, rawMessage);
     }
 }

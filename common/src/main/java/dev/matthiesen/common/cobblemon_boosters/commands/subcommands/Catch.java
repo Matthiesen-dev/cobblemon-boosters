@@ -8,25 +8,32 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
+import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
+import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
+import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
+import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
-public class Catch implements ISubCommand {
+public final class Catch implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+        var permissions = PermissionRegistry.getPermissions();
         return Util.newBasicMultiplierBoosterCommand(
                 "catch",
-                CobblemonBoosters.INSTANCE.permissions.CATCH_PERMISSION,
+                permissions.CATCH_PERMISSION,
                 this::openGUI,
                 this::startCommand,
                 maxMultiplier,
-                CobblemonBoosters.INSTANCE.permissions.CATCH_START_PERMISSION,
+                permissions.CATCH_START_PERMISSION,
                 this::stopCommand,
-                CobblemonBoosters.INSTANCE.permissions.CATCH_STOP_PERMISSION,
+                permissions.CATCH_STOP_PERMISSION,
                 this::statusCommand,
-                CobblemonBoosters.INSTANCE.permissions.CATCH_STATUS_PERMISSION
+                permissions.CATCH_STATUS_PERMISSION
         );
     }
 
@@ -44,49 +51,52 @@ public class Catch implements ISubCommand {
         float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
-        ServerPlayer player = ctx.getSource().getPlayer();
-        int totalSeconds = Util.parseTotalSeconds(duration, unit);
+        int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
 
-        if (CobblemonBoosters.INSTANCE.activeCatchBoost == null) {
-            CobblemonBoosters.INSTANCE.activeCatchBoost = new CatchBoost(multiplier, totalSeconds);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostStarted, CobblemonBoosters.INSTANCE.activeCatchBoost);
+        BoostManager.IBoostManager<CatchBoost> manager = CobblemonBoosters.INSTANCE.boostManager.getCatchBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
+        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
+
+        if (manager.getActive() == null) {
+            CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
+            manager.setActive(boost);
+            Util.sendMessage(ctx, messages.boostStarted, boost);
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                    CobblemonBoosters.INSTANCE.config.discordWebhookConfig.catchEventStartEmbed,
-                    CobblemonBoosters.INSTANCE.activeCatchBoost
+                    webhooks.catchEventStartEmbed,
+                    boost
             );
-            CobblemonBoosters.INSTANCE.getAdventure().all().showBossBar(CobblemonBoosters.INSTANCE.activeCatchBoost.getBossBar());
+            boost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
         } else {
             CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
-            CobblemonBoosters.INSTANCE.queuedCatchBoosts.add(boost);
-            Util.sendMessage(ctx, player, CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostAddedToQueued, boost);
+            manager.appendToQueue(boost);
+            Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
         }
-        CobblemonBoosters.INSTANCE.config.saveGlobalBoostData();
+        CacheConfig.setGlobalBoostData();
         return 1;
     }
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
         try {
+            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
             Util.handleStopCommand(
                     ctx,
-                    player,
-                    CobblemonBoosters.INSTANCE.activeCatchBoost,
-                    CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostStopped
+                    CobblemonBoosters.INSTANCE.boostManager.getCatchBoostManager().getActive(),
+                    messages.boostStopped
             );
         } catch (RuntimeException e) {
+            MetricManager.ERROR_TRACKER.trackError(e);
             Constants.LOGGER.error("Failed to stop catch boost", e);
         }
         return 1;
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer player = ctx.getSource().getPlayer();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
         Util.handleStatusCommand(
                 ctx,
-                player,
-                CobblemonBoosters.INSTANCE.activeCatchBoost,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.boostInfo,
-                CobblemonBoosters.INSTANCE.config.messages.catchBoostMessages.noActiveBoosts
+                CobblemonBoosters.INSTANCE.boostManager.getCatchBoostManager().getActive(),
+                messages.boostInfo,
+                messages.noActiveBoosts
         );
         return 1;
     }
