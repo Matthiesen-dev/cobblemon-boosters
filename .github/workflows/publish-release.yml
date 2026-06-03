@@ -147,17 +147,18 @@ jobs:
     steps:
       - name: Build Discord Embed Payload
         id: build_payload
+        env:
+          RELEASE_BODY: ${{ github.event.release.body }}
         run: |
           payload=$(jq -cn \
             --arg title "New Release: ${{ env.MOD_NAME }} ${{ needs.prepare.outputs.version }}" \
-            --arg description "${{ github.event.release.body }}" \
             '{
               "username": "Matthiesen Release Bot",
               "avatar_url": "https://raw.githubusercontent.com/Matthiesen-dev/.github/refs/heads/main/logo-transparent.png",
               "embeds": [
                 {
                   "title": $title,
-                  "description": $description,
+                  "description": $ENV.RELEASE_BODY,
                   "color": 5763719,
                   "thumbnail": {
                     "url": "https://raw.githubusercontent.com/Matthiesen-dev/.github/refs/heads/main/mod-logos/cobblemon-boosters.png"
