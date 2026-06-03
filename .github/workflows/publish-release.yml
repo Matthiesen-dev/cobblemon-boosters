@@ -16,7 +16,8 @@ env:
       {"project_id":"MdwFAVRL","dependency_type":"required"},
       {"project_id":"j2JrSWnx","dependency_type":"required"},
       {"project_id":"XP5CfD30","dependency_type":"optional"},
-      {"project_id":"KzjvlKEN","dependency_type":"optional"}
+      {"project_id":"KzjvlKEN","dependency_type":"optional"},
+      {"project_id":"ItmVb4zY","dependency_type":"optional"}
     ]
 
 # The dependencies above correspond to:
@@ -24,6 +25,7 @@ env:
 # - Matthiesen Lib API (j2JrSWnx)
 # - Matthiesen Lib Webhooks (XP5CfD30)
 # - GooeyLibs (KzjvlKEN)
+# - Cobbreeding (ItmVb4zY)
 
 jobs:
   prepare:
