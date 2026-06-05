@@ -12,7 +12,7 @@ kotlin-for-forge = "5.10.0"
 cobblemon = "1.7.3+1.21.1"
 gooeylibs = "3.1.1-1.21.x"
 publish = "0.35.0"
-matthiesen_lib_api = "1.5.1"
+matthiesen_lib_api = "1.5.2"
 matthiesen_lib_webhooks = "1.0.0"
 
 [plugins]

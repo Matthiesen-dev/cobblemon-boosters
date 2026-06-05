@@ -29,7 +29,7 @@ public final class CobblemonBoosters {
 
     public void initialize() {
         INSTANCE = this;
-        MetricManager.ready();
+        MetricManager.init();
         this.reload(false);
         PermissionRegistry.init();
         CommandRegistry.init();
