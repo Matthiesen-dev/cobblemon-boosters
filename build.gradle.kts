@@ -9,7 +9,10 @@ tasks.register<Copy>("copyJars") {
     description = "Copies JAR files from fabric and neoforge to output directory"
 
     from("./common/build/libs/") {
-        include("*-sources.jar")
+        include("*.jar")
+        exclude("*-dev-shadow.jar")
+        exclude("*-transformProductionFabric.jar")
+        exclude("*-transformProductionNeoForge.jar")
     }
     from("./fabric/build/libs/") {
         include("*.jar")
