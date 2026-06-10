@@ -15,7 +15,7 @@ public final class SpawnBucketBoost implements IBoost {
     public float multiplier;
     public int duration;
     public long timeRemaining;
-    public BossBar bossBar;
+    public transient BossBar bossBar;
     public String bucket;
 
     public SpawnBucketBoost(float multiplier, int duration) {
@@ -24,8 +24,6 @@ public final class SpawnBucketBoost implements IBoost {
         this.timeRemaining = duration * 20L;
         this.bossBar = createBossBar();
     }
-
-    public SpawnBucketBoost() {}
 
     @Override
     public float getMultiplier() {
@@ -83,11 +81,11 @@ public final class SpawnBucketBoost implements IBoost {
     }
 
     @Override
-    public BossBar getBossBar() {
+    public BossBar.Builder getBossBar() {
         if (this.bossBar == null) {
             this.bossBar = createBossBar();
         }
-        return this.bossBar;
+        return this.bossBar.getBuilder();
     }
 
     private BossBar createBossBar() {

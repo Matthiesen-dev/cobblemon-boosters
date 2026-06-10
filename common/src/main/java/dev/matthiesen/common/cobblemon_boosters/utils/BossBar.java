@@ -7,56 +7,58 @@ import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.BossEvent;
 
 public final class BossBar {
-    private static ServerBossEvent bossBar;
+    private final Builder builder;
 
-    public BossBar(Component component, float initialProgress, BossEvent.BossBarColor bossBarColor, BossEvent.BossBarOverlay bossBarOverlay) {
-        bossBar = new ServerBossEvent(component, bossBarColor, bossBarOverlay);
-        bossBar.setProgress(initialProgress);
+    public BossBar(Component comp, float initProgress, BossEvent.BossBarColor bbColor, BossEvent.BossBarOverlay bbOverlay) {
+        this.builder = new Builder(comp, initProgress, bbColor, bbOverlay);
     }
 
-    public void addPlayer(ServerPlayer player) {
-        if (bossBar != null) {
-            bossBar.addPlayer(player);
+    public Builder getBuilder() {
+        return this.builder;
+    }
+
+    public static class Builder {
+        private final ServerBossEvent bossBar;
+
+        public Builder(Component component, float initialProgress, BossEvent.BossBarColor bossBarColor, BossEvent.BossBarOverlay bossBarOverlay) {
+            this.bossBar = new ServerBossEvent(component, bossBarColor, bossBarOverlay);
+            this.bossBar.setProgress(initialProgress);
         }
-    }
 
-    public void removePlayer(ServerPlayer player) {
-        if (bossBar != null) {
-            bossBar.removePlayer(player);
+        public void addPlayer(ServerPlayer player) {
+            this.bossBar.addPlayer(player);
         }
-    }
 
-    public void updateProgress(float progress) {
-        if (bossBar != null) {
-            bossBar.setProgress(progress);
+        public void removePlayer(ServerPlayer player) {
+            this.bossBar.removePlayer(player);
         }
-    }
 
-    public void setName(Component component) {
-        if (bossBar != null) {
-            bossBar.setName(component);
+        public void updateProgress(float progress) {
+            this.bossBar.setProgress(progress);
         }
-    }
 
-    public void verifyPlayerList(PlayerList list) {
-        if (bossBar != null) {
+        public void setName(Component component) {
+            this.bossBar.setName(component);
+        }
+
+        public void verifyPlayerList(PlayerList list) {
             for (ServerPlayer sp : list.getPlayers()) {
-                if (!bossBar.getPlayers().contains(sp)) {
-                    bossBar.addPlayer(sp);
+                if (!this.bossBar.getPlayers().contains(sp)) {
+                    this.bossBar.addPlayer(sp);
                 }
             }
         }
-    }
 
-    public void hideBossBarFromPlayerList(PlayerList list) {
-        for (ServerPlayer sp : list.getPlayers()) {
-            removePlayer(sp);
+        public void hideBossBarFromPlayerList(PlayerList list) {
+            for (ServerPlayer sp : list.getPlayers()) {
+                removePlayer(sp);
+            }
         }
-    }
 
-    public void showBossBarFromPlayerList(PlayerList list) {
-        for (ServerPlayer sp : list.getPlayers()) {
-            addPlayer(sp);
+        public void showBossBarFromPlayerList(PlayerList list) {
+            for (ServerPlayer sp : list.getPlayers()) {
+                addPlayer(sp);
+            }
         }
     }
 }

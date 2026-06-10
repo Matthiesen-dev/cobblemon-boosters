@@ -14,7 +14,7 @@ public interface IBoost {
 	long getTimeRemaining();
 	void setTimeRemaining(long timeRemaining);
 
-	BossBar getBossBar();
+	BossBar.Builder getBossBar();
 
 	Component getBossBarText();
 
