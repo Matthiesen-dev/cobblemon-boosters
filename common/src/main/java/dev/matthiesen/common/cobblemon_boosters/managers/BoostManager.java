@@ -19,6 +19,7 @@ import dev.matthiesen.common.cobblemon_boosters.utils.SpawnBucketOverrideSelecto
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -194,6 +195,10 @@ public final class BoostManager {
 
         public Queue<T> getQueue() {
             return this.queue;
+        }
+
+        public List<T> getQueueList() {
+            return this.queue.stream().toList();
         }
 
         public void setQueue(Queue<T> replacement) {
