@@ -13,7 +13,7 @@ public final class ShinyBoost implements IBoost {
     public float multiplier;
     public int duration;
     public long timeRemaining;
-    public BossBar bossBar;
+    public transient BossBar bossBar;
 
     public ShinyBoost(float multiplier, int duration) {
         this.multiplier = multiplier;
@@ -55,11 +55,11 @@ public final class ShinyBoost implements IBoost {
     }
 
     @Override
-    public BossBar getBossBar() {
+    public BossBar.Builder getBossBar() {
         if (this.bossBar == null) {
             this.bossBar = createBossBar();
         }
-        return this.bossBar;
+        return this.bossBar.getBuilder();
     }
 
     private BossBar createBossBar() {

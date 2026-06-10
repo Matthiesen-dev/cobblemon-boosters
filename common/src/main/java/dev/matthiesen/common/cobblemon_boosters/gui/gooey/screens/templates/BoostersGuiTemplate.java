@@ -3,9 +3,11 @@ package dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates;
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.ButtonAction;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
+import dev.matthiesen.common.cobblemon_boosters.config.MessagesConfig;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.QueueGui;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
@@ -36,11 +38,8 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
             String guiTitle,
             String boostType,
             ServerPlayer player,
-            IBoost activeBoost,
-            Queue<? extends IBoost> queuedBoosts,
-            String noActiveBoost,
-            String stopBoostMsg,
-            String boostInfo,
+            BoostManager.IBoostManager<? extends IBoost> boostManager,
+            MessagesConfig.BoostMessagesConfig messagesConfig,
             Permission startPermission,
             Permission stopPermission,
             Permission statusPermission,
@@ -50,11 +49,11 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
         super(player);
         this.guiTitle = guiTitle;
         this.boostType = boostType;
-        this.activeBoost = activeBoost;
-        this.queuedBoosts = queuedBoosts;
-        this.noActiveBoost = noActiveBoost;
-        this.stopBoostMsg = stopBoostMsg;
-        this.boostInfo = boostInfo;
+        this.activeBoost = boostManager.getActive();
+        this.queuedBoosts = boostManager.getQueue();
+        this.noActiveBoost = messagesConfig.noActiveBoosts;
+        this.stopBoostMsg = messagesConfig.boostStopped;
+        this.boostInfo = messagesConfig.boostInfo;
         this.startPermission = startPermission;
         this.stopPermission = stopPermission;
         this.statusPermission = statusPermission;

@@ -46,30 +46,32 @@ public final class CacheConfig {
     public CacheConfig() {}
 
     public CacheConfig(
-            ShinyBoost activeShinyBoost, CatchBoost activeCatchBoost, ExperienceBoost activeExperienceBoost, SpawnBucketBoost activeSpawnBucketBoost,
-            List<ShinyBoost> queuedShinyBoosts, List<CatchBoost> queuedCatchBoosts, List<ExperienceBoost> queuedExperienceBoosts, List<SpawnBucketBoost> queuedSpawnBucketBoosts
+            BoostManager.IBoostManager<ShinyBoost> shinyBoostManager,
+            BoostManager.IBoostManager<CatchBoost> catchBoostManager,
+            BoostManager.IBoostManager<ExperienceBoost> experienceBoostManager,
+            BoostManager.IBoostManager<SpawnBucketBoost> spawnBucketBoostManager
     ) {
-        this.activeShinyBoost = activeShinyBoost;
-        this.activeCatchBoost = activeCatchBoost;
-        this.activeExperienceBoost = activeExperienceBoost;
-        this.activeSpawnBucketBoost = activeSpawnBucketBoost;
-        this.queuedShinyBoosts = queuedShinyBoosts;
-        this.queuedCatchBoosts = queuedCatchBoosts;
-        this.queuedExperienceBoosts = queuedExperienceBoosts;
-        this.queuedSpawnBucketBoosts = queuedSpawnBucketBoosts;
+        this.activeShinyBoost = shinyBoostManager.getActive();
+        this.activeCatchBoost = catchBoostManager.getActive();
+        this.activeExperienceBoost = experienceBoostManager.getActive();
+        this.activeSpawnBucketBoost = spawnBucketBoostManager.getActive();
+        this.queuedShinyBoosts = shinyBoostManager.getQueueList();
+        this.queuedCatchBoosts = catchBoostManager.getQueueList();
+        this.queuedExperienceBoosts = experienceBoostManager.getQueueList();
+        this.queuedSpawnBucketBoosts = spawnBucketBoostManager.getQueueList();
     }
 
     public static void setGlobalBoostData() {
-        BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
+        var shinyBoostManager = BoostManager.getShinyBoostManager();
+        var catchBoostManager = BoostManager.getCatchBoostManager();
+        var experienceBoostManager = BoostManager.getExperienceBoostManager();
+        var spawnBucketBoostManager = BoostManager.getSpawnBucketBoostManager();
+
         CobblemonBoosters.INSTANCE.getCacheConfigManager().setConfig(new CacheConfig(
-                bm.getShinyBoostManager().getActive(),
-                bm.getCatchBoostManager().getActive(),
-                bm.getExperienceBoostManager().getActive(),
-                bm.getSpawnBucketBoostManager().getActive(),
-                bm.getShinyBoostManager().getQueue().stream().toList(),
-                bm.getCatchBoostManager().getQueue().stream().toList(),
-                bm.getExperienceBoostManager().getQueue().stream().toList(),
-                bm.getSpawnBucketBoostManager().getQueue().stream().toList()
+                shinyBoostManager,
+                catchBoostManager,
+                experienceBoostManager,
+                spawnBucketBoostManager
         ));
     }
 

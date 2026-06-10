@@ -19,6 +19,7 @@ import dev.matthiesen.common.cobblemon_boosters.utils.SpawnBucketOverrideSelecto
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -61,25 +62,25 @@ public final class BoostManager {
                     }
             );
 
-    public BoostManager() {}
+    public static void init() {}
 
-    public IBoostManager<ShinyBoost> getShinyBoostManager() {
+    public static IBoostManager<ShinyBoost> getShinyBoostManager() {
         return SHINY_RECORD.getManager();
     }
 
-    public IBoostManager<CatchBoost> getCatchBoostManager() {
+    public static IBoostManager<CatchBoost> getCatchBoostManager() {
         return CATCH_RECORD.getManager();
     }
 
-    public IBoostManager<ExperienceBoost> getExperienceBoostManager() {
+    public static IBoostManager<ExperienceBoost> getExperienceBoostManager() {
         return EXPERIENCE_RECORD.getManager();
     }
 
-    public IBoostManager<SpawnBucketBoost> getSpawnBucketBoostManager() {
+    public static IBoostManager<SpawnBucketBoost> getSpawnBucketBoostManager() {
         return SPAWN_BUCKET_RECORD.getManager();
     }
 
-    public void appendPlayer(ServerPlayer player) {
+    public static void appendPlayer(ServerPlayer player) {
         try {
             SHINY_RECORD.addPlayer(player);
             CATCH_RECORD.addPlayer(player);
@@ -91,7 +92,7 @@ public final class BoostManager {
         }
     }
 
-    public void clearPlayer(ServerPlayer player) {
+    public static void clearPlayer(ServerPlayer player) {
         try {
             SHINY_RECORD.clearPlayer(player);
             CATCH_RECORD.clearPlayer(player);
@@ -103,7 +104,7 @@ public final class BoostManager {
         }
     }
 
-    public void setupSubscriptions() {
+    public static void setupSubscriptions() {
         try {
             SHINY_RECORD.setupSubscription();
             CATCH_RECORD.setupSubscription();
@@ -115,7 +116,7 @@ public final class BoostManager {
         }
     }
 
-    public void teardownSubscriptions() {
+    public static void teardownSubscriptions() {
         try {
             SHINY_RECORD.teardown();
             CATCH_RECORD.teardown();
@@ -141,27 +142,27 @@ public final class BoostManager {
             this.eventHandler = eventHandler;
             this.queue = new LinkedList<>();
             this.active = null;
-            this.manager = new IBoostManager<>(() -> active, b -> active = b, this.queue);
+            this.manager = new IBoostManager<>(() -> this.active, b -> this.active = b, this.queue);
             this.subscription = null;
         }
 
         public void addPlayer(ServerPlayer player) {
-            if (active != null) active.getBossBar().addPlayer(player);
+            if (this.active != null) this.active.getBossBar().addPlayer(player);
         }
 
         public void clearPlayer(ServerPlayer player) {
-            if (active != null) active.getBossBar().removePlayer(player);
+            if (this.active != null) this.active.getBossBar().removePlayer(player);
         }
 
         public IBoostManager<T> getManager() {
-            return manager;
+            return this.manager;
         }
 
         public void setupSubscription() {
-            this.subscription = observable.subscribe(Priority.NORMAL, event -> {
-                T activeBoost = manager.getActive();
+            this.subscription = this.observable.subscribe(Priority.NORMAL, event -> {
+                T activeBoost = this.manager.getActive();
                 if (activeBoost != null) {
-                    eventHandler.accept(activeBoost, event);
+                    this.eventHandler.accept(activeBoost, event);
                 }
             });
         }
@@ -169,7 +170,7 @@ public final class BoostManager {
         public void teardown() {
             this.active = null;
             this.queue.clear();
-            if (this.subscription != null) subscription.unsubscribe();
+            if (this.subscription != null) this.subscription.unsubscribe();
         }
     }
 
@@ -185,15 +186,19 @@ public final class BoostManager {
         }
 
         public T getActive() {
-            return getter.get();
+            return this.getter.get();
         }
 
         public void setActive(T boost) {
-            setter.accept(boost);
+            this.setter.accept(boost);
         }
 
         public Queue<T> getQueue() {
-            return queue;
+            return this.queue;
+        }
+
+        public List<T> getQueueList() {
+            return this.queue.stream().toList();
         }
 
         public void setQueue(Queue<T> replacement) {

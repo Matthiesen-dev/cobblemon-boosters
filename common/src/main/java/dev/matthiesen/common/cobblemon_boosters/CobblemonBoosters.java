@@ -21,7 +21,6 @@ public final class CobblemonBoosters {
     public IGUIAdapter guiAdapter;
     public IWebhookService discordWebhookService;
     public boolean COBBREEDING_AVAILABLE;
-    public BoostManager boostManager;
 
     public CobblemonBoosters() {
         BoostersConfigManager.registerConfigs();
@@ -34,7 +33,7 @@ public final class CobblemonBoosters {
         PermissionRegistry.init();
         CommandRegistry.init();
         this.loadCompat();
-        this.boostManager = new BoostManager();
+        BoostManager.init();
         this.registerHandlers();
         Constants.createInfoLog("Initialized");
     }

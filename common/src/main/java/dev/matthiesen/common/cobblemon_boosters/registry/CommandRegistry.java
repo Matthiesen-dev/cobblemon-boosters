@@ -13,6 +13,6 @@ public final class CommandRegistry extends AbstractCommandRegistry {
     public static void init() {}
 
     static {
-        INSTANCE.register(new BoostersCommand());
+        INSTANCE.register(BoostersCommand.CMD);
     }
 }

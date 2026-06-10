@@ -7,6 +7,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import dev.matthiesen.common.cobblemon_boosters.config.MessagesConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
@@ -18,16 +19,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Queue;
 
 public final class Util {
-    public static void handleStopCommand(CommandContext<CommandSourceStack> ctx, IBoost active, String message) {
+    public static void handleStopCommand(CommandContext<CommandSourceStack> ctx, IBoost active, MessagesConfig.BoostMessagesConfig messagesConfig) {
+        if (active == null) {
+            sendMessage(ctx, messagesConfig.noActiveBoosts);
+            return;
+        }
         active.setTimeRemaining(1);
-        sendMessage(ctx, message, active);
+        sendMessage(ctx, messagesConfig.boostStopped, active);
     }
 
-    public static void handleStatusCommand(CommandContext<CommandSourceStack> ctx, IBoost active, String activeMessage, String noActiveMessage) {
+    public static void handleStatusCommand(CommandContext<CommandSourceStack> ctx, IBoost active, MessagesConfig.BoostMessagesConfig messagesConfig) {
         if (active != null) {
-            sendMessage(ctx, activeMessage, active);
+            sendMessage(ctx, messagesConfig.boostInfo, active);
         } else {
-            sendMessage(ctx, noActiveMessage);
+            sendMessage(ctx, messagesConfig.noActiveBoosts);
         }
     }
 
@@ -36,12 +41,12 @@ public final class Util {
         sendMessage(ctx, clearedMessage);
     }
 
-    public static void handleQueueResponse(CommandContext<CommandSourceStack> ctx, Queue<? extends IBoost> queue, String noQueue, String withQueue) {
+    public static void handleQueueResponse(CommandContext<CommandSourceStack> ctx, Queue<? extends IBoost> queue, MessagesConfig.BoostMessagesConfig messagesConfig) {
         if (queue.isEmpty()) {
-            sendMessage(ctx, noQueue);
+            sendMessage(ctx, messagesConfig.noQueuedBoosts);
         } else {
             for (IBoost iBoost : queue) {
-                sendMessage(ctx, withQueue, iBoost);
+                sendMessage(ctx, messagesConfig.boostInfo, iBoost);
             }
         }
     }

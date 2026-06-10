@@ -7,6 +7,7 @@ import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
@@ -41,23 +42,22 @@ public final class AdminGui extends BaseMenuGuiTemplate {
     }
 
     private void getQueuesAndClear() {
-        var boostManager = CobblemonBoosters.INSTANCE.boostManager;
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages;
         List<QueueListEntry> queueEntries = new ArrayList<>();
         queueEntries.add(new QueueListEntry(
-                boostManager.getShinyBoostManager().getQueue(),
+                BoostManager.getShinyBoostManager().getQueue(),
                 messages.shinyMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
-                boostManager.getCatchBoostManager().getQueue(),
+                BoostManager.getCatchBoostManager().getQueue(),
                 messages.catchBoostMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
-                boostManager.getExperienceBoostManager().getQueue(),
+                BoostManager.getExperienceBoostManager().getQueue(),
                 messages.experienceBoostMessages.boostQueueCleared
         ));
         queueEntries.add(new QueueListEntry(
-                boostManager.getSpawnBucketBoostManager().getQueue(),
+                BoostManager.getSpawnBucketBoostManager().getQueue(),
                 messages.spawnBucketBoostMessages.boostQueueCleared
         ));
         for (QueueListEntry entry : queueEntries) {
