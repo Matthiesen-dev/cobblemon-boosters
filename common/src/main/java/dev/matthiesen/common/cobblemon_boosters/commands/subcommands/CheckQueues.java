@@ -48,29 +48,28 @@ public final class CheckQueues implements ISubCommand {
 
     public int command(CommandContext<CommandSourceStack> ctx) {
         String booster = StringArgumentType.getString(ctx, "booster").toLowerCase();
-        BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
         switch (booster) {
             case "bucket" -> Util.handleQueueResponse(
                     ctx,
-                    bm.getSpawnBucketBoostManager().getQueue(),
+                    BoostManager.getSpawnBucketBoostManager().getQueue(),
                     CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.noQueuedBoosts,
                     CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.boostInfo
             );
             case "catch" -> Util.handleQueueResponse(
                     ctx,
-                    bm.getCatchBoostManager().getQueue(),
+                    BoostManager.getCatchBoostManager().getQueue(),
                     CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.noQueuedBoosts,
                     CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostInfo
             );
             case "experience" -> Util.handleQueueResponse(
                     ctx,
-                    bm.getExperienceBoostManager().getQueue(),
+                    BoostManager.getExperienceBoostManager().getQueue(),
                     CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.noQueuedBoosts,
                     CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostInfo
             );
             case "shiny" -> Util.handleQueueResponse(
                     ctx,
-                    bm.getShinyBoostManager().getQueue(),
+                    BoostManager.getShinyBoostManager().getQueue(),
                     CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.noQueuedBoosts,
                     CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.boostInfo
             );

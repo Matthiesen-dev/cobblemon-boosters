@@ -13,6 +13,7 @@ import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.Buc
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BoostersGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
@@ -34,7 +35,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openBucketGui(ServerPlayer player) {
         String boostType = "Spawn Bucket";
-        var spawnBucketManager = CobblemonBoosters.INSTANCE.boostManager.getSpawnBucketBoostManager();
+        var spawnBucketManager = BoostManager.getSpawnBucketBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages;
         var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
         var permissions = PermissionRegistry.getPermissions();
@@ -77,7 +78,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openCatchGUI(ServerPlayer player) {
         String boostType = "Catch";
-        var catchBoostManager = CobblemonBoosters.INSTANCE.boostManager.getCatchBoostManager();
+        var catchBoostManager = BoostManager.getCatchBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
         var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
         var permissions = PermissionRegistry.getPermissions();
@@ -121,7 +122,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openExperienceGUI(ServerPlayer player) {
         String boostType = "Experience";
-        var experienceBoostManager = CobblemonBoosters.INSTANCE.boostManager.getExperienceBoostManager();
+        var experienceBoostManager = BoostManager.getExperienceBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
         var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
         var permissions = PermissionRegistry.getPermissions();
@@ -165,7 +166,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openShinyGUI(ServerPlayer player) {
         String boostType = "Shiny";
-        var shinyBoostManager = CobblemonBoosters.INSTANCE.boostManager.getShinyBoostManager();
+        var shinyBoostManager = BoostManager.getShinyBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
         var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
         var permissions = PermissionRegistry.getPermissions();

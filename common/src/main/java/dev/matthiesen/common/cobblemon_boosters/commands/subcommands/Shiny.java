@@ -16,7 +16,6 @@ import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
-import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -56,24 +55,12 @@ public final class Shiny implements ISubCommand {
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
 
-        BoostManager.IBoostManager<ShinyBoost> manager = CobblemonBoosters.INSTANCE.boostManager.getShinyBoostManager();
+        BoostManager.IBoostManager<ShinyBoost> manager = BoostManager.getShinyBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
-        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
 
-        if (manager.getActive() == null) {
-            ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
-            manager.setActive(boost);
-            Util.sendMessage(ctx, messages.boostStarted, boost);
-            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                    webhooks.shinyEventStartEmbed,
-                    boost
-            );
-            boost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
-        } else {
-            ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
-            manager.appendToQueue(boost);
-            Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
-        }
+        ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
+        manager.appendToQueue(boost);
+        Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
         CacheConfig.setGlobalBoostData();
         return 1;
     }
@@ -83,8 +70,9 @@ public final class Shiny implements ISubCommand {
             var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
             Util.handleStopCommand(
                     ctx,
-                    CobblemonBoosters.INSTANCE.boostManager.getShinyBoostManager().getActive(),
-                    messages.boostStopped
+                    BoostManager.getShinyBoostManager().getActive(),
+                    messages.boostStopped,
+                    messages.noActiveBoosts
             );
         } catch (RuntimeException e) {
             MetricManager.ERROR_TRACKER.trackError(e);
@@ -97,7 +85,7 @@ public final class Shiny implements ISubCommand {
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
         Util.handleStatusCommand(
                 ctx,
-                CobblemonBoosters.INSTANCE.boostManager.getShinyBoostManager().getActive(),
+                BoostManager.getShinyBoostManager().getActive(),
                 messages.boostInfo,
                 messages.noActiveBoosts
         );

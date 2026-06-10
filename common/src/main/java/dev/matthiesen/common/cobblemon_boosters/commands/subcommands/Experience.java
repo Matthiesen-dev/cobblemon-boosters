@@ -15,7 +15,6 @@ import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
-import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -53,24 +52,12 @@ public final class Experience implements ISubCommand {
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
 
-        BoostManager.IBoostManager<ExperienceBoost> manager = CobblemonBoosters.INSTANCE.boostManager.getExperienceBoostManager();
+        BoostManager.IBoostManager<ExperienceBoost> manager = BoostManager.getExperienceBoostManager();
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
-        var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
 
-        if (manager.getActive() == null) {
-            ExperienceBoost boost = new ExperienceBoost(multiplier, totalSeconds);
-            manager.setActive(boost);
-            Util.sendMessage(ctx, messages.boostStarted, boost);
-            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                    webhooks.experienceEventStartEmbed,
-                    boost
-            );
-            boost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
-        } else {
-            ExperienceBoost boost = new ExperienceBoost(multiplier, totalSeconds);
-            manager.appendToQueue(boost);
-            Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
-        }
+        ExperienceBoost boost = new ExperienceBoost(multiplier, totalSeconds);
+        manager.appendToQueue(boost);
+        Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
         CacheConfig.setGlobalBoostData();
         return 1;
     }
@@ -80,8 +67,9 @@ public final class Experience implements ISubCommand {
             var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
             Util.handleStopCommand(
                     ctx,
-                    CobblemonBoosters.INSTANCE.boostManager.getExperienceBoostManager().getActive(),
-                    messages.boostStopped
+                    BoostManager.getExperienceBoostManager().getActive(),
+                    messages.boostStopped,
+                    messages.noActiveBoosts
             );
         } catch (RuntimeException e) {
             MetricManager.ERROR_TRACKER.trackError(e);
@@ -94,7 +82,7 @@ public final class Experience implements ISubCommand {
         var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
         Util.handleStatusCommand(
                 ctx,
-                CobblemonBoosters.INSTANCE.boostManager.getExperienceBoostManager().getActive(),
+                BoostManager.getExperienceBoostManager().getActive(),
                 messages.boostInfo,
                 messages.noActiveBoosts
         );

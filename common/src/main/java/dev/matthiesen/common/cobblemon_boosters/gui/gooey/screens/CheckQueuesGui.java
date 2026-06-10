@@ -2,10 +2,10 @@ package dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens;
 
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
-import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.subscreens.QueueGui;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
 import dev.matthiesen.common.cobblemon_boosters.utils.MenuUtils;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import net.minecraft.network.chat.Component;
@@ -42,13 +42,10 @@ public final class CheckQueuesGui extends BaseMenuGuiTemplate {
     @Override
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
-        var boostManager = CobblemonBoosters.INSTANCE.boostManager;
-
-        buttons.add(getQueueButton("Spawn Bucket", boostManager.getSpawnBucketBoostManager().getQueue()));
-        buttons.add(getQueueButton("Catch", boostManager.getCatchBoostManager().getQueue()));
-        buttons.add(getQueueButton("Experience", boostManager.getExperienceBoostManager().getQueue()));
-        buttons.add(getQueueButton("Shiny", boostManager.getShinyBoostManager().getQueue()));
-
+        buttons.add(getQueueButton("Spawn Bucket", BoostManager.getSpawnBucketBoostManager().getQueue()));
+        buttons.add(getQueueButton("Catch", BoostManager.getCatchBoostManager().getQueue()));
+        buttons.add(getQueueButton("Experience", BoostManager.getExperienceBoostManager().getQueue()));
+        buttons.add(getQueueButton("Shiny", BoostManager.getShinyBoostManager().getQueue()));
         return buttons;
     }
 }

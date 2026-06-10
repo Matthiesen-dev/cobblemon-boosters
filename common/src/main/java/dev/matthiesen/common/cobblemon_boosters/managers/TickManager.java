@@ -4,16 +4,9 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
-import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
-import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.server.MinecraftServer;
-
-import java.util.Queue;
-import java.util.function.Consumer;
 
 public final class TickManager {
     public static void tick() {
@@ -27,53 +20,43 @@ public final class TickManager {
     }
 
     public static void tickBoosts() {
-        BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
         var webhooks = CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
 
-        BoostManager.IBoostManager<ShinyBoost> shiny = bm.getShinyBoostManager();
         handleBoostTick(
-                shiny.getActive(),
-                shiny.getQueue(),
-                shiny::setActive,
+                BoostManager.getShinyBoostManager(),
                 webhooks.shinyEventEndEmbed,
                 webhooks.shinyEventStartEmbed
         );
 
-        BoostManager.IBoostManager<CatchBoost> catch_ = bm.getCatchBoostManager();
         handleBoostTick(
-                catch_.getActive(),
-                catch_.getQueue(),
-                catch_::setActive,
+                BoostManager.getCatchBoostManager(),
                 webhooks.catchEventEndEmbed,
                 webhooks.catchEventStartEmbed
         );
 
-        BoostManager.IBoostManager<ExperienceBoost> experience = bm.getExperienceBoostManager();
         handleBoostTick(
-                experience.getActive(),
-                experience.getQueue(),
-                experience::setActive,
+                BoostManager.getExperienceBoostManager(),
                 webhooks.experienceEventEndEmbed,
                 webhooks.experienceEventStartEmbed
         );
 
-        BoostManager.IBoostManager<SpawnBucketBoost> spawnBucket = bm.getSpawnBucketBoostManager();
         handleBoostTick(
-                spawnBucket.getActive(),
-                spawnBucket.getQueue(),
-                spawnBucket::setActive,
+                BoostManager.getSpawnBucketBoostManager(),
                 webhooks.spawnBucketEventEndEmbed,
                 webhooks.spawnBucketEventStartEmbed
         );
     }
 
     public static void updateBossBars() {
-        BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
+        var shinyManager = BoostManager.getShinyBoostManager();
+        var catchManager = BoostManager.getCatchBoostManager();
+        var experienceManager = BoostManager.getExperienceBoostManager();
+        var spawnBucketManager = BoostManager.getSpawnBucketBoostManager();
 
-        if (bm.getShinyBoostManager().getActive() != null) updateBossBar(bm.getShinyBoostManager().getActive());
-        if (bm.getCatchBoostManager().getActive() != null) updateBossBar(bm.getCatchBoostManager().getActive());
-        if (bm.getExperienceBoostManager().getActive() != null) updateBossBar(bm.getExperienceBoostManager().getActive());
-        if (bm.getSpawnBucketBoostManager().getActive() != null) updateBossBar(bm.getSpawnBucketBoostManager().getActive());
+        if (shinyManager.getActive() != null) updateBossBar(shinyManager.getActive());
+        if (catchManager.getActive() != null) updateBossBar(catchManager.getActive());
+        if (experienceManager.getActive() != null) updateBossBar(experienceManager.getActive());
+        if (spawnBucketManager.getActive() != null) updateBossBar(spawnBucketManager.getActive());
     }
 
     private static void decrementBoost(IBoost boost) {
@@ -81,22 +64,24 @@ public final class TickManager {
     }
 
     private static <T extends IBoost> void handleBoostTick(
-            T activeBoost,
-            Queue<T> queue,
-            Consumer<T> setActiveBoost,
+            BoostManager.IBoostManager<T> boostManager,
             WebhooksConfig.DiscordEmbed boostEndEmbed,
             WebhooksConfig.DiscordEmbed boostStartEmbed
     ) {
-        if (activeBoost == null) return;
-        decrementBoost(activeBoost);
-        if (activeBoost.getTimeRemaining() > 0) return;
-        activeBoost.getBossBar().hideBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
-        CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
-                boostEndEmbed,
-                activeBoost
-        );
+        var activeBoost = boostManager.getActive();
+        var queue = boostManager.getQueue();
+        if (activeBoost == null && queue.isEmpty()) return;
+        if (activeBoost != null) {
+            decrementBoost(activeBoost);
+            if (activeBoost.getTimeRemaining() > 0) return;
+            activeBoost.getBossBar().hideBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
+            CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
+                    boostEndEmbed,
+                    activeBoost
+            );
+        }
         T nextBoost = queue.poll();
-        setActiveBoost.accept(nextBoost);
+        boostManager.setActive(nextBoost);
         if (nextBoost != null) {
             nextBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(

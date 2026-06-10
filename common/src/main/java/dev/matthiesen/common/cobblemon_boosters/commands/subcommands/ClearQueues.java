@@ -24,25 +24,24 @@ public final class ClearQueues implements ISubCommand {
     }
 
     public int command(CommandContext<CommandSourceStack> ctx) {
-        BoostManager bm = CobblemonBoosters.INSTANCE.boostManager;
         Util.handleQueueClear(
                 ctx,
-                bm.getShinyBoostManager().getQueue(),
+                BoostManager.getShinyBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                bm.getCatchBoostManager().getQueue(),
+                BoostManager.getCatchBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                bm.getExperienceBoostManager().getQueue(),
+                BoostManager.getExperienceBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
-                bm.getSpawnBucketBoostManager().getQueue(),
+                BoostManager.getSpawnBucketBoostManager().getQueue(),
                 CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
         );
         CacheConfig.setGlobalBoostData();
