@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.world.BossEvent;
 
+@SuppressWarnings("unused")
 public final class MessagesConfig {
     @SerializedName("messages")
     public GeneralMessagesConfig messages = new GeneralMessagesConfig();
@@ -17,147 +18,108 @@ public final class MessagesConfig {
         public String commandReload = "%prefix% &aReloaded the config!";
 
         @SerializedName("shinyMessages")
-        public ShinyMessagesConfig shinyMessages = new ShinyMessagesConfig();
+        public BoostMessagesConfig shinyMessages = new BoostMessagesConfig(
+                BossEvent.BossBarColor.YELLOW,
+                BossEvent.BossBarOverlay.PROGRESS,
+                "&6%multiplier%x Shiny Boost &7| &a%time_remaining% Remaining",
+                "%prefix% &aThere are currently no active Shiny Boosts!",
+                "%prefix% &aStarted an Shiny %multiplier%x boost for %duration%!",
+                "%prefix% &aAdded an Shiny %multiplier%x boost with a %duration% duration to queue!",
+                "%prefix% &aStopped the current Shiny boost!",
+                "%prefix% &aCleared the Shiny queued boosts!",
+                "%prefix% &f&lMultiplier: &r&6%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%",
+                "%prefix% &aThere are currently no Shiny Boosts in the queue!"
+        );
 
         @SerializedName("catchBoostMessages")
-        public CatchBoostMessagesConfig catchBoostMessages = new CatchBoostMessagesConfig();
+        public BoostMessagesConfig catchBoostMessages = new BoostMessagesConfig(
+                BossEvent.BossBarColor.PURPLE,
+                BossEvent.BossBarOverlay.PROGRESS,
+                "&d%multiplier%x Catch Boost &7| &a%time_remaining% Remaining",
+                "%prefix% &aThere are currently no active Catch Boosts!",
+                "%prefix% &aStarted an Catch %multiplier%x boost for %duration%!",
+                "%prefix% &aAdded an Catch %multiplier%x boost with a %duration% duration to queue!",
+                "%prefix% &aStopped the current Catch boost!",
+                "%prefix% &aCleared the Catch queued boosts!",
+                "%prefix% &f&lMultiplier: &r&d%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%",
+                "%prefix% &aThere are currently no Catch Boosts in the queue!"
+        );
 
         @SerializedName("experienceBoostMessages")
-        public ExperienceBoostMessagesConfig experienceBoostMessages = new ExperienceBoostMessagesConfig();
+        public BoostMessagesConfig experienceBoostMessages = new BoostMessagesConfig(
+                BossEvent.BossBarColor.GREEN,
+                BossEvent.BossBarOverlay.PROGRESS,
+                "&a%multiplier%x Experience Boost &7| &a%time_remaining% Remaining",
+                "%prefix% &aThere are currently no active Experience Boosts!",
+                "%prefix% &aStarted an Experience %multiplier%x boost for %duration%!",
+                "%prefix% &aAdded an Experience %multiplier%x boost with a %duration% duration to queue!",
+                "%prefix% &aStopped the current Experience boost!",
+                "%prefix% &aCleared the Experience queued boosts!",
+                "%prefix% &f&lMultiplier: &r&a%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%",
+                "%prefix% &aThere are currently no Experience Boosts in the queue!"
+        );
 
         @SerializedName("spawnBucketBoostMessages")
-        public SpawnBucketBoostMessagesConfig spawnBucketBoostMessages = new SpawnBucketBoostMessagesConfig();
+        public BoostMessagesConfig spawnBucketBoostMessages = new BoostMessagesConfig(
+                BossEvent.BossBarColor.BLUE,
+                BossEvent.BossBarOverlay.PROGRESS,
+                "&b%bucket% Spawn Bucket Boost &7| &a%time_remaining% Remaining",
+                "%prefix% &aThere are currently no active Spawn Bucket Boosts!",
+                "%prefix% &aStarted a %bucket% Spawn Bucket boost for %duration%!",
+                "%prefix% &aAdded a %bucket% Spawn Bucket Boost with a %duration% duration to queue!",
+                "%prefix% &aStopped the current Spawn Bucket boost!",
+                "%prefix% &aCleared the Spawn Bucket queued boosts!",
+                "%prefix% &f&lBucket: &r&b%bucket% &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%",
+                "%prefix% &aThere are currently no Spawn Bucket Boosts in the queue!"
+        );
     }
 
-    public static class ShinyMessagesConfig {
-        @SerializedName("barColor")
-        public BossEvent.BossBarColor barColor = BossEvent.BossBarColor.YELLOW;
-
+    public static class BoostMessagesConfig {
+        public BossEvent.BossBarColor barColor;
         @SerializedName("barOverlay")
-        public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
-
+        public BossEvent.BossBarOverlay barOverlay;
         @SerializedName("barText")
-        public String barText = "&6%multiplier%x Shiny Boost &7| &a%time_remaining% Remaining";
-
+        public String barText;
         @SerializedName("noActiveBoosts")
-        public String noActiveBoosts = "%prefix% &aThere are currently no active Shiny Boosts!";
-
+        public String noActiveBoosts;
         @SerializedName("boostStarted")
-        public String boostStarted = "%prefix% &aStarted a Shiny %multiplier%x boost for %duration%!";
-
-        @SerializedName("boostAddedToQueued")
-        public String boostAddedToQueued = "%prefix% &aAdded a Shiny %multiplier%x boost with a %duration% duration to queue!";
-
+        public String boostStarted;
+        @SerializedName("boostAddedToQueue")
+        public String boostAddedToQueued;
         @SerializedName("boostStopped")
-        public String boostStopped = "%prefix% &aStopped the current Shiny boost!";
-
+        public String boostStopped;
         @SerializedName("boostQueueCleared")
-        public String boostQueueCleared = "%prefix% &aCleared the Shiny queued boosts!";
-
+        public String boostQueueCleared;
         @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% &f&lMultiplier: &r&6%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%";
-
+        public String boostInfo;
         @SerializedName("noQueuedBoosts")
-        public String noQueuedBoosts = "%prefix% &aThere are currently no Shiny Boosts in the queue!";
+        public String noQueuedBoosts;
+
+        public BoostMessagesConfig(
+                BossEvent.BossBarColor barColor,
+                BossEvent.BossBarOverlay barOverlay,
+                String barText,
+                String noActiveBoosts,
+                String boostStarted,
+                String boostAddedToQueued,
+                String boostStopped,
+                String boostQueueCleared,
+                String boostInfo,
+                String noQueuedBoosts
+        ) {
+            this.barColor = barColor;
+            this.barOverlay = barOverlay;
+            this.barText = barText;
+            this.noActiveBoosts = noActiveBoosts;
+            this.boostStarted = boostStarted;
+            this.boostAddedToQueued = boostAddedToQueued;
+            this.boostStopped = boostStopped;
+            this.boostQueueCleared = boostQueueCleared;
+            this.boostInfo = boostInfo;
+            this.noQueuedBoosts = noQueuedBoosts;
+        }
     }
 
-    public static class CatchBoostMessagesConfig {
-        @SerializedName("barColor")
-        public BossEvent.BossBarColor barColor = BossEvent.BossBarColor.PURPLE;
-
-        @SerializedName("barOverlay")
-        public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
-
-        @SerializedName("barText")
-        public String barText = "&d%multiplier%x Catch Boost &7| &a%time_remaining% Remaining";
-
-        @SerializedName("noActiveBoosts")
-        public String noActiveBoosts = "%prefix% &aThere are currently no active Catch Boosts!";
-
-        @SerializedName("boostStarted")
-        public String boostStarted = "%prefix% &aStarted a Catch %multiplier%x boost for %duration%!";
-
-        @SerializedName("boostAddedToQueued")
-        public String boostAddedToQueued = "%prefix% &aAdded a Catch %multiplier%x boost with a %duration% duration to queue!";
-
-        @SerializedName("boostStopped")
-        public String boostStopped = "%prefix% &aStopped the current Catch boost!";
-
-        @SerializedName("boostQueueCleared")
-        public String boostQueueCleared = "%prefix% &aCleared the Catch queued boosts!";
-
-        @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% &f&lMultiplier: &r&d%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%";
-
-        @SerializedName("noQueuedBoosts")
-        public String noQueuedBoosts = "%prefix% &aThere are currently no Catch Boosts in the queue!";
-    }
-
-    public static class ExperienceBoostMessagesConfig {
-        @SerializedName("barColor")
-        public BossEvent.BossBarColor barColor = BossEvent.BossBarColor.GREEN;
-
-        @SerializedName("barOverlay")
-        public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
-
-        @SerializedName("barText")
-        public String barText = "&a%multiplier%x Experience Boost &7| &a%time_remaining% Remaining";
-
-        @SerializedName("noActiveBoosts")
-        public String noActiveBoosts = "%prefix% &aThere are currently no active Experience Boosts!";
-
-        @SerializedName("boostStarted")
-        public String boostStarted = "%prefix% &aStarted a Experience %multiplier%x boost for %duration%!";
-
-        @SerializedName("boostAddedToQueued")
-        public String boostAddedToQueued = "%prefix% &aAdded a Experience %multiplier%x boost with a %duration% duration to queue!";
-
-        @SerializedName("boostStopped")
-        public String boostStopped = "%prefix% &aStopped the current Experience boost!";
-
-        @SerializedName("boostQueueCleared")
-        public String boostQueueCleared = "%prefix% &aCleared the Experience queued boosts!";
-
-        @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% &f&lMultiplier: &r&a%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%";
-
-        @SerializedName("noQueuedBoosts")
-        public String noQueuedBoosts = "%prefix% &aThere are currently no Experience Boosts in the queue!";
-    }
-
-    public static class SpawnBucketBoostMessagesConfig {
-        @SerializedName("barColor")
-        public BossEvent.BossBarColor barColor = BossEvent.BossBarColor.BLUE;
-
-        @SerializedName("barOverlay")
-        public BossEvent.BossBarOverlay barOverlay = BossEvent.BossBarOverlay.PROGRESS;
-
-        @SerializedName("barText")
-        public String barText = "&b%bucket% Spawn Bucket Boost &7| &a%time_remaining% Remaining";
-
-        @SerializedName("noActiveBoosts")
-        public String noActiveBoosts = "%prefix% &aThere are currently no active Spawn Bucket Boosts!";
-
-        @SerializedName("boostStarted")
-        public String boostStarted = "%prefix% &aStarted a %bucket% Spawn Bucket Boost for %duration%!";
-
-        @SerializedName("boostAddedToQueued")
-        public String boostAddedToQueued = "%prefix% &aAdded a %bucket% Spawn Bucket Boost with a %duration% duration to queue!";
-
-        @SerializedName("boostStopped")
-        public String boostStopped = "%prefix% &aStopped the current Spawn Bucket boost!";
-
-        @SerializedName("boostQueueCleared")
-        public String boostQueueCleared = "%prefix% &aCleared the Spawn Bucket queued boosts!";
-
-        @SerializedName("boostInfo")
-        public String boostInfo = "%prefix% &f&lBucket: &r&b%bucket% &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%";
-
-        @SerializedName("noQueuedBoosts")
-        public String noQueuedBoosts = "%prefix% &aThere are currently no Spawn Bucket Boosts in the queue!";
-    }
-
-    @SuppressWarnings("unused")
     public static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             .setPrettyPrinting()

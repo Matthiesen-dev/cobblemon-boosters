@@ -1,4 +1,4 @@
-package dev.matthiesen.common.cobblemon_boosters.commands.subcommands;
+package dev.matthiesen.common.cobblemon_boosters.commands.subcommands.boosters;
 
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -9,7 +9,7 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
-import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
+import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
@@ -18,21 +18,21 @@ import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
-public final class Catch implements ISubCommand {
+public final class Experience implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         var permissions = PermissionRegistry.getPermissions();
         return Util.newBasicMultiplierBoosterCommand(
-                "catch",
-                permissions.CATCH_PERMISSION,
+                "experience",
+                permissions.EXPERIENCE_PERMISSION,
                 this::openGUI,
                 this::startCommand,
                 maxMultiplier,
-                permissions.CATCH_START_PERMISSION,
+                permissions.EXPERIENCE_START_PERMISSION,
                 this::stopCommand,
-                permissions.CATCH_STOP_PERMISSION,
+                permissions.EXPERIENCE_STOP_PERMISSION,
                 this::statusCommand,
-                permissions.CATCH_STATUS_PERMISSION
+                permissions.EXPERIENCE_STATUS_PERMISSION
         );
     }
 
@@ -41,7 +41,7 @@ public final class Catch implements ISubCommand {
     public int openGUI(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
         if (player != null) {
-            CobblemonBoosters.INSTANCE.guiAdapter.openCatchBoosterGUI(player);
+            CobblemonBoosters.INSTANCE.guiAdapter.openExperienceBoosterGUI(player);
         }
         return 1;
     }
@@ -51,11 +51,9 @@ public final class Catch implements ISubCommand {
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
-
-        BoostManager.IBoostManager<CatchBoost> manager = BoostManager.getCatchBoostManager();
-        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
-
-        CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
+        BoostManager.IBoostManager<ExperienceBoost> manager = BoostManager.getExperienceBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
+        ExperienceBoost boost = new ExperienceBoost(multiplier, totalSeconds);
         manager.appendToQueue(boost);
         Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
         CacheConfig.setGlobalBoostData();
@@ -64,28 +62,18 @@ public final class Catch implements ISubCommand {
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
         try {
-            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
-            Util.handleStopCommand(
-                    ctx,
-                    BoostManager.getCatchBoostManager().getActive(),
-                    messages.boostStopped,
-                    messages.noActiveBoosts
-            );
+            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
+            Util.handleStopCommand(ctx, BoostManager.getExperienceBoostManager().getActive(), messages);
         } catch (RuntimeException e) {
             MetricManager.ERROR_TRACKER.trackError(e);
-            Constants.LOGGER.error("Failed to stop catch boost", e);
+            Constants.LOGGER.error("Failed to stop experience boost", e);
         }
         return 1;
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
-        Util.handleStatusCommand(
-                ctx,
-                BoostManager.getCatchBoostManager().getActive(),
-                messages.boostInfo,
-                messages.noActiveBoosts
-        );
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
+        Util.handleStatusCommand(ctx, BoostManager.getExperienceBoostManager().getActive(), messages);
         return 1;
     }
 }

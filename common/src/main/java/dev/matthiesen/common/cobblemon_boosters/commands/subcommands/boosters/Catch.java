@@ -1,6 +1,5 @@
-package dev.matthiesen.common.cobblemon_boosters.commands.subcommands;
+package dev.matthiesen.common.cobblemon_boosters.commands.subcommands.boosters;
 
-import com.cobblemon.mod.common.Cobblemon;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -10,7 +9,7 @@ import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.commands.Util;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
-import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
+import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
@@ -19,32 +18,30 @@ import dev.matthiesen.common.cobblemon_boosters.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
-public final class Shiny implements ISubCommand {
+public final class Catch implements ISubCommand {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         var permissions = PermissionRegistry.getPermissions();
         return Util.newBasicMultiplierBoosterCommand(
-                "shiny",
-                permissions.SHINY_PERMISSION,
+                "catch",
+                permissions.CATCH_PERMISSION,
                 this::openGUI,
                 this::startCommand,
-                maxMultiplier(),
-                permissions.SHINY_START_PERMISSION,
+                maxMultiplier,
+                permissions.CATCH_START_PERMISSION,
                 this::stopCommand,
-                permissions.SHINY_STOP_PERMISSION,
+                permissions.CATCH_STOP_PERMISSION,
                 this::statusCommand,
-                permissions.SHINY_STATUS_PERMISSION
+                permissions.CATCH_STATUS_PERMISSION
         );
     }
 
-    public static Float maxMultiplier() {
-        return Cobblemon.config.getShinyRate();
-    }
+    public static final Float maxMultiplier = 100F;
 
     public int openGUI(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
         if (player != null) {
-            CobblemonBoosters.INSTANCE.guiAdapter.openShinyBoosterGUI(player);
+            CobblemonBoosters.INSTANCE.guiAdapter.openCatchBoosterGUI(player);
         }
         return 1;
     }
@@ -54,11 +51,9 @@ public final class Shiny implements ISubCommand {
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
-
-        BoostManager.IBoostManager<ShinyBoost> manager = BoostManager.getShinyBoostManager();
-        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
-
-        ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
+        BoostManager.IBoostManager<CatchBoost> manager = BoostManager.getCatchBoostManager();
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
+        CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
         manager.appendToQueue(boost);
         Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
         CacheConfig.setGlobalBoostData();
@@ -67,28 +62,18 @@ public final class Shiny implements ISubCommand {
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
         try {
-            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
-            Util.handleStopCommand(
-                    ctx,
-                    BoostManager.getShinyBoostManager().getActive(),
-                    messages.boostStopped,
-                    messages.noActiveBoosts
-            );
+            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
+            Util.handleStopCommand(ctx, BoostManager.getCatchBoostManager().getActive(), messages);
         } catch (RuntimeException e) {
             MetricManager.ERROR_TRACKER.trackError(e);
-            Constants.LOGGER.error("Failed to stop shiny boost", e);
+            Constants.LOGGER.error("Failed to stop catch boost", e);
         }
         return 1;
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
-        Util.handleStatusCommand(
-                ctx,
-                BoostManager.getShinyBoostManager().getActive(),
-                messages.boostInfo,
-                messages.noActiveBoosts
-        );
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
+        Util.handleStatusCommand(ctx, BoostManager.getCatchBoostManager().getActive(), messages);
         return 1;
     }
 }
