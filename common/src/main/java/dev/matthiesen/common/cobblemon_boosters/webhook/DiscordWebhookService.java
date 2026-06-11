@@ -8,8 +8,8 @@ import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
 import dev.matthiesen.common.cobblemon_boosters.utils.TextUtils;
 import dev.matthiesen.common.matthiesen_lib_webhooks.MatthiesenLibWebhooks;
-import dev.matthiesen.common.matthiesen_lib_webhooks.discord.model.Embed;
-import dev.matthiesen.common.matthiesen_lib_webhooks.discord.model.EmbedBuilder;
+import dev.matthiesen.common.matthiesen_lib_api.core.discord.model.Embed;
+import dev.matthiesen.common.matthiesen_lib_api.core.discord.model.EmbedBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
