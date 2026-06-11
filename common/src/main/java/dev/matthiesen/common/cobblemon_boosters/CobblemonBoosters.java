@@ -69,6 +69,10 @@ public final class CobblemonBoosters {
         Constants.createInfoLog("Reloaded Cobblemon Boosters configs");
     }
 
+    public ConfigManager<CoreConfig> getCoreConfigManager() {
+        return BoostersConfigManager.getCoreConfigManager();
+    }
+
     public ConfigManager<CacheConfig> getCacheConfigManager() {
          return BoostersConfigManager.getCacheConfigManager();
     }

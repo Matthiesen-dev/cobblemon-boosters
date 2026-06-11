@@ -1,9 +1,6 @@
 package dev.matthiesen.common.cobblemon_boosters;
 
-import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
-import dev.matthiesen.common.cobblemon_boosters.config.MessagesConfig;
-import dev.matthiesen.common.cobblemon_boosters.config.PermissionsConfig;
-import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
+import dev.matthiesen.common.cobblemon_boosters.config.*;
 import dev.matthiesen.libs.faststats.Token;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -26,7 +23,8 @@ public final class Constants {
         CACHE("cache", CacheConfig.class),
         MESSAGES("messages", MessagesConfig.class),
         PERMISSIONS("permissions", PermissionsConfig.class),
-        WEBHOOKS("webhooks", WebhooksConfig.class);
+        WEBHOOKS("webhooks", WebhooksConfig.class),
+        CORE("core", CoreConfig.class);
 
         private final String configName;
         private final Class<?> configClass;
