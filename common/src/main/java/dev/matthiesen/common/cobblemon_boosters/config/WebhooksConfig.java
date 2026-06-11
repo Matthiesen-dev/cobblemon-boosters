@@ -3,7 +3,7 @@ package dev.matthiesen.common.cobblemon_boosters.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import dev.matthiesen.common.matthiesen_lib_webhooks.discord.DiscordColor;
+import dev.matthiesen.common.matthiesen_lib_api.core.discord.DiscordColor;
 
 import java.util.List;
 
