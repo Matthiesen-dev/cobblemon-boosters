@@ -11,13 +11,9 @@ import net.minecraft.server.MinecraftServer;
 
 public final class TickManager {
     private static int tickCounter = 0;
-    private static Integer saveIntervalTicks = null;
 
     public static int getSaveIntervalTicks() {
-        if (saveIntervalTicks == null) {
-            saveIntervalTicks = CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig().saveIntervalTicks;
-        }
-        return saveIntervalTicks;
+        return CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig().saveIntervalTicks;
     }
 
     public static void tick() {
@@ -25,7 +21,8 @@ public final class TickManager {
             tickBoosts();
             updateBossBars();
             tickCounter++;
-            if (tickCounter >= getSaveIntervalTicks()) {
+            var saveInterval = getSaveIntervalTicks();
+            if (tickCounter >= saveInterval) {
                 tickCounter = 0;
                 BoostersConfigManager.saveCache();
             }
