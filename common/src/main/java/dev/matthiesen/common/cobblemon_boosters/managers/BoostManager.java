@@ -40,7 +40,7 @@ public final class BoostManager {
                     CobblemonEvents.POKEMON_CATCH_RATE,
                     (boost, event) -> {
                         float baseCatchRate = event.getCatchRate();
-                        event.setCatchRate(Math.min(baseCatchRate * boost.getMultiplier(), 1F));
+                        event.setCatchRate(Math.min(baseCatchRate * boost.getMultiplier(), 255F));
                     }
             );
     private static final BoostRecord<ExperienceBoost, ExperienceGainedEvent.Pre> EXPERIENCE_RECORD =
