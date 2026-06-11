@@ -2,6 +2,7 @@ package dev.matthiesen.common.cobblemon_boosters.managers;
 
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
+import dev.matthiesen.common.cobblemon_boosters.config.BoostersConfigManager;
 import dev.matthiesen.common.cobblemon_boosters.config.CacheConfig;
 import dev.matthiesen.common.cobblemon_boosters.config.WebhooksConfig;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
@@ -9,10 +10,22 @@ import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.server.MinecraftServer;
 
 public final class TickManager {
+    private static int tickCounter = 0;
+
+    public static int getSaveIntervalTicks() {
+        return CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig().saveIntervalTicks;
+    }
+
     public static void tick() {
         try {
             tickBoosts();
             updateBossBars();
+            tickCounter++;
+            var saveInterval = getSaveIntervalTicks();
+            if (tickCounter >= saveInterval) {
+                tickCounter = 0;
+                BoostersConfigManager.saveCache();
+            }
         } catch (IllegalArgumentException e) {
             MetricManager.ERROR_TRACKER.trackError(e);
             Constants.LOGGER.error("Caught BossBar exception! ", e);

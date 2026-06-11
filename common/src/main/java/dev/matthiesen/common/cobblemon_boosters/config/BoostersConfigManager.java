@@ -28,11 +28,19 @@ public final class BoostersConfigManager<T> extends ConfigManager<T> {
         }
     }
 
+    public static void saveCache() {
+        getCacheConfigManager().saveConfig();
+    }
+
     public static void loadAll() {
         for (Map.Entry<Constants.CONFIGS, ConfigManager<?>> entry : configManagers.entrySet()) {
             Constants.LOGGER.info("Loading config: {}", entry.getKey().getConfigName());
             entry.getValue().loadConfig();
         }
+    }
+
+    public static ConfigManager<CoreConfig> getCoreConfigManager() {
+        return getTypedConfigManager(Constants.CONFIGS.CORE);
     }
 
     public static ConfigManager<CacheConfig> getCacheConfigManager() {
