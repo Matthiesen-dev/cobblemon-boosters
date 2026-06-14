@@ -9,6 +9,8 @@ public final class CoreConfig {
     @SerializedName("saveIntervalTicks")
     public int saveIntervalTicks = 1200;
 
+    public boolean verboseCacheLogging = false;
+
     @SuppressWarnings("unused")
     public static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
