@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.EventObservable;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
+import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
@@ -32,7 +33,9 @@ public final class BoostManager {
                     CobblemonEvents.SHINY_CHANCE_CALCULATION,
                     (boost, event) ->
                             event.addModificationFunction(((rate, player, pokemon) ->
-                                    Math.max(rate / boost.getMultiplier(), 1)))
+                                    Math.max(rate / boost.getMultiplier(), 1))),
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().activeShinyBoost,
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().queuedShinyBoosts
             );
     private static final BoostRecord<CatchBoost, PokemonCatchRateEvent> CATCH_RECORD =
             new BoostRecord<>(
@@ -41,7 +44,9 @@ public final class BoostManager {
                     (boost, event) -> {
                         float baseCatchRate = event.getCatchRate();
                         event.setCatchRate(Math.min(baseCatchRate * boost.getMultiplier(), 255F));
-                    }
+                    },
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().activeCatchBoost,
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().queuedCatchBoosts
             );
     private static final BoostRecord<ExperienceBoost, ExperienceGainedEvent.Pre> EXPERIENCE_RECORD =
             new BoostRecord<>(
@@ -50,7 +55,9 @@ public final class BoostManager {
                     (boost, event) -> {
                         int exp = event.getExperience();
                         event.setExperience(Math.round(exp * boost.getMultiplier()));
-                    }
+                    },
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().activeExperienceBoost,
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().queuedExperienceBoosts
             );
     private static final BoostRecord<SpawnBucketBoost, SpawnBucketChosenEvent> SPAWN_BUCKET_RECORD =
             new BoostRecord<>(
@@ -59,7 +66,9 @@ public final class BoostManager {
                     (boost, event) -> {
                         SpawnBucket newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, boost);
                         event.setBucket(newBucket);
-                    }
+                    },
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().activeSpawnBucketBoost,
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().queuedSpawnBucketBoosts
             );
 
     public static void init() {}
@@ -137,11 +146,25 @@ public final class BoostManager {
         private final IBoostManager<T> manager;
 
         @SuppressWarnings("unused")
-        public BoostRecord(Class<T> boostClass, EventObservable<K> observable, BiConsumer<T, K> eventHandler) {
+        public BoostRecord(Class<T> boostClass, EventObservable<K> observable, BiConsumer<T, K> eventHandler, T activeBoost, List<T> queue) {
             this.observable = observable;
             this.eventHandler = eventHandler;
-            this.queue = new LinkedList<>();
-            this.active = null;
+            if (!queue.isEmpty()) {
+                this.queue = new LinkedList<>(queue);
+                if (CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig().verboseCacheLogging) {
+                    Constants.createInfoLog("Re-Initializing BoostRecord for " + boostClass.getSimpleName() + " with non-empty queue. Queue size: " + queue.size());
+                }
+            } else {
+                this.queue = new LinkedList<>();
+            }
+            if (activeBoost != null) {
+                this.active = activeBoost;
+                if (CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig().verboseCacheLogging) {
+                    Constants.createInfoLog("Re-Initialized BoostRecord for " + boostClass.getSimpleName() + " with active boost: " + activeBoost.getMultiplier());
+                }
+            } else {
+                this.active = null;
+            }
             this.manager = new IBoostManager<>(() -> this.active, b -> this.active = b, this.queue);
             this.subscription = null;
         }
