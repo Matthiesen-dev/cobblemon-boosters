@@ -24,6 +24,7 @@ public final class TickManager {
             var saveInterval = getSaveIntervalTicks();
             if (tickCounter >= saveInterval) {
                 tickCounter = 0;
+                Constants.createInfoLog("Saving Boosters to Cache...");
                 BoostersConfigManager.saveCache();
             }
         } catch (IllegalArgumentException e) {

@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.EventObservable;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
+import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
@@ -32,7 +33,8 @@ public final class BoostManager {
                     CobblemonEvents.SHINY_CHANCE_CALCULATION,
                     (boost, event) ->
                             event.addModificationFunction(((rate, player, pokemon) ->
-                                    Math.max(rate / boost.getMultiplier(), 1)))
+                                    Math.max(rate / boost.getMultiplier(), 1))),
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().activeShinyBoost
             );
     private static final BoostRecord<CatchBoost, PokemonCatchRateEvent> CATCH_RECORD =
             new BoostRecord<>(
@@ -41,7 +43,8 @@ public final class BoostManager {
                     (boost, event) -> {
                         float baseCatchRate = event.getCatchRate();
                         event.setCatchRate(Math.min(baseCatchRate * boost.getMultiplier(), 255F));
-                    }
+                    },
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().activeCatchBoost
             );
     private static final BoostRecord<ExperienceBoost, ExperienceGainedEvent.Pre> EXPERIENCE_RECORD =
             new BoostRecord<>(
@@ -50,7 +53,8 @@ public final class BoostManager {
                     (boost, event) -> {
                         int exp = event.getExperience();
                         event.setExperience(Math.round(exp * boost.getMultiplier()));
-                    }
+                    },
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().activeExperienceBoost
             );
     private static final BoostRecord<SpawnBucketBoost, SpawnBucketChosenEvent> SPAWN_BUCKET_RECORD =
             new BoostRecord<>(
@@ -59,7 +63,8 @@ public final class BoostManager {
                     (boost, event) -> {
                         SpawnBucket newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, boost);
                         event.setBucket(newBucket);
-                    }
+                    },
+                    CobblemonBoosters.INSTANCE.getCacheConfigManager().getConfig().activeSpawnBucketBoost
             );
 
     public static void init() {}
@@ -137,11 +142,11 @@ public final class BoostManager {
         private final IBoostManager<T> manager;
 
         @SuppressWarnings("unused")
-        public BoostRecord(Class<T> boostClass, EventObservable<K> observable, BiConsumer<T, K> eventHandler) {
+        public BoostRecord(Class<T> boostClass, EventObservable<K> observable, BiConsumer<T, K> eventHandler, T activeBoost) {
             this.observable = observable;
             this.eventHandler = eventHandler;
             this.queue = new LinkedList<>();
-            this.active = null;
+            this.active = activeBoost;
             this.manager = new IBoostManager<>(() -> this.active, b -> this.active = b, this.queue);
             this.subscription = null;
         }
