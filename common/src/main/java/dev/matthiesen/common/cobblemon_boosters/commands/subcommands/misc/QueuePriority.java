@@ -15,6 +15,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 public final class QueuePriority implements ISubCommand {
+    public static final QueuePriority CMD = new QueuePriority();
+
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         var permissions = PermissionRegistry.getPermissions();

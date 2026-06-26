@@ -12,6 +12,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 public final class ClearQueues implements ISubCommand {
+    public static final ClearQueues CMD = new ClearQueues();
+
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         var permissions = PermissionRegistry.getPermissions();

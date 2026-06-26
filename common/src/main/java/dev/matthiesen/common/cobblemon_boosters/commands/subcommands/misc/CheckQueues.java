@@ -14,6 +14,8 @@ import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
 
 public final class CheckQueues implements ISubCommand {
+    public static final CheckQueues CMD = new CheckQueues();
+
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         var permissions = PermissionRegistry.getPermissions();

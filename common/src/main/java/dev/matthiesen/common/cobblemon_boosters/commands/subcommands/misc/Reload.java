@@ -10,6 +10,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
 public final class Reload implements ISubCommand {
+    public static final Reload CMD = new Reload();
+
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         var permissions = PermissionRegistry.getPermissions();

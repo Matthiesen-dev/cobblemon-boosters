@@ -19,6 +19,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
 public final class Bucket implements ISubCommand {
+    public static final Bucket CMD = new Bucket();
+
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
         var permissions = PermissionRegistry.getPermissions();
