@@ -66,6 +66,8 @@ public final class CobblemonBoosters {
             getCacheConfigManager().saveConfig();
         }
         BoostersConfigManager.loadAll();
+        BoostManager.reapplyQueuePriorities();
+        CacheConfig.setGlobalBoostData();
         Constants.createInfoLog("Reloaded Cobblemon Boosters configs");
     }
 

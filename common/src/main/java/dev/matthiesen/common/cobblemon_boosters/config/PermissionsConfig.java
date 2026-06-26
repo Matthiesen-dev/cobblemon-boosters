@@ -85,6 +85,10 @@ public final class PermissionsConfig {
         @SerializedName("command.boosters.check_queue")
         public int CHECK_QUEUE_PERMISSION =
                 PermissionLevel.NONE.getNumericalValue();
+
+        @SerializedName("command.boosters.queue_priority")
+        public int QUEUE_PRIORITY_PERMISSION =
+                PermissionLevel.ALL_COMMANDS.getNumericalValue();
     }
 
     @SuppressWarnings("unused")

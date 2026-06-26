@@ -36,6 +36,8 @@ import java.util.List;
 
 // '/boosters check-queues <booster>'
 
+// '/boosters queue-priority'
+
 public final class BoostersCommand extends AbstractCommand {
     public static final BoostersCommand CMD = new BoostersCommand();
     public static List<ISubCommand> SUB_COMMANDS = new ArrayList<>();

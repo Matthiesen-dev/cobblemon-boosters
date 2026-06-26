@@ -89,6 +89,10 @@ public final class PermissionRegistry {
                 "command.boosters.check_queue",
                 CobblemonBoosters.INSTANCE.getPermissionsConfigManager().getConfig().permissionLevels.CHECK_QUEUE_PERMISSION
         );
+        public Permission QUEUE_PRIORITY_PERMISSION = toModPerm(
+                "command.boosters.queue_priority",
+                CobblemonBoosters.INSTANCE.getPermissionsConfigManager().getConfig().permissionLevels.QUEUE_PRIORITY_PERMISSION
+        );
     }
 
     public static Permissions getPermissions() {
