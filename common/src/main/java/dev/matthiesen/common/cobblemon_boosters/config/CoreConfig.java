@@ -9,6 +9,7 @@ public final class CoreConfig {
     @SerializedName("saveIntervalTicks")
     public int saveIntervalTicks = 1200;
 
+    @SerializedName("verboseCacheLogging")
     public boolean verboseCacheLogging = false;
 
     @SerializedName("queuePriorityEnabled")
