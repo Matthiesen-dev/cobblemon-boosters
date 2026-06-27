@@ -17,6 +17,12 @@ public final class MessagesConfig {
         @SerializedName("commandReload")
         public String commandReload = "%prefix% &aReloaded the config!";
 
+        @SerializedName("queuePriorityStatus")
+        public String queuePriorityStatus = "%prefix% &7Queue priority -> enabled: &f%s&7, mode: &f%s&7, timeDirection: &f%s&7, preemption: &f%s";
+
+        @SerializedName("queuePriorityUpdated")
+        public String queuePriorityUpdated = "%prefix% &aUpdated queue priority setting: &f%s";
+
         @SerializedName("shinyMessages")
         public BoostMessagesConfig shinyMessages = new BoostMessagesConfig(
                 BossEvent.BossBarColor.YELLOW,

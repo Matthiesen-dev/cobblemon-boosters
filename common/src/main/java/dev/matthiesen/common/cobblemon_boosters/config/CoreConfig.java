@@ -9,7 +9,20 @@ public final class CoreConfig {
     @SerializedName("saveIntervalTicks")
     public int saveIntervalTicks = 1200;
 
+    @SerializedName("verboseCacheLogging")
     public boolean verboseCacheLogging = false;
+
+    @SerializedName("queuePriorityEnabled")
+    public boolean queuePriorityEnabled = false;
+
+    @SerializedName("queuePriorityMode")
+    public String queuePriorityMode = "FIFO";
+
+    @SerializedName("timePriorityDirection")
+    public String timePriorityDirection = "SHORTEST_FIRST";
+
+    @SerializedName("activePreemptionEnabled")
+    public boolean activePreemptionEnabled = false;
 
     @SuppressWarnings("unused")
     public static final Gson GSON = new GsonBuilder()

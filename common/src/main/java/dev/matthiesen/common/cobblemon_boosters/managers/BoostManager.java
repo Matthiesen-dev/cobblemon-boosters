@@ -11,16 +11,21 @@ import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
 import dev.matthiesen.common.cobblemon_boosters.Constants;
+import dev.matthiesen.common.cobblemon_boosters.config.CoreConfig;
 import dev.matthiesen.common.cobblemon_boosters.data.CatchBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.cobblemon_boosters.utils.SpawnBucketOverrideSelector;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -72,6 +77,13 @@ public final class BoostManager {
             );
 
     public static void init() {}
+
+    public static void reapplyQueuePriorities() {
+        SHINY_RECORD.getManager().refreshQueuePriority();
+        CATCH_RECORD.getManager().refreshQueuePriority();
+        EXPERIENCE_RECORD.getManager().refreshQueuePriority();
+        SPAWN_BUCKET_RECORD.getManager().refreshQueuePriority();
+    }
 
     public static IBoostManager<ShinyBoost> getShinyBoostManager() {
         return SHINY_RECORD.getManager();
@@ -229,8 +241,155 @@ public final class BoostManager {
             this.queue.addAll(replacement);
         }
 
+        public void refreshQueuePriority() {
+            QueuePrioritySettings settings = getQueuePrioritySettings();
+            if (!settings.enabled() || settings.mode() == QueuePriorityMode.FIFO || this.queue.isEmpty()) {
+                return;
+            }
+
+            List<T> sorted = new ArrayList<>(this.queue);
+            sorted.sort(priorityComparator(settings));
+
+            T active = this.getActive();
+            if (settings.activePreemptionEnabled() && active != null && !sorted.isEmpty()) {
+                T candidate = sorted.getFirst();
+                if (hasHigherPriority(candidate, active, settings)) {
+                    sorted.removeFirst();
+                    sorted.add(active);
+                    sorted.sort(priorityComparator(settings));
+                    this.setQueue(new LinkedList<>(sorted));
+                    switchActiveBoost(active, candidate);
+                    return;
+                }
+            }
+
+            this.setQueue(new LinkedList<>(sorted));
+        }
+
         public void appendToQueue(T boost) {
-            this.queue.add(boost);
+            QueuePrioritySettings settings = getQueuePrioritySettings();
+            if (!settings.enabled() || settings.mode() == QueuePriorityMode.FIFO) {
+                this.queue.add(boost);
+                return;
+            }
+
+            List<T> sorted = new ArrayList<>(this.queue);
+            sorted.add(boost);
+            sorted.sort(priorityComparator(settings));
+
+            T active = this.getActive();
+            if (settings.activePreemptionEnabled() && active != null && !sorted.isEmpty()) {
+                T candidate = sorted.getFirst();
+                if (hasHigherPriority(candidate, active, settings)) {
+                    sorted.removeFirst();
+                    sorted.add(active);
+                    sorted.sort(priorityComparator(settings));
+                    this.setQueue(new LinkedList<>(sorted));
+                    switchActiveBoost(active, candidate);
+                    return;
+                }
+            }
+
+            this.setQueue(new LinkedList<>(sorted));
+        }
+
+        private Comparator<T> priorityComparator(QueuePrioritySettings settings) {
+            return (left, right) -> comparePriority(left, right, settings);
+        }
+
+        private int comparePriority(T left, T right, QueuePrioritySettings settings) {
+            return switch (settings.mode()) {
+                case FIFO -> 0;
+                case MULTIPLIER -> Float.compare(right.getMultiplier(), left.getMultiplier());
+                case TIME_REMAINING -> {
+                    if (settings.timeDirection() == TimePriorityDirection.LONGEST_FIRST) {
+                        yield Long.compare(right.getTimeRemaining(), left.getTimeRemaining());
+                    }
+                    yield Long.compare(left.getTimeRemaining(), right.getTimeRemaining());
+                }
+            };
+        }
+
+        private boolean hasHigherPriority(T candidate, T active, QueuePrioritySettings settings) {
+            if (settings.mode() == QueuePriorityMode.FIFO) {
+                return false;
+            }
+            return comparePriority(candidate, active, settings) < 0;
+        }
+
+        private void switchActiveBoost(T oldActive, T newActive) {
+            var server = MatthiesenLibApi.getMinecraftServer();
+            if (server != null) {
+                oldActive.getBossBar().hideBossBarFromPlayerList(server.getPlayerList());
+            }
+            this.setActive(newActive);
+            if (server != null) {
+                newActive.getBossBar().showBossBarFromPlayerList(server.getPlayerList());
+            }
+        }
+    }
+
+    private static QueuePrioritySettings getQueuePrioritySettings() {
+        CoreConfig config = CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig();
+        if (config == null) {
+            return QueuePrioritySettings.defaults();
+        }
+
+        return new QueuePrioritySettings(
+                config.queuePriorityEnabled,
+                QueuePriorityMode.fromString(config.queuePriorityMode),
+                TimePriorityDirection.fromString(config.timePriorityDirection),
+                config.activePreemptionEnabled
+        );
+    }
+
+    public enum QueuePriorityMode {
+        FIFO,
+        MULTIPLIER,
+        TIME_REMAINING;
+
+        public static QueuePriorityMode fromString(String value) {
+            if (value == null) {
+                return FIFO;
+            }
+
+            String normalized = value.trim().toUpperCase(Locale.ROOT);
+            for (QueuePriorityMode mode : values()) {
+                if (mode.name().equals(normalized)) {
+                    return mode;
+                }
+            }
+            return FIFO;
+        }
+    }
+
+    public enum TimePriorityDirection {
+        SHORTEST_FIRST,
+        LONGEST_FIRST;
+
+        public static TimePriorityDirection fromString(String value) {
+            if (value == null) {
+                return SHORTEST_FIRST;
+            }
+
+            String normalized = value.trim().toUpperCase(Locale.ROOT);
+            for (TimePriorityDirection direction : values()) {
+                if (direction.name().equals(normalized)) {
+                    return direction;
+                }
+            }
+            return SHORTEST_FIRST;
+        }
+    }
+
+    private record QueuePrioritySettings(
+            boolean enabled,
+            QueuePriorityMode mode,
+            TimePriorityDirection timeDirection,
+            boolean activePreemptionEnabled
+    ) {
+        private static QueuePrioritySettings defaults() {
+            return new QueuePrioritySettings(false, QueuePriorityMode.FIFO, TimePriorityDirection.SHORTEST_FIRST, false);
         }
     }
 }

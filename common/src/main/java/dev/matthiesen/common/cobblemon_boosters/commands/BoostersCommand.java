@@ -3,7 +3,8 @@ package dev.matthiesen.common.cobblemon_boosters.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.common.cobblemon_boosters.CobblemonBoosters;
-import dev.matthiesen.common.cobblemon_boosters.commands.subcommands.*;
+import dev.matthiesen.common.cobblemon_boosters.commands.subcommands.boosters.*;
+import dev.matthiesen.common.cobblemon_boosters.commands.subcommands.misc.*;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.ISubCommand;
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
 import net.minecraft.commands.CommandBuildContext;
@@ -36,6 +37,8 @@ import java.util.List;
 
 // '/boosters check-queues <booster>'
 
+// '/boosters queue-priority'
+
 public final class BoostersCommand extends AbstractCommand {
     public static final BoostersCommand CMD = new BoostersCommand();
     public static List<ISubCommand> SUB_COMMANDS = new ArrayList<>();
@@ -44,8 +47,17 @@ public final class BoostersCommand extends AbstractCommand {
     }
 
     static {
-        SUB_COMMANDS.addAll(Boosts.getSubCommands());
-        SUB_COMMANDS.addAll(Misc.getSubCommands());
+        // Boosters Sub Commands
+        SUB_COMMANDS.add(Bucket.CMD);
+        SUB_COMMANDS.add(Catch.CMD);
+        SUB_COMMANDS.add(Experience.CMD);
+        SUB_COMMANDS.add(Shiny.CMD);
+
+        // Misc Sub Commands
+        SUB_COMMANDS.add(Reload.CMD);
+        SUB_COMMANDS.add(ClearQueues.CMD);
+        SUB_COMMANDS.add(CheckQueues.CMD);
+        SUB_COMMANDS.add(QueuePriority.CMD);
     }
 
     @Override
