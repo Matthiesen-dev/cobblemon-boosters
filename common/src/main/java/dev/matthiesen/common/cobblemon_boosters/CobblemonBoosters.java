@@ -1,12 +1,19 @@
 package dev.matthiesen.common.cobblemon_boosters;
 
 import dev.matthiesen.common.cobblemon_boosters.config.*;
+import dev.matthiesen.common.cobblemon_boosters.display.BoostDisplayMode;
+import dev.matthiesen.common.cobblemon_boosters.display.BoostDisplayService;
+import dev.matthiesen.common.cobblemon_boosters.display.BossBarDisplay;
+import dev.matthiesen.common.cobblemon_boosters.display.NoOpDisplay;
+import dev.matthiesen.common.cobblemon_boosters.display.SidebarDisplay;
 import dev.matthiesen.common.cobblemon_boosters.event_handlers.ServerEventHandler;
 import dev.matthiesen.common.cobblemon_boosters.gui.FallbackGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.gui.gooey.GooeyGUIAdapter;
+import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IGUIAdapter;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IWebhookService;
 import dev.matthiesen.common.cobblemon_boosters.managers.BoostManager;
+import net.minecraft.server.MinecraftServer;
 import dev.matthiesen.common.cobblemon_boosters.event_handlers.PlayerEventHandler;
 import dev.matthiesen.common.cobblemon_boosters.managers.MetricManager;
 import dev.matthiesen.common.cobblemon_boosters.registry.CommandRegistry;
@@ -20,6 +27,8 @@ public final class CobblemonBoosters {
     public static CobblemonBoosters INSTANCE;
     public IGUIAdapter guiAdapter;
     public IWebhookService discordWebhookService;
+    public BoostDisplayService displayService;
+    private BoostDisplayMode displayMode;
     public boolean COBBREEDING_AVAILABLE;
 
     public CobblemonBoosters() {
@@ -66,9 +75,41 @@ public final class CobblemonBoosters {
             getCacheConfigManager().saveConfig();
         }
         BoostersConfigManager.loadAll();
+        applyDisplayMode();
         BoostManager.reapplyQueuePriorities();
         CacheConfig.setGlobalBoostData();
         Constants.createInfoLog("Reloaded Cobblemon Boosters configs");
+    }
+
+    /**
+     * Selects the display service from {@code CoreConfig.displayMode}. Called on every config
+     * load, so {@code /boosters reload} switches the display live. When the mode actually
+     * changes, the previous service is shut down (clearing its visuals) and any currently
+     * active boosts are re-shown under the new one.
+     */
+    public void applyDisplayMode() {
+        BoostDisplayMode mode = BoostDisplayMode.fromString(getCoreConfigManager().getConfig().displayMode);
+        if (this.displayService != null && mode == this.displayMode) {
+            return;
+        }
+
+        MinecraftServer server = MatthiesenLibApi.getMinecraftServer();
+        if (this.displayService != null) {
+            this.displayService.shutdown(server);
+        }
+
+        this.displayService = switch (mode) {
+            case BOSSBAR -> new BossBarDisplay();
+            case SIDEBAR -> new SidebarDisplay();
+            case NONE -> new NoOpDisplay();
+        };
+        this.displayMode = mode;
+
+        if (server != null) {
+            for (IBoost boost : BoostManager.getActiveBoosts()) {
+                this.displayService.onBoostActivated(boost);
+            }
+        }
     }
 
     public ConfigManager<CoreConfig> getCoreConfigManager() {

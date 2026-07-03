@@ -14,6 +14,9 @@ public final class MessagesConfig {
         @SerializedName("prefix")
         public String prefix = "&7[&6Boosters&7]";
 
+        @SerializedName("sidebarTitle")
+        public String sidebarTitle = "&6&lBoosters";
+
         @SerializedName("commandReload")
         public String commandReload = "%prefix% &aReloaded the config!";
 
@@ -34,7 +37,8 @@ public final class MessagesConfig {
                 "%prefix% &aStopped the current Shiny boost!",
                 "%prefix% &aCleared the Shiny queued boosts!",
                 "%prefix% &f&lMultiplier: &r&6%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%",
-                "%prefix% &aThere are currently no Shiny Boosts in the queue!"
+                "%prefix% &aThere are currently no Shiny Boosts in the queue!",
+                "&7%time_remaining_short2% &6Shiny &f%multiplier%x"
         );
 
         @SerializedName("catchBoostMessages")
@@ -48,7 +52,8 @@ public final class MessagesConfig {
                 "%prefix% &aStopped the current Catch boost!",
                 "%prefix% &aCleared the Catch queued boosts!",
                 "%prefix% &f&lMultiplier: &r&d%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%",
-                "%prefix% &aThere are currently no Catch Boosts in the queue!"
+                "%prefix% &aThere are currently no Catch Boosts in the queue!",
+                "&7%time_remaining_short2% &dCatch &f%multiplier%x"
         );
 
         @SerializedName("experienceBoostMessages")
@@ -62,7 +67,8 @@ public final class MessagesConfig {
                 "%prefix% &aStopped the current Experience boost!",
                 "%prefix% &aCleared the Experience queued boosts!",
                 "%prefix% &f&lMultiplier: &r&a%multiplier%x &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%",
-                "%prefix% &aThere are currently no Experience Boosts in the queue!"
+                "%prefix% &aThere are currently no Experience Boosts in the queue!",
+                "&7%time_remaining_short2% &aExp &f%multiplier%x"
         );
 
         @SerializedName("spawnBucketBoostMessages")
@@ -76,7 +82,8 @@ public final class MessagesConfig {
                 "%prefix% &aStopped the current Spawn Bucket boost!",
                 "%prefix% &aCleared the Spawn Bucket queued boosts!",
                 "%prefix% &f&lBucket: &r&b%bucket% &7&l| &r&f&lTimer: &r&a%time_remaining% &7/ &a%duration%",
-                "%prefix% &aThere are currently no Spawn Bucket Boosts in the queue!"
+                "%prefix% &aThere are currently no Spawn Bucket Boosts in the queue!",
+                "&7%time_remaining_short2% &b%bucket% &f%multiplier%x"
         );
     }
 
@@ -101,6 +108,10 @@ public final class MessagesConfig {
         @SerializedName("noQueuedBoosts")
         public String noQueuedBoosts;
 
+        // Optional. Falls back to barText when null/blank so pre-existing configs keep working.
+        @SerializedName("sidebarLine")
+        public String sidebarLine = null;
+
         public BoostMessagesConfig(
                 BossEvent.BossBarColor barColor,
                 BossEvent.BossBarOverlay barOverlay,
@@ -111,7 +122,8 @@ public final class MessagesConfig {
                 String boostStopped,
                 String boostQueueCleared,
                 String boostInfo,
-                String noQueuedBoosts
+                String noQueuedBoosts,
+                String sidebarLine
         ) {
             this.barColor = barColor;
             this.barOverlay = barOverlay;
@@ -123,6 +135,7 @@ public final class MessagesConfig {
             this.boostQueueCleared = boostQueueCleared;
             this.boostInfo = boostInfo;
             this.noQueuedBoosts = noQueuedBoosts;
+            this.sidebarLine = sidebarLine;
         }
     }
 

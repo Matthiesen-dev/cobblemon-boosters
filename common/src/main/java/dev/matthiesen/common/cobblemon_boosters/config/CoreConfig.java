@@ -12,6 +12,9 @@ public final class CoreConfig {
     @SerializedName("verboseCacheLogging")
     public boolean verboseCacheLogging = false;
 
+    @SerializedName("displayMode")
+    public String displayMode = "BOSSBAR"; // BOSSBAR | SIDEBAR | NONE
+
     @SerializedName("queuePriorityEnabled")
     public boolean queuePriorityEnabled = false;
 

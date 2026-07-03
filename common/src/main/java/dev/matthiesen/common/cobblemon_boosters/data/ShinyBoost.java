@@ -82,6 +82,13 @@ public final class ShinyBoost implements IBoost {
     }
 
     @Override
+    public Component getSidebarText() {
+        var cfg = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
+        String format = (cfg.sidebarLine == null || cfg.sidebarLine.isBlank()) ? cfg.barText : cfg.sidebarLine;
+        return TextUtils.deserialize(TextUtils.parse(format, this));
+    }
+
+    @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
         return new BoostersItemBuilder(MenuUtils.SHINY_ITEM)
                 .hideAdditional()

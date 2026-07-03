@@ -17,7 +17,6 @@ import dev.matthiesen.common.cobblemon_boosters.data.ExperienceBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.ShinyBoost;
 import dev.matthiesen.common.cobblemon_boosters.data.SpawnBucketBoost;
 import dev.matthiesen.common.cobblemon_boosters.interfaces.IBoost;
-import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.cobblemon_boosters.utils.SpawnBucketOverrideSelector;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -103,10 +102,7 @@ public final class BoostManager {
 
     public static void appendPlayer(ServerPlayer player) {
         try {
-            SHINY_RECORD.addPlayer(player);
-            CATCH_RECORD.addPlayer(player);
-            EXPERIENCE_RECORD.addPlayer(player);
-            SPAWN_BUCKET_RECORD.addPlayer(player);
+            CobblemonBoosters.INSTANCE.displayService.onPlayerJoin(player);
         } catch (RuntimeException e) {
             MetricManager.ERROR_TRACKER.trackError(e);
             Constants.createErrorLog("Error appending player to boosts in BoostManager", e);
@@ -115,13 +111,27 @@ public final class BoostManager {
 
     public static void clearPlayer(ServerPlayer player) {
         try {
-            SHINY_RECORD.clearPlayer(player);
-            CATCH_RECORD.clearPlayer(player);
-            EXPERIENCE_RECORD.clearPlayer(player);
-            SPAWN_BUCKET_RECORD.clearPlayer(player);
+            CobblemonBoosters.INSTANCE.displayService.onPlayerLeave(player);
         } catch (RuntimeException e) {
             MetricManager.ERROR_TRACKER.trackError(e);
             Constants.createErrorLog("Error clearing player from boosts in BoostManager", e);
+        }
+    }
+
+    /** All currently-active boosts in a stable order (shiny, catch, experience, spawn bucket). */
+    public static List<IBoost> getActiveBoosts() {
+        List<IBoost> active = new ArrayList<>(4);
+        addIfActive(active, SHINY_RECORD);
+        addIfActive(active, CATCH_RECORD);
+        addIfActive(active, EXPERIENCE_RECORD);
+        addIfActive(active, SPAWN_BUCKET_RECORD);
+        return active;
+    }
+
+    private static void addIfActive(List<IBoost> target, BoostRecord<? extends IBoost, ?> record) {
+        IBoost active = record.getManager().getActive();
+        if (active != null) {
+            target.add(active);
         }
     }
 
@@ -179,14 +189,6 @@ public final class BoostManager {
             }
             this.manager = new IBoostManager<>(() -> this.active, b -> this.active = b, this.queue);
             this.subscription = null;
-        }
-
-        public void addPlayer(ServerPlayer player) {
-            if (this.active != null) this.active.getBossBar().addPlayer(player);
-        }
-
-        public void clearPlayer(ServerPlayer player) {
-            if (this.active != null) this.active.getBossBar().removePlayer(player);
         }
 
         public IBoostManager<T> getManager() {
@@ -318,14 +320,9 @@ public final class BoostManager {
         }
 
         private void switchActiveBoost(T oldActive, T newActive) {
-            var server = MatthiesenLibApi.getMinecraftServer();
-            if (server != null) {
-                oldActive.getBossBar().hideBossBarFromPlayerList(server.getPlayerList());
-            }
+            CobblemonBoosters.INSTANCE.displayService.onBoostDeactivated(oldActive);
             this.setActive(newActive);
-            if (server != null) {
-                newActive.getBossBar().showBossBarFromPlayerList(server.getPlayerList());
-            }
+            CobblemonBoosters.INSTANCE.displayService.onBoostActivated(newActive);
         }
     }
 

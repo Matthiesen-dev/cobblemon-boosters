@@ -19,7 +19,10 @@ public final class TickManager {
     public static void tick() {
         try {
             tickBoosts();
-            updateBossBars();
+            MinecraftServer server = MatthiesenLibApi.getMinecraftServer();
+            if (server != null) {
+                CobblemonBoosters.INSTANCE.displayService.tick(server);
+            }
             tickCounter++;
             var saveInterval = getSaveIntervalTicks();
             if (tickCounter >= saveInterval) {
@@ -63,18 +66,6 @@ public final class TickManager {
         );
     }
 
-    public static void updateBossBars() {
-        var shinyManager = BoostManager.getShinyBoostManager();
-        var catchManager = BoostManager.getCatchBoostManager();
-        var experienceManager = BoostManager.getExperienceBoostManager();
-        var spawnBucketManager = BoostManager.getSpawnBucketBoostManager();
-
-        if (shinyManager.getActive() != null) updateBossBar(shinyManager.getActive());
-        if (catchManager.getActive() != null) updateBossBar(catchManager.getActive());
-        if (experienceManager.getActive() != null) updateBossBar(experienceManager.getActive());
-        if (spawnBucketManager.getActive() != null) updateBossBar(spawnBucketManager.getActive());
-    }
-
     private static void decrementBoost(IBoost boost) {
         boost.setTimeRemaining(boost.getTimeRemaining() - 1);
     }
@@ -90,7 +81,7 @@ public final class TickManager {
         if (activeBoost != null) {
             decrementBoost(activeBoost);
             if (activeBoost.getTimeRemaining() > 0) return;
-            activeBoost.getBossBar().hideBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
+            CobblemonBoosters.INSTANCE.displayService.onBoostDeactivated(activeBoost);
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
                     boostEndEmbed,
                     activeBoost
@@ -99,31 +90,12 @@ public final class TickManager {
         T nextBoost = queue.poll();
         boostManager.setActive(nextBoost);
         if (nextBoost != null) {
-            nextBoost.getBossBar().showBossBarFromPlayerList(MatthiesenLibApi.getMinecraftServer().getPlayerList());
+            CobblemonBoosters.INSTANCE.displayService.onBoostActivated(nextBoost);
             CobblemonBoosters.INSTANCE.discordWebhookService.sendMessage(
                     boostStartEmbed,
                     nextBoost
             );
         }
         CacheConfig.setGlobalBoostData();
-    }
-
-    private static void updateBossBar(IBoost boost) {
-        float progressRate = 1.0F / (boost.getDuration() * 20L);
-        float total = progressRate * boost.getTimeRemaining();
-
-        if (total < 0F)
-            total = 0F;
-        if (total > 1F)
-            total = 1F;
-
-        boost.getBossBar().updateProgress(total);
-        boost.getBossBar().setName(boost.getBossBarText());
-
-        // if server tick is multiple of 20
-        MinecraftServer server = MatthiesenLibApi.getMinecraftServer();
-        if (server.getTickCount() % 20 == 0) {
-            boost.getBossBar().verifyPlayerList(server.getPlayerList());
-        }
     }
 }

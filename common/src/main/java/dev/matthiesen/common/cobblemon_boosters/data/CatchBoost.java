@@ -82,6 +82,13 @@ public final class CatchBoost implements IBoost {
     }
 
     @Override
+    public Component getSidebarText() {
+        var cfg = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
+        String format = (cfg.sidebarLine == null || cfg.sidebarLine.isBlank()) ? cfg.barText : cfg.sidebarLine;
+        return TextUtils.deserialize(TextUtils.parse(format, this));
+    }
+
+    @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
         return new BoostersItemBuilder(MenuUtils.CATCH_ITEM)
                 .hideAdditional()
