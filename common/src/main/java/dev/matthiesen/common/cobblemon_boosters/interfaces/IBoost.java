@@ -18,5 +18,7 @@ public interface IBoost {
 
 	Component getBossBarText();
 
+	Component getSidebarText();
+
 	ItemStack getGUIItem(Component[] lore);
 }

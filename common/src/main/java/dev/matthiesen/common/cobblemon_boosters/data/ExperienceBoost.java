@@ -82,6 +82,13 @@ public final class ExperienceBoost implements IBoost {
     }
 
     @Override
+    public Component getSidebarText() {
+        var cfg = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
+        String format = (cfg.sidebarLine == null || cfg.sidebarLine.isBlank()) ? cfg.barText : cfg.sidebarLine;
+        return TextUtils.deserialize(TextUtils.parse(format, this));
+    }
+
+    @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
         return new BoostersItemBuilder(MenuUtils.EXPERIENCE_ITEM)
                 .hideAdditional()
