@@ -14,24 +14,6 @@ chances of finding Shiny Pokemon, or increases the catch rate!
 - **Shiny Boosters**: Increases the chances of finding shiny Pokemon for all players on the server.
 - **Spawn Bucket Boosters**: Increases the spawn rates for Pokemon in a specific spawn bucket for all players on the server.
 
-## Display Options
-
-By default, an active booster is shown as a vanilla **boss bar** at the top of the screen.
-This can be changed with the `displayMode` option in `config/cobblemon_boosters/core.json`:
-
-| `displayMode` | Result |
-|---------------|--------|
-| `BOSSBAR`     | Boss bar per active boost (default). |
-| `SIDEBAR`     | Vanilla scoreboard sidebar on the right, one line per active boost. |
-| `NONE`        | No on-screen display. |
-
-The sidebar title and per-boost line text are configurable in
-`config/cobblemon_boosters/messages.json` (`sidebarTitle` and each boost's `sidebarLine`,
-which support the same placeholders as `barText`). Changes apply on `/boosters reload`.
-
-> The sidebar uses the server-global scoreboard, so it can conflict with other mods/plugins
-> that use the sidebar slot.
-
 ## Requirements
 - [Cobblemon 1.7.3+1.21.1](https://www.modrinth.com/mod/cobblemon)
 - [Matthiesen Lib API](https://www.modrinth.com/mod/matthiesen-lib-api)
