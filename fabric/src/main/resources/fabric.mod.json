@@ -12,7 +12,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.matthiesen.fabric.cobblemon_boosters.CobblemonBoostersFabric"
+      "dev.matthiesen.cobblemon_boosters.fabric.CobblemonBoostersFabric"
     ]
   },
   "depends": {

@@ -1,0 +1,110 @@
+package dev.matthiesen.cobblemon_boosters.common.gui.gooey.screens;
+
+import ca.landonjw.gooeylibs2.api.button.Button;
+import ca.landonjw.gooeylibs2.api.button.GooeyButton;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
+import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
+import dev.matthiesen.cobblemon_boosters.common.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
+import dev.matthiesen.cobblemon_boosters.common.gui.gooey.screens.templates.BaseMenuGuiTemplate;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
+import dev.matthiesen.cobblemon_boosters.common.managers.BoostManager;
+import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
+import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
+import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+
+public final class AdminGui extends BaseMenuGuiTemplate {
+
+    public AdminGui(ServerPlayer player) {
+        super(player);
+    }
+
+    @Override
+    public Component getTitle() {
+        return TextUtils.deserialize(
+                TextUtils.parse("&cAdmin Menu&r")
+        );
+    }
+
+    public static class QueueListEntry {
+        Queue<? extends IBoost> queueEntry;
+        String clearedMessage;
+
+        public QueueListEntry(Queue<? extends IBoost> queueEntry, String clearedMessage) {
+            this.queueEntry = queueEntry;
+            this.clearedMessage = clearedMessage;
+        }
+    }
+
+    private void getQueuesAndClear() {
+        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages;
+        List<QueueListEntry> queueEntries = new ArrayList<>();
+        queueEntries.add(new QueueListEntry(
+                BoostManager.getShinyBoostManager().getQueue(),
+                messages.shinyMessages.boostQueueCleared
+        ));
+        queueEntries.add(new QueueListEntry(
+                BoostManager.getCatchBoostManager().getQueue(),
+                messages.catchBoostMessages.boostQueueCleared
+        ));
+        queueEntries.add(new QueueListEntry(
+                BoostManager.getExperienceBoostManager().getQueue(),
+                messages.experienceBoostMessages.boostQueueCleared
+        ));
+        queueEntries.add(new QueueListEntry(
+                BoostManager.getSpawnBucketBoostManager().getQueue(),
+                messages.spawnBucketBoostMessages.boostQueueCleared
+        ));
+        for (QueueListEntry entry : queueEntries) {
+            entry.queueEntry.clear();
+            sendPlayerMessage(entry.clearedMessage);
+        }
+        CacheConfig.setGlobalBoostData();
+    }
+
+    @Override
+    public List<Button> getButtons() {
+        List<Button> buttons = new ArrayList<>();
+        var permissions = PermissionRegistry.getPermissions();
+
+        // Reload
+        if (PermissionRegistry.checkPermission(player, permissions.RELOAD_PERMISSION))
+            buttons.add(GooeyButton.builder()
+                    .display(MenuUtils.getReloadItem())
+                    .onClick(() -> new CancelConfirmGuiBuilder(
+                            player,
+                            "&cConfirm to reload",
+                            () -> {
+                                CobblemonBoosters.INSTANCE.reload(true);
+                                sendPlayerMessage(CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.commandReload);
+                                close();
+                            },
+                            this::open
+                    ).open())
+                    .build()
+            );
+
+        // Clear Queues
+        if (PermissionRegistry.checkPermission(player, permissions.CLEAR_QUEUES_PERMISSION))
+            buttons.add(GooeyButton.builder()
+                    .display(MenuUtils.getClearQueueItem())
+                    .onClick(() -> new CancelConfirmGuiBuilder(
+                            player,
+                            "&cConfirm to clear all Queues",
+                            () -> {
+                                getQueuesAndClear();
+                                close();
+                            },
+                            this::open
+                    ).open())
+                    .build()
+            );
+
+        return buttons;
+    }
+}
