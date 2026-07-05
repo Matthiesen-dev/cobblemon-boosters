@@ -1,14 +1,13 @@
 package dev.matthiesen.cobblemon_boosters.neoforge;
 
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
-import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import net.neoforged.fml.common.Mod;
 
-@Mod(Constants.MOD_ID)
+@Mod(CobblemonBoostersCommon.MOD_ID)
 public final class CobblemonBoostersNeoForge {
     public CobblemonBoostersNeoForge() {
-        var instance = CobblemonBoosters.INSTANCE;
-        Constants.createInfoLog("Loading for NeoForge Mod Loader");
+        var instance = CobblemonBoostersCommon.INSTANCE;
+        instance.createInfoLog("Loading for NeoForge Mod Loader");
         instance.initialize();
     }
 }

@@ -4,12 +4,12 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CoreConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.cobblemon_boosters.common.managers.BoostManager;
+import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -57,8 +57,8 @@ public final class QueuePriority implements ISubCommand {
     }
 
     private int status(CommandContext<CommandSourceStack> ctx) {
-        CoreConfig config = CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig();
-        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages;
+        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
+        var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages;
         Util.sendMessage(ctx, String.format(
                 messages.queuePriorityStatus,
                 config.queuePriorityEnabled,
@@ -71,11 +71,11 @@ public final class QueuePriority implements ISubCommand {
 
     private int enable(CommandContext<CommandSourceStack> ctx) {
         boolean enabled = BoolArgumentType.getBool(ctx, "enabled");
-        CoreConfig config = CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig();
+        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
         config.queuePriorityEnabled = enabled;
         persistAndApplyChanges();
 
-        var message = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
+        var message = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
         Util.sendMessage(ctx, String.format(message, "enabled=" + enabled));
         return status(ctx);
     }
@@ -94,22 +94,22 @@ public final class QueuePriority implements ISubCommand {
             return 0;
         }
 
-        CoreConfig config = CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig();
+        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
         config.queuePriorityMode = normalized;
         persistAndApplyChanges();
 
-        var message = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
+        var message = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
         Util.sendMessage(ctx, String.format(message, "mode=" + normalized));
         return status(ctx);
     }
 
     private int preemption(CommandContext<CommandSourceStack> ctx) {
         boolean enabled = BoolArgumentType.getBool(ctx, "enabled");
-        CoreConfig config = CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig();
+        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
         config.activePreemptionEnabled = enabled;
         persistAndApplyChanges();
 
-        var message = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
+        var message = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
         Util.sendMessage(ctx, String.format(message, "activePreemptionEnabled=" + enabled));
         return status(ctx);
     }
@@ -127,17 +127,17 @@ public final class QueuePriority implements ISubCommand {
             return 0;
         }
 
-        CoreConfig config = CobblemonBoosters.INSTANCE.getCoreConfigManager().getConfig();
+        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
         config.timePriorityDirection = normalized;
         persistAndApplyChanges();
 
-        var message = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
+        var message = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
         Util.sendMessage(ctx, String.format(message, "timePriorityDirection=" + normalized));
         return status(ctx);
     }
 
     private void persistAndApplyChanges() {
-        CobblemonBoosters.INSTANCE.getCoreConfigManager().saveConfig();
+        CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().saveConfig();
         BoostManager.reapplyQueuePriorities();
         CacheConfig.setGlobalBoostData();
     }

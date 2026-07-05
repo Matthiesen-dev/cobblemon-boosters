@@ -1,8 +1,8 @@
 package dev.matthiesen.cobblemon_boosters.common.utils;
 
 import com.cobblemon.mod.common.CobblemonItems;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -98,7 +98,7 @@ public final class MenuUtils {
     public static ItemStack getBucketItem() {
         Item item = BUCKET_ITEM;
 
-        if (CobblemonBoosters.INSTANCE.COBBREEDING_AVAILABLE) {
+        if (ServiceManager.isCobbreedingAvailable()) {
             item = BuiltInRegistries.ITEM.getOptional(Constants.COMPAT.COBBREEDING_EGG).orElse(BUCKET_ITEM);
         }
 

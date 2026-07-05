@@ -3,12 +3,12 @@ package dev.matthiesen.cobblemon_boosters.common.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
-import dev.matthiesen.cobblemon_boosters.common.managers.BoostManager;
-import dev.matthiesen.cobblemon_boosters.common.data.CatchBoost;
-import dev.matthiesen.cobblemon_boosters.common.data.ExperienceBoost;
-import dev.matthiesen.cobblemon_boosters.common.data.ShinyBoost;
-import dev.matthiesen.cobblemon_boosters.common.data.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
+import dev.matthiesen.cobblemon_boosters.common.boosts.CatchBoost;
+import dev.matthiesen.cobblemon_boosters.common.boosts.ExperienceBoost;
+import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
+import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public final class CacheConfig {
         var experienceBoostManager = BoostManager.getExperienceBoostManager();
         var spawnBucketBoostManager = BoostManager.getSpawnBucketBoostManager();
 
-        CobblemonBoosters.INSTANCE.getCacheConfigManager().setConfig(new CacheConfig(
+        CobblemonBoostersCommon.INSTANCE.getCacheConfigManager().setConfig(new CacheConfig(
                 shinyBoostManager,
                 catchBoostManager,
                 experienceBoostManager,

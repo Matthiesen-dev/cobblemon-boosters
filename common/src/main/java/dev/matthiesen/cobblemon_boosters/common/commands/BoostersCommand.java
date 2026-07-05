@@ -2,7 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
+import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.boosters.Bucket;
 import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.boosters.Catch;
 import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.boosters.Experience;
@@ -79,7 +79,7 @@ public final class BoostersCommand extends AbstractCommand {
     public int action(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
         if (player != null) {
-            CobblemonBoosters.INSTANCE.guiAdapter.openMainMenuGUI(player);
+            ServiceManager.getGuiAdapter().openMainMenuGUI(player);
         }
         return 1;
     }

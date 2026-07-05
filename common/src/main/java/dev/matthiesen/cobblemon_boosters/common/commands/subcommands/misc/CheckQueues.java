@@ -3,11 +3,12 @@ package dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.cobblemon_boosters.common.managers.BoostManager;
+import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -43,7 +44,7 @@ public final class CheckQueues implements ISubCommand {
     public int openGUI(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
         if (player != null) {
-            CobblemonBoosters.INSTANCE.guiAdapter.openQueuesGUI(player);
+            ServiceManager.getGuiAdapter().openQueuesGUI(player);
         }
         return 1;
     }
@@ -54,22 +55,22 @@ public final class CheckQueues implements ISubCommand {
             case "bucket" -> Util.handleQueueResponse(
                     ctx,
                     BoostManager.getSpawnBucketBoostManager().getQueue(),
-                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages
+                    CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages
             );
             case "catch" -> Util.handleQueueResponse(
                     ctx,
                     BoostManager.getCatchBoostManager().getQueue(),
-                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages
+                    CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages
             );
             case "experience" -> Util.handleQueueResponse(
                     ctx,
                     BoostManager.getExperienceBoostManager().getQueue(),
-                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages
+                    CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages
             );
             case "shiny" -> Util.handleQueueResponse(
                     ctx,
                     BoostManager.getShinyBoostManager().getQueue(),
-                    CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages
+                    CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages
             );
             default -> Util.sendMessage(ctx, "%prefix% &cUnknown booster type. Valid types are: " + String.join(", ", Constants.CURRENT_BOOSTERS) + ".");
         }

@@ -1,8 +1,8 @@
 package dev.matthiesen.cobblemon_boosters.common.utils;
 
 import com.cobblemon.mod.common.Cobblemon;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
-import dev.matthiesen.cobblemon_boosters.common.data.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
@@ -22,7 +22,7 @@ public final class TextUtils {
 
     public static String parse(String text) {
         return text
-                .replaceAll("%prefix%", CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.prefix)
+                .replaceAll("%prefix%", CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.prefix)
                 .replaceAll("%base_shiny_rate%", String.valueOf(Cobblemon.config.getShinyRate()));
     }
 
@@ -37,8 +37,8 @@ public final class TextUtils {
                 .replaceAll("%time_remaining_short2%", hmsShort2(boost.getTimeRemaining() / 20L))
                 .replaceAll("%time_remaining_short%", hmsShort(boost.getTimeRemaining() / 20L))
                 .replaceAll("%time_remaining%", hms(boost.getTimeRemaining() / 20L))
-                .replaceAll("%discord_webhook_author_name%", CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.discordAuthorName)
-                .replaceAll("%discord_webhook_author_icon_url%", CobblemonBoosters.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.discordAuthorIconUrl)
+                .replaceAll("%discord_webhook_author_name%", CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.discordAuthorName)
+                .replaceAll("%discord_webhook_author_icon_url%", CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.discordAuthorIconUrl)
                 .replaceAll("%timestamp%", getCurrentTimestampForDiscordEmbed());
     }
 

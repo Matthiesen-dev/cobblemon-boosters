@@ -2,7 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
@@ -24,8 +24,8 @@ public final class Reload implements ISubCommand {
     }
 
     public int cmd(CommandContext<CommandSourceStack> ctx) {
-        CobblemonBoosters.INSTANCE.reload(true);
-        Util.sendMessage(ctx, CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.commandReload);
+        CobblemonBoostersCommon.INSTANCE.reloadTask(true);
+        Util.sendMessage(ctx, CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.commandReload);
         return 1;
     }
 }

@@ -2,11 +2,11 @@ package dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.cobblemon_boosters.common.managers.BoostManager;
+import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -29,22 +29,22 @@ public final class ClearQueues implements ISubCommand {
         Util.handleQueueClear(
                 ctx,
                 BoostManager.getShinyBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.boostQueueCleared
+                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
                 BoostManager.getCatchBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostQueueCleared
+                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
                 BoostManager.getExperienceBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.boostQueueCleared
+                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.boostQueueCleared
         );
         Util.handleQueueClear(
                 ctx,
                 BoostManager.getSpawnBucketBoostManager().getQueue(),
-                CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
+                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
         );
         CacheConfig.setGlobalBoostData();
         return 1;

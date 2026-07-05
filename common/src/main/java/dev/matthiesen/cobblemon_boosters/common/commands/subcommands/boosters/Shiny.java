@@ -6,15 +6,14 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoosters;
-import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
-import dev.matthiesen.cobblemon_boosters.common.data.ShinyBoost;
-import dev.matthiesen.cobblemon_boosters.common.gui.gooey.screens.utils.Helpers;
+import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.cobblemon_boosters.common.managers.BoostManager;
-import dev.matthiesen.cobblemon_boosters.common.managers.MetricManager;
+import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,7 +45,7 @@ public final class Shiny implements ISubCommand {
     public int openGUI(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = ctx.getSource().getPlayer();
         if (player != null) {
-            CobblemonBoosters.INSTANCE.guiAdapter.openShinyBoosterGUI(player);
+            ServiceManager.getGuiAdapter().openShinyBoosterGUI(player);
         }
         return 1;
     }
@@ -57,7 +56,7 @@ public final class Shiny implements ISubCommand {
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
         BoostManager.IBoostManager<ShinyBoost> manager = BoostManager.getShinyBoostManager();
-        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
+        var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
         ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
         manager.appendToQueue(boost);
         Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
@@ -67,17 +66,16 @@ public final class Shiny implements ISubCommand {
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
         try {
-            var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
+            var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
             Util.handleStopCommand(ctx, BoostManager.getShinyBoostManager().getActive(), messages);
         } catch (RuntimeException e) {
-            MetricManager.ERROR_TRACKER.trackError(e);
-            Constants.LOGGER.error("Failed to stop shiny boost", e);
+            CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop shiny boost", e);
         }
         return 1;
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-        var messages = CobblemonBoosters.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
+        var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages;
         Util.handleStatusCommand(ctx, BoostManager.getShinyBoostManager().getActive(), messages);
         return 1;
     }

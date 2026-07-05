@@ -3,8 +3,8 @@ package dev.matthiesen.cobblemon_boosters.common.utils;
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.events.entity.SpawnBucketChosenEvent;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
-import dev.matthiesen.cobblemon_boosters.common.Constants;
-import dev.matthiesen.cobblemon_boosters.common.data.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
 
 import java.util.*;
 
@@ -51,7 +51,7 @@ public final class SpawnBucketOverrideSelector {
         // Apply boost to the user-selected target bucket.
         SpawnBucket boostedBucket = getBucketByName(boostedBucketName);
         if (boostedBucket == null) {
-            Constants.createErrorLog("Could not find Spawn Bucket with name '" + boostedBucketName + "'. Check your config for typos.");
+            CobblemonBoostersCommon.INSTANCE.createErrorLog("Could not find Spawn Bucket with name '" + boostedBucketName + "'. Check your config for typos.");
             return originalChosenBucket;
         }
         float base = adjusted.getOrDefault(boostedBucket, 0f);

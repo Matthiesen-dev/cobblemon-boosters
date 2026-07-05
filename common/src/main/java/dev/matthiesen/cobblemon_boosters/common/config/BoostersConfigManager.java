@@ -1,5 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
 import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
 
@@ -8,7 +9,7 @@ import java.util.Map;
 
 public final class BoostersConfigManager<T> extends ConfigManager<T> {
     public BoostersConfigManager(Class<T> configClass, String configName) {
-        super(configClass, configName, Constants.MOD_ID);
+        super(configClass, configName, CobblemonBoostersCommon.MOD_ID);
     }
 
     // Static methods for Cobblemon Boosters configs
@@ -23,7 +24,7 @@ public final class BoostersConfigManager<T> extends ConfigManager<T> {
 
     public static void saveAll() {
         for (Map.Entry<Constants.CONFIGS, ConfigManager<?>> entry : configManagers.entrySet()) {
-            Constants.LOGGER.info("Saving config: {}", entry.getKey().getConfigName());
+            CobblemonBoostersCommon.INSTANCE.getLogger().info("Saving config: {}", entry.getKey().getConfigName());
             entry.getValue().saveConfig();
         }
     }
@@ -34,7 +35,7 @@ public final class BoostersConfigManager<T> extends ConfigManager<T> {
 
     public static void loadAll() {
         for (Map.Entry<Constants.CONFIGS, ConfigManager<?>> entry : configManagers.entrySet()) {
-            Constants.LOGGER.info("Loading config: {}", entry.getKey().getConfigName());
+            CobblemonBoostersCommon.INSTANCE.getLogger().info("Loading config: {}", entry.getKey().getConfigName());
             entry.getValue().loadConfig();
         }
     }
@@ -61,7 +62,7 @@ public final class BoostersConfigManager<T> extends ConfigManager<T> {
 
     private static void registerConfigManager(Constants.CONFIGS configName) {
         if (configManagers.containsKey(configName)) {
-            Constants.LOGGER.warn("Config manager for {} already exists, skipping registration", configName.getConfigName());
+            CobblemonBoostersCommon.INSTANCE.getLogger().warn("Config manager for {} already exists, skipping registration", configName.getConfigName());
             return;
         }
         @SuppressWarnings("unchecked")
@@ -70,12 +71,12 @@ public final class BoostersConfigManager<T> extends ConfigManager<T> {
                 configName.getConfigName()
         );
         configManagers.put(configName, manager);
-        Constants.LOGGER.info("Registered config manager for {}", configName);
+        CobblemonBoostersCommon.INSTANCE.getLogger().info("Registered config manager for {}", configName);
     }
 
     private static ConfigManager<?> getConfigManager(Constants.CONFIGS configName) {
         if (!configManagers.containsKey(configName)) {
-            Constants.LOGGER.warn("Config manager for {} does not exist, returning null", configName.getConfigName());
+            CobblemonBoostersCommon.INSTANCE.getLogger().warn("Config manager for {} does not exist, returning null", configName.getConfigName());
             return null;
         }
         return configManagers.get(configName);
@@ -90,7 +91,7 @@ public final class BoostersConfigManager<T> extends ConfigManager<T> {
 
         Object config = manager.getConfig();
         if (config != null && !configName.getConfigClass().isInstance(config)) {
-            Constants.LOGGER.error(
+            CobblemonBoostersCommon.INSTANCE.getLogger().error(
                     "Config manager type mismatch for {}. Expected {}, got {}",
                     configName.getConfigName(),
                     configName.getConfigClass().getSimpleName(),

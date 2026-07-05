@@ -1,0 +1,49 @@
+package dev.matthiesen.cobblemon_boosters.common.services.gui;
+
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.IGUIAdapter;
+import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+
+public final class FallbackGUIAdapter implements IGUIAdapter {
+
+    public FallbackGUIAdapter() {
+        CobblemonBoostersCommon.INSTANCE.createInfoLog("No compatible GUI library detected, using fallback GUI adapter which sends messages to players instead of opening GUIs");
+    }
+
+    public Component getDefaultComponent() {
+        String defaultMessage = TextUtils.parse("%prefix% &7GUI not available, please use command arguments instead.&r");
+        return TextUtils.deserialize(defaultMessage);
+    }
+
+    @Override
+    public void openMainMenuGUI(ServerPlayer player) {
+        player.sendSystemMessage(getDefaultComponent());
+    }
+
+    @Override
+    public void openQueuesGUI(ServerPlayer player) {
+        player.sendSystemMessage(getDefaultComponent());
+    }
+
+    @Override
+    public void openBucketBoosterGUI(ServerPlayer player) {
+        player.sendSystemMessage(getDefaultComponent());
+    }
+
+    @Override
+    public void openCatchBoosterGUI(ServerPlayer player) {
+        player.sendSystemMessage(getDefaultComponent());
+    }
+
+    @Override
+    public void openExperienceBoosterGUI(ServerPlayer player) {
+        player.sendSystemMessage(getDefaultComponent());
+    }
+
+    @Override
+    public void openShinyBoosterGUI(ServerPlayer player) {
+        player.sendSystemMessage(getDefaultComponent());
+    }
+}
