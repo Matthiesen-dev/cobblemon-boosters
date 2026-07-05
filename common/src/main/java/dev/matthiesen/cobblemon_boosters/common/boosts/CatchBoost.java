@@ -2,10 +2,10 @@ package dev.matthiesen.cobblemon_boosters.common.boosts;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.utils.BossBar;
 import dev.matthiesen.cobblemon_boosters.common.utils.BoostersItemBuilder;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
+import dev.matthiesen.common.matthiesen_lib_api.utility.BossBar;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 

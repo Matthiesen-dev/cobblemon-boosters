@@ -1,6 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.interfaces;
 
-import dev.matthiesen.cobblemon_boosters.common.utils.BossBar;
+import dev.matthiesen.common.matthiesen_lib_api.utility.BossBar;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
