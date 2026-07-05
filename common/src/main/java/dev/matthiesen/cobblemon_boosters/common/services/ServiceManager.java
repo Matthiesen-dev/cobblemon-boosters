@@ -24,16 +24,14 @@ public final class ServiceManager {
     private static BoostDisplayMode displayMode;
     private static boolean cobbreedingAvailable;
 
-    private static CobblemonBoostersCommon modInstance;
+    public static boolean isInitialized;
 
-    public static volatile boolean isInitialized = false;
-
-    public static void init(CobblemonBoostersCommon mod) {
+    public static void init() {
         if (isInitialized) return;
-
-        modInstance = mod;
+        CobblemonBoostersCommon.INSTANCE.createInfoLog("Initializing ServiceManager");
         loadCompat();
         BoostManager.init();
+        applyDisplayMode();
 
         isInitialized = true;
     }
@@ -55,19 +53,19 @@ public final class ServiceManager {
     }
 
     public static void loadCompat() {
-        if (modInstance.isModLoaded(Constants.COMPAT.GOOEYLIBS)) {
+        if (CobblemonBoostersCommon.INSTANCE.isModLoaded(Constants.COMPAT.GOOEYLIBS)) {
             guiAdapter = new GooeyGUIAdapter();
         } else {
             guiAdapter = new FallbackGUIAdapter();
         }
 
-        if (modInstance.isModLoaded(Constants.COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
+        if (CobblemonBoostersCommon.INSTANCE.isModLoaded(Constants.COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
             discordWebhookService = new DiscordWebhookService();
         } else {
             discordWebhookService = new NoOpWebhookService();
         }
 
-        cobbreedingAvailable = modInstance.isModLoaded(Constants.COMPAT.COBBREEDING);
+        cobbreedingAvailable = CobblemonBoostersCommon.INSTANCE.isModLoaded(Constants.COMPAT.COBBREEDING);
     }
 
     /**
@@ -77,12 +75,12 @@ public final class ServiceManager {
      * active boosts are re-shown under the new one.
      */
     public static void applyDisplayMode() {
-        BoostDisplayMode mode = BoostDisplayMode.fromString(modInstance.getCoreConfigManager().getConfig().displayMode);
+        BoostDisplayMode mode = BoostDisplayMode.fromString(CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig().displayMode);
         if (displayService != null && mode == displayMode) {
             return;
         }
 
-        MinecraftServer server = modInstance.getMinecraftServer();
+        MinecraftServer server = CobblemonBoostersCommon.INSTANCE.getMinecraftServer();
         if (displayService != null) {
             displayService.shutdown(server);
         }

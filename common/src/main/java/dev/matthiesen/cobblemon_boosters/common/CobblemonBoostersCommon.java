@@ -24,17 +24,18 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
 
     public CobblemonBoostersCommon() {
         super(MOD_ID, MOD_NAME);
-        BoostersConfigManager.registerConfigs();
     }
 
     @Override
     public void initialize() {
         super.initialize();
+        BoostersConfigManager.registerConfigs();
+
         reloadTask(false);
         PermissionRegistry.init();
         registerCommand(BoostersCommand.CMD);
 
-        ServiceManager.init(this);
+        ServiceManager.init();
         registerPlayerEventHandler(PlayerEventsHandler.INSTANCE);
         registerServerEventHandler(ServerEventHandler.INSTANCE);
     }
