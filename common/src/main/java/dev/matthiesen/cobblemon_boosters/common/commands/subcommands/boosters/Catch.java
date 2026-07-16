@@ -10,10 +10,10 @@ import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
 import dev.matthiesen.cobblemon_boosters.common.boosts.CatchBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
+import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -51,7 +51,7 @@ public final class Catch implements ISubCommand {
         float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
-        int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
+        int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
         BoostManager.IBoostManager<CatchBoost> manager = BoostManager.getCatchBoostManager();
         var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
         CatchBoost boost = new CatchBoost(multiplier, totalSeconds);

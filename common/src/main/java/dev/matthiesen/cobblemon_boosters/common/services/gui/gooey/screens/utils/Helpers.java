@@ -22,17 +22,6 @@ public final class Helpers {
     public static final List<String> allowedUnits = List.of("seconds", "minutes", "hours", "days");
     public static final List<String> allowedBuckets = List.of("common", "uncommon", "rare", "ultra-rare");
 
-    public static int parseTotalSeconds(int duration, String unit) {
-        int totalSeconds;
-        switch (unit) {
-            case "minutes" -> totalSeconds = duration * 60;
-            case "hours" -> totalSeconds = duration * 3600;
-            case "days" -> totalSeconds = duration * 86400;
-            default -> totalSeconds = duration;
-        }
-        return totalSeconds;
-    }
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean ensureModeSelected(String currentMode, Consumer<String> sendMessage) {
         if (currentMode != null) {
