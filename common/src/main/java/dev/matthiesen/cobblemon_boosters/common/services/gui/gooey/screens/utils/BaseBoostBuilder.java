@@ -2,6 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.util
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
+import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class BaseBoostBuilder {
 
     public <T extends IBoost> T build(Class<T> boostClass) {
         try {
-            int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
+            int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
             return boostClass.getDeclaredConstructor(float.class, int.class)
                     .newInstance(multiplier, totalSeconds);
         } catch (Exception e) {

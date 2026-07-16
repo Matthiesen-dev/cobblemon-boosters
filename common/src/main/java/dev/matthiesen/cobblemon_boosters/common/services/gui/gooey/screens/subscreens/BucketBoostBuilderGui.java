@@ -11,6 +11,7 @@ import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils.BaseBoostBuilder;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGui;
+import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,7 +56,7 @@ public final class BucketBoostBuilderGui implements IGui {
 
         public SpawnBucketBoost build() {
             try {
-                int totalSeconds = Helpers.parseTotalSeconds(duration, unit);
+                int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
                 return new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
             } catch (Exception e) {
                 CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to build boost", e);
