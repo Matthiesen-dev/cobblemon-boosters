@@ -40,6 +40,8 @@ how this mod is being used and improve it over time. You can learn more about th
 
 You can also view the data collected by this library on the [FastStats: Cobblemon Boosters](https://faststats.dev/project/cobblemon-boosters) page.
 
+To opt out of this data collection, set the `enabled` property to `false` in the `<game_directory>/config/matthiesen_lib_api/metrics.properties` file.
+
 ## License
 
 MIT - see `LICENSE`.
