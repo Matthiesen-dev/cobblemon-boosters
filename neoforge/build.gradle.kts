@@ -28,7 +28,6 @@ dependencies {
     neoForge(libs.neoforge)
     modImplementation(libs.bundles.neoforgeModImplementation) { isTransitive = false }
     modRuntimeOnly(libs.bundles.neoforgeModRuntimeOnly)
-    modRuntimeOnly(libs.matthiesen.lib.webhooks.neoforge) { isTransitive = false }
     forgeRuntimeLibrary(libs.kotlinforforge) {
         exclude("net.neoforged.fancymodloader", "loader")
     }

@@ -1,7 +1,5 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
@@ -74,10 +72,4 @@ public final class CacheConfig {
                 spawnBucketBoostManager
         ));
     }
-
-    @SuppressWarnings("unused")
-    public static final Gson GSON = new GsonBuilder()
-            .disableHtmlEscaping()
-            .setPrettyPrinting()
-            .create();
 }

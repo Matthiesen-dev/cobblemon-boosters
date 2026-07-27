@@ -2,16 +2,12 @@ package dev.matthiesen.cobblemon_boosters.common.config;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
-import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
+import dev.matthiesen.matthiesen_core.common.utility.config.ConfigManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class BoostersConfigManager<T> extends ConfigManager<T> {
-    public BoostersConfigManager(Class<T> configClass, String configName) {
-        super(configClass, configName, CobblemonBoostersCommon.MOD_ID);
-    }
-
+public final class BoostersConfigManager {
     // Static methods for Cobblemon Boosters configs
 
     private static final Map<Constants.CONFIGS, ConfigManager<?>> configManagers = new HashMap<>();
@@ -66,9 +62,10 @@ public final class BoostersConfigManager<T> extends ConfigManager<T> {
             return;
         }
         @SuppressWarnings("unchecked")
-        BoostersConfigManager<Object> manager = new BoostersConfigManager<>(
+        ConfigManager<Object> manager = new ConfigManager<>(
                 (Class<Object>) configName.getConfigClass(),
-                configName.getConfigName()
+                configName.getConfigName(),
+                CobblemonBoostersCommon.MOD_ID
         );
         configManagers.put(configName, manager);
         CobblemonBoostersCommon.INSTANCE.getLogger().info("Registered config manager for {}", configName);

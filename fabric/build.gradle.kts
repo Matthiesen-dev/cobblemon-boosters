@@ -18,7 +18,6 @@ dependencies {
     modImplementation(libs.bundles.fabricModImplementation)
     modImplementation(libs.bundles.fabricModImplementationNoTransitive) { isTransitive = false }
     modRuntimeOnly(libs.bundles.fabricModRuntimeOnly)
-    modRuntimeOnly(libs.matthiesen.lib.webhooks.fabric) { isTransitive = false }
 
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))

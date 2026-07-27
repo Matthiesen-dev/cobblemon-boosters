@@ -6,13 +6,10 @@ import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.services.managers.TickManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
-import dev.matthiesen.common.matthiesen_lib_api.abstracts.AbstractCommonMod;
-import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
-import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPlayerEventHandler;
-import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import dev.matthiesen.libs.faststats.Token;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
+import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
+import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
+import dev.matthiesen.matthiesen_core.common.utility.config.ConfigManager;
 import org.jetbrains.annotations.NotNull;
 
 public final class CobblemonBoostersCommon extends AbstractCommonMod {
@@ -33,21 +30,37 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
 
         reloadTask(false);
         PermissionRegistry.init();
-        registerCommand(BoostersCommand.CMD);
+        getCommandsRegistryManager().registerCommand(BoostersCommand.CMD);
 
         ServiceManager.init();
-        registerPlayerEventHandler(PlayerEventsHandler.INSTANCE);
-        registerServerEventHandler(ServerEventHandler.INSTANCE);
+
+        PlatformEvents.SERVER_RELOAD.subscribe(event -> {
+            reloadTask(true);
+            createInfoLog("Reloaded Cobblemon Boosters configs via /reload");
+        });
+
+        PlatformEvents.SERVER_STARTING.subscribe(event -> {
+            createInfoLog("Server starting, initializing Cobblemon Boosters");
+            BoostManager.setupSubscriptions();
+        });
+
+        PlatformEvents.SERVER_END_TICK.subscribe(event -> TickManager.tick());
+
+        PlatformEvents.SERVER_STOPPING.subscribe(event -> {
+            createInfoLog("Server stopping, shutting down");
+            CacheConfig.setGlobalBoostData();
+            BoostersConfigManager.saveAll();
+            BoostManager.teardownSubscriptions();
+        });
+
+        PlatformEvents.PLAYER_JOIN.subscribe(event -> BoostManager.appendPlayer(event.player()));
+
+        PlatformEvents.PLAYER_LEAVE.subscribe(event -> BoostManager.clearPlayer(event.player()));
     }
 
     @Override
     public @Token @NotNull String getMetricsToken() {
         return METRICS_TOKEN;
-    }
-
-    @Override
-    public Runnable reload() {
-        return () -> reloadTask(false);
     }
 
     public void reloadTask(boolean fromCommand) {
@@ -82,42 +95,5 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
 
     public ConfigManager<WebhooksConfig> getWebhooksConfigManager() {
         return BoostersConfigManager.getWebhooksConfigManager();
-    }
-
-    public static class PlayerEventsHandler implements MatthiesenLibPlayerEventHandler {
-        public static PlayerEventsHandler INSTANCE = new PlayerEventsHandler();
-
-        @Override
-        public void onPlayerJoin(ServerPlayer player) {
-            BoostManager.appendPlayer(player);
-        }
-
-        @Override
-        public void onPlayerLeave(ServerPlayer player) {
-            BoostManager.clearPlayer(player);
-        }
-    }
-
-    public static class ServerEventHandler implements MatthiesenLibServerEventHandler {
-        public static ServerEventHandler INSTANCE = new ServerEventHandler();
-
-        @Override
-        public void onServerStart(MinecraftServer server) {
-            CobblemonBoostersCommon.INSTANCE.createInfoLog("Server started, initializing Cobblemon Boosters");
-            BoostManager.setupSubscriptions();
-        }
-
-        @Override
-        public void onServerTick(MinecraftServer server) {
-            TickManager.tick();
-        }
-
-        @Override
-        public void onServerStop(MinecraftServer server) {
-            CobblemonBoostersCommon.INSTANCE.createInfoLog("Server stopping, shutting down");
-            CacheConfig.setGlobalBoostData();
-            BoostersConfigManager.saveAll();
-            BoostManager.teardownSubscriptions();
-        }
     }
 }

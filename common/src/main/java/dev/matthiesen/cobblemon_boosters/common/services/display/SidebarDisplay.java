@@ -128,6 +128,6 @@ public final class SidebarDisplay implements IBoostDisplayService {
     }
 
     private static MinecraftServer getServer() {
-        return CobblemonBoostersCommon.INSTANCE.getMinecraftServer();
+        return CobblemonBoostersCommon.INSTANCE.getCommonUtils().getServer();
     }
 }

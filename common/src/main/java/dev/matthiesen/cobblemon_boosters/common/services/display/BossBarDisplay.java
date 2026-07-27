@@ -1,9 +1,9 @@
 package dev.matthiesen.cobblemon_boosters.common.services.display;
 
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostDisplayService;
 import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
-import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -29,7 +29,7 @@ public final class BossBarDisplay implements IBoostDisplayService {
 
     @Override
     public void onBoostActivated(IBoost boost) {
-        MinecraftServer server = MatthiesenLibApi.getMinecraftServer();
+        MinecraftServer server = getServer();
         if (server != null) {
             boost.getBossBar().showBossBarFromPlayerList(server.getPlayerList());
         }
@@ -37,7 +37,7 @@ public final class BossBarDisplay implements IBoostDisplayService {
 
     @Override
     public void onBoostDeactivated(IBoost boost) {
-        MinecraftServer server = MatthiesenLibApi.getMinecraftServer();
+        MinecraftServer server = getServer();
         if (server != null) {
             boost.getBossBar().hideBossBarFromPlayerList(server.getPlayerList());
         }
@@ -77,5 +77,9 @@ public final class BossBarDisplay implements IBoostDisplayService {
 
         boost.getBossBar().updateProgress(total);
         boost.getBossBar().setName(boost.getBossBarText());
+    }
+
+    private static MinecraftServer getServer() {
+        return CobblemonBoostersCommon.INSTANCE.getCommonUtils().getServer();
     }
 }

@@ -11,7 +11,7 @@ import dev.matthiesen.cobblemon_boosters.common.config.MessagesConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
-import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
+import dev.matthiesen.matthiesen_core.common.api.permissions.Permission;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.jetbrains.annotations.NotNull;

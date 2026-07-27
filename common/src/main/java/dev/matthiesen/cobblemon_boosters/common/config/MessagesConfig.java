@@ -1,11 +1,8 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.world.BossEvent;
 
-@SuppressWarnings("unused")
 public final class MessagesConfig {
     @SerializedName("messages")
     public GeneralMessagesConfig messages = new GeneralMessagesConfig();
@@ -136,9 +133,4 @@ public final class MessagesConfig {
             this.sidebarLine = sidebarLine;
         }
     }
-
-    public static final Gson GSON = new GsonBuilder()
-            .disableHtmlEscaping()
-            .setPrettyPrinting()
-            .create();
 }

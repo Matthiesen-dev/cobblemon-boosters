@@ -1,10 +1,9 @@
 package dev.matthiesen.cobblemon_boosters.common.registry;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
-import dev.matthiesen.common.matthiesen_lib_api.permission.AbstractPermission;
-import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
-import dev.matthiesen.common.matthiesen_lib_api.permission.PermissionLevel;
+import dev.matthiesen.matthiesen_core.common.api.permissions.Permission;
+import dev.matthiesen.matthiesen_core.common.api.permissions.PermissionLevel;
+import dev.matthiesen.matthiesen_core.common.utility.AbstractPermission;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -104,11 +103,11 @@ public final class PermissionRegistry {
     public static void init() {}
 
     public static boolean checkPermission(CommandSourceStack source, Permission permission) {
-        return MatthiesenLibApi.getPermissionValidator().hasPermission(source, permission);
+        return CobblemonBoostersCommon.INSTANCE.getPermissionsManager().getPermissionValidator().hasPermission(source, permission);
     }
 
     public static boolean checkPermission(ServerPlayer source, Permission permission) {
-        return MatthiesenLibApi.getPermissionValidator().hasPermission(source, permission);
+        return CobblemonBoostersCommon.INSTANCE.getPermissionsManager().getPermissionValidator().hasPermission(source, permission);
     }
 
     private static Permission toModPerm(String permission, int level) {
@@ -128,7 +127,7 @@ public final class PermissionRegistry {
     }
 
     private static Permission register(Permission permission) {
-        MatthiesenLibApi.registerPermission(permission);
+        CobblemonBoostersCommon.INSTANCE.getPermissionsManager().registerPermission(permission);
         return permission;
     }
 

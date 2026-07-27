@@ -5,28 +5,34 @@ import dev.matthiesen.cobblemon_boosters.common.config.WebhooksConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IWebhookService;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
-import dev.matthiesen.common.matthiesen_lib_webhooks.MatthiesenLibWebhooks;
-import dev.matthiesen.common.matthiesen_lib_api.core.discord.model.Embed;
-import dev.matthiesen.common.matthiesen_lib_api.core.discord.model.EmbedBuilder;
+import dev.matthiesen.matthiesen_core.common.api.discord.WebhookNotifierInstance;
+import dev.matthiesen.matthiesen_core.common.api.discord.WebhookNotifierService;
+import dev.matthiesen.matthiesen_core.common.api.exceptions.DiscordWebhookException;
+import dev.matthiesen.matthiesen_core.common.core.discord.model.Embed;
+import dev.matthiesen.matthiesen_core.common.core.discord.model.EmbedBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class DiscordWebhookService implements IWebhookService {
-    private static MatthiesenLibWebhooks.Webhooks webhooks;
+    private static WebhookNotifierInstance WEBHOOK_INSTANCE;
 
     public DiscordWebhookService() {
-        webhooks = getClient();
-        CobblemonBoostersCommon.INSTANCE.createInfoLog("Matthiesen Lib Webhooks detected, using it for Discord Webhook integration");
+        WebhookNotifierService WEBHOOK_SERVICE = getService();
+        if (WEBHOOK_SERVICE != null) {
+            WEBHOOK_INSTANCE = WEBHOOK_SERVICE.makeInstance(CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.webhookUrl);
+            CobblemonBoostersCommon.INSTANCE.createInfoLog("Matthiesen Lib Webhooks detected, using it for Discord Webhook integration");
+        }
     }
 
-    public MatthiesenLibWebhooks.Webhooks getClient() {
+    public WebhookNotifierService getService() {
         if (!CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.enabled) return null;
         if (!CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.webhookUrl.startsWith("https://")) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Discord webhooks are enabled but an invalid Discord Webhook URL is set! Please check your configuration. (Must start with 'https://')");
             return null;
         }
-        return new MatthiesenLibWebhooks.Webhooks(CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.webhookUrl);
+        if (!CobblemonBoostersCommon.INSTANCE.getWebhookService().isAvailable()) return null;
+        return CobblemonBoostersCommon.INSTANCE.getWebhookService();
     }
 
     public static Embed parseEventEmbed(WebhooksConfig.DiscordEmbed embed, IBoost boost) {
@@ -64,7 +70,7 @@ public final class DiscordWebhookService implements IWebhookService {
 
     @Override
     public void sendMessage(WebhooksConfig.DiscordEmbed embed, IBoost boost) {
-        if (webhooks == null) return;
+        if (WEBHOOK_INSTANCE == null) return;
         try {
             String userName = embed.author != null && embed.author.name != null
                     ? embed.author.name
@@ -73,13 +79,15 @@ public final class DiscordWebhookService implements IWebhookService {
                     ? embed.author.icon_url
                     : "https://raw.githubusercontent.com/Matthiesen-dev/cobblemon-boosters/refs/heads/main/assets/logo.png";
 
-            webhooks.sendMessage(message -> message
+            WEBHOOK_INSTANCE.sendMessage(message -> message
                     .withUsername(TextUtils.parse(userName, boost))
                     .withAvatarUrl(TextUtils.parse(avatarUrl, boost))
                     .withEmbeds(List.of(parseEventEmbed(embed, boost)))
             );
         } catch (RuntimeException e) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to send Discord webhook message! Check your webhook URL and ensure that your server can connect to Discord's servers.", e);
+        } catch (DiscordWebhookException e) {
+            CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to send Discord webhook message due to a DiscordWebhookException!", e);
         }
     }
 }

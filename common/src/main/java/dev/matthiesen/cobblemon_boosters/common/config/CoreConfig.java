@@ -1,7 +1,5 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 public final class CoreConfig {
@@ -27,9 +25,4 @@ public final class CoreConfig {
     @SerializedName("activePreemptionEnabled")
     public boolean activePreemptionEnabled = false;
 
-    @SuppressWarnings("unused")
-    public static final Gson GSON = new GsonBuilder()
-            .disableHtmlEscaping()
-            .setPrettyPrinting()
-            .create();
 }

@@ -18,7 +18,7 @@ public final class TickManager {
     public static void tick() {
         try {
             tickBoosts();
-            MinecraftServer server = CobblemonBoostersCommon.INSTANCE.getMinecraftServer();
+            MinecraftServer server = CobblemonBoostersCommon.INSTANCE.getCommonUtils().getServer();
             if (server != null) {
                 ServiceManager.getDisplayService().tick(server);
             }

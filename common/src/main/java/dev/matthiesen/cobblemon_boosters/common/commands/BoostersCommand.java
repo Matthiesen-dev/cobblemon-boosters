@@ -12,7 +12,7 @@ import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc.ClearQ
 import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc.QueuePriority;
 import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc.Reload;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
+import dev.matthiesen.matthiesen_core.common.api.command.CoreCommand;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -45,7 +45,7 @@ import java.util.List;
 
 // '/boosters queue-priority'
 
-public final class BoostersCommand extends AbstractCommand {
+public final class BoostersCommand implements CoreCommand {
     public static final BoostersCommand CMD = new BoostersCommand();
     public static List<ISubCommand> SUB_COMMANDS = new ArrayList<>();
 
@@ -75,7 +75,6 @@ public final class BoostersCommand extends AbstractCommand {
         dispatcher.register(rootCommand);
     }
 
-    @Override
     public int action(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
         if (player != null) {
