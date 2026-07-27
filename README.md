@@ -20,7 +20,7 @@ chances of finding Shiny Pokemon, or increases the catch rate!
 - [Cobblemon](https://www.modrinth.com/mod/cobblemon)
 
 ### Optional Dependencies
-- [Matthiesen Lib Webhooks](https://www.modrinth.com/mod/matthiesen-lib-webhooks) - Used for sending Discord webhooks when boosters are started or stopped.
+- [Matthiesen Core Webhooks](https://modrinth.com/project/XP5CfD30) - Used for sending Discord webhooks when boosters are started or stopped.
 - [GooeyLibs 3.1.1-1.21.x](https://modrinth.com/mod/gooeylibs) - Used for optional GUIs
 
 ## Docs
