@@ -3,6 +3,7 @@ package dev.matthiesen.cobblemon_boosters.common.utils;
 import com.cobblemon.mod.common.Cobblemon;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.matthiesen_core.common.api.text_parsers.BuiltInTextParsers;
 import net.minecraft.network.chat.Component;
@@ -21,7 +22,7 @@ public final class TextUtils {
 
     public static String parse(String text) {
         return text
-                .replaceAll("%prefix%", CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.prefix)
+                .replaceAll("%prefix%", BoostersConfig.CORE_SERVER_CONFIG.messages_prefix.get())
                 .replaceAll("%base_shiny_rate%", String.valueOf(Cobblemon.config.getShinyRate()));
     }
 
@@ -36,8 +37,8 @@ public final class TextUtils {
                 .replaceAll("%time_remaining_short2%", hmsShort2(boost.getTimeRemaining() / 20L))
                 .replaceAll("%time_remaining_short%", hmsShort(boost.getTimeRemaining() / 20L))
                 .replaceAll("%time_remaining%", hms(boost.getTimeRemaining() / 20L))
-                .replaceAll("%discord_webhook_author_name%", CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.discordAuthorName)
-                .replaceAll("%discord_webhook_author_icon_url%", CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.discordAuthorIconUrl)
+                .replaceAll("%discord_webhook_author_name%", BoostersConfig.WEBHOOKS_SERVER_CONFIG.discordAuthorName.get())
+                .replaceAll("%discord_webhook_author_icon_url%", BoostersConfig.WEBHOOKS_SERVER_CONFIG.discordAuthorIconUrl.get())
                 .replaceAll("%timestamp%", getCurrentTimestampForDiscordEmbed());
     }
 

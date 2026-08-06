@@ -1,7 +1,8 @@
 package dev.matthiesen.cobblemon_boosters.common.services.webhook;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.cobblemon_boosters.common.config.WebhooksConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IWebhookService;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
@@ -20,14 +21,14 @@ public final class DiscordWebhookService implements IWebhookService {
     public DiscordWebhookService() {
         WebhookNotifierService WEBHOOK_SERVICE = getService();
         if (WEBHOOK_SERVICE != null) {
-            WEBHOOK_INSTANCE = WEBHOOK_SERVICE.makeInstance(CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.webhookUrl);
+            WEBHOOK_INSTANCE = WEBHOOK_SERVICE.makeInstance(BoostersConfig.WEBHOOKS_SERVER_CONFIG.webhookUrl.get());
             CobblemonBoostersCommon.INSTANCE.createInfoLog("Matthiesen Lib Webhooks detected, using it for Discord Webhook integration");
         }
     }
 
     public WebhookNotifierService getService() {
-        if (!CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.enabled) return null;
-        if (!CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig.webhookUrl.startsWith("https://")) {
+        if (!BoostersConfig.WEBHOOKS_SERVER_CONFIG.enabled.getAsBoolean()) return null;
+        if (!BoostersConfig.WEBHOOKS_SERVER_CONFIG.webhookUrl.get().startsWith("https://")) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Discord webhooks are enabled but an invalid Discord Webhook URL is set! Please check your configuration. (Must start with 'https://')");
             return null;
         }
@@ -35,48 +36,47 @@ public final class DiscordWebhookService implements IWebhookService {
         return CobblemonBoostersCommon.INSTANCE.getWebhookService();
     }
 
-    public static Embed parseEventEmbed(WebhooksConfig.DiscordEmbed embed, IBoost boost) {
+    public static Embed parseEventEmbed(DiscordEmbed embed, IBoost boost) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        if (embed.title != null)
-            embedBuilder.withTitle(TextUtils.parse(embed.title, boost));
-        if (embed.description != null)
-            embedBuilder.withDescription(TextUtils.parse(embed.description, boost));
-        if (embed.color != null)
-            embedBuilder.withColor(embed.color);
-        if (embed.timestamp != null)
-            embedBuilder.withTimestamp(TextUtils.parse(embed.timestamp, boost));
+        if (embed.title() != null)
+            embedBuilder.withTitle(TextUtils.parse(embed.title(), boost));
+        if (embed.description() != null)
+            embedBuilder.withDescription(TextUtils.parse(embed.description(), boost));
+        if (embed.color() != null)
+            embedBuilder.withColor(embed.color());
+        if (embed.timestamp() != null)
+            embedBuilder.withTimestamp(TextUtils.parse(embed.timestamp(), boost));
         List<Embed.EmbedField> fields = new ArrayList<>();
-        if (embed.fields != null) {
-            for (WebhooksConfig.DiscordEmbedField field : embed.fields) {
+        if (embed.fields() != null) {
+            for (DiscordEmbed.DiscordEmbedField field : embed.fields()) {
                 Embed.EmbedField embedField = new Embed.EmbedField();
-                if (field.name != null)
-                    embedField.setName(TextUtils.parse(field.name, boost));
-                if (field.value != null)
-                    embedField.setValue(TextUtils.parse(field.value, boost));
-                embedField.setInline(field.inline);
+                if (field.name() != null)
+                    embedField.setName(TextUtils.parse(field.name(), boost));
+                if (field.value() != null)
+                    embedField.setValue(TextUtils.parse(field.value(), boost));
+                embedField.setInline(field.inline());
                 fields.add(embedField);
             }
             embedBuilder.withFields(fields);
         }
-        if (embed.author != null) {
+        if (embed.author() != null) {
             Embed.Author author = new Embed.Author();
-            if (embed.author.name != null) author.setName(TextUtils.parse(embed.author.name, boost));
-            if (embed.author.icon_url != null) author.setIconUrl(TextUtils.parse(embed.author.icon_url, boost));
-            if (embed.author.url != null) author.setUrl(TextUtils.parse(embed.author.url, boost));
+            if (embed.author().name() != null) author.setName(TextUtils.parse(embed.author().name(), boost));
+            if (embed.author().icon_url() != null) author.setIconUrl(TextUtils.parse(embed.author().icon_url(), boost));
             embedBuilder.withAuthor(author);
         }
         return embedBuilder.build();
     }
 
     @Override
-    public void sendMessage(WebhooksConfig.DiscordEmbed embed, IBoost boost) {
+    public void sendMessage(DiscordEmbed embed, IBoost boost) {
         if (WEBHOOK_INSTANCE == null) return;
         try {
-            String userName = embed.author != null && embed.author.name != null
-                    ? embed.author.name
+            String userName = embed.author() != null && embed.author().name() != null
+                    ? embed.author().name()
                     : "Cobblemon Boosters";
-            String avatarUrl = embed.author != null && embed.author.icon_url != null
-                    ? embed.author.icon_url
+            String avatarUrl = embed.author() != null && embed.author().icon_url() != null
+                    ? embed.author().icon_url()
                     : "https://raw.githubusercontent.com/Matthiesen-dev/cobblemon-boosters/refs/heads/main/assets/logo.png";
 
             WEBHOOK_INSTANCE.sendMessage(message -> message

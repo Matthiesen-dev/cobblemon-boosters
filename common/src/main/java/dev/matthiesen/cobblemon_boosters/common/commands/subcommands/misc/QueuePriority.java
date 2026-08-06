@@ -4,10 +4,8 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
-import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
-import dev.matthiesen.cobblemon_boosters.common.config.CoreConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
@@ -57,35 +55,34 @@ public final class QueuePriority implements ISubCommand {
     }
 
     private int status(CommandContext<CommandSourceStack> ctx) {
-        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
-        var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages;
+        var config = BoostersConfig.CORE_SERVER_CONFIG;
         Util.sendMessage(ctx, String.format(
-                messages.queuePriorityStatus,
-                config.queuePriorityEnabled,
-                config.queuePriorityMode,
-                config.timePriorityDirection,
-                config.activePreemptionEnabled
+                config.messages_queuePriorityStatus.get(),
+                config.queuePriorityEnabled.getAsBoolean(),
+                config.queuePriorityMode.get(),
+                config.timePriorityDirection.get(),
+                config.activePreemptionEnabled.getAsBoolean()
         ));
         return 1;
     }
 
     private int enable(CommandContext<CommandSourceStack> ctx) {
         boolean enabled = BoolArgumentType.getBool(ctx, "enabled");
-        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
-        config.queuePriorityEnabled = enabled;
-        persistAndApplyChanges();
 
-        var message = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
+        BoostersConfig.CORE_SERVER_CONFIG.queuePriorityEnabled.set(enabled);
+        BoostersConfig.CORE_SERVER_CONFIG.queuePriorityEnabled.save();
+
+        var message = BoostersConfig.CORE_SERVER_CONFIG.messages_queuePriorityUpdated.get();
         Util.sendMessage(ctx, String.format(message, "enabled=" + enabled));
         return status(ctx);
     }
 
     private int mode(CommandContext<CommandSourceStack> ctx) {
         String value = StringArgumentType.getString(ctx, "mode");
-        String normalized = switch (value.toLowerCase()) {
-            case "fifo" -> BoostManager.QueuePriorityMode.FIFO.name();
-            case "multiplier" -> BoostManager.QueuePriorityMode.MULTIPLIER.name();
-            case "time" -> BoostManager.QueuePriorityMode.TIME_REMAINING.name();
+        BoostManager.QueuePriorityMode normalized = switch (value.toLowerCase()) {
+            case "fifo" -> BoostManager.QueuePriorityMode.FIFO;
+            case "multiplier" -> BoostManager.QueuePriorityMode.MULTIPLIER;
+            case "time" -> BoostManager.QueuePriorityMode.TIME_REMAINING;
             default -> null;
         };
 
@@ -94,31 +91,30 @@ public final class QueuePriority implements ISubCommand {
             return 0;
         }
 
-        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
-        config.queuePriorityMode = normalized;
-        persistAndApplyChanges();
+        BoostersConfig.CORE_SERVER_CONFIG.queuePriorityMode.set(normalized);
+        BoostersConfig.CORE_SERVER_CONFIG.queuePriorityMode.save();
 
-        var message = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
+        var message = BoostersConfig.CORE_SERVER_CONFIG.messages_queuePriorityUpdated.get();
         Util.sendMessage(ctx, String.format(message, "mode=" + normalized));
         return status(ctx);
     }
 
     private int preemption(CommandContext<CommandSourceStack> ctx) {
         boolean enabled = BoolArgumentType.getBool(ctx, "enabled");
-        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
-        config.activePreemptionEnabled = enabled;
-        persistAndApplyChanges();
 
-        var message = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
+        BoostersConfig.CORE_SERVER_CONFIG.activePreemptionEnabled.set(enabled);
+        BoostersConfig.CORE_SERVER_CONFIG.activePreemptionEnabled.save();
+
+        var message = BoostersConfig.CORE_SERVER_CONFIG.messages_queuePriorityUpdated.get();
         Util.sendMessage(ctx, String.format(message, "activePreemptionEnabled=" + enabled));
         return status(ctx);
     }
 
     private int timeDirection(CommandContext<CommandSourceStack> ctx) {
         String value = StringArgumentType.getString(ctx, "direction");
-        String normalized = switch (value.toLowerCase()) {
-            case "shortest" -> BoostManager.TimePriorityDirection.SHORTEST_FIRST.name();
-            case "longest" -> BoostManager.TimePriorityDirection.LONGEST_FIRST.name();
+        BoostManager.TimePriorityDirection normalized = switch (value.toLowerCase()) {
+            case "shortest" -> BoostManager.TimePriorityDirection.SHORTEST_FIRST;
+            case "longest" -> BoostManager.TimePriorityDirection.LONGEST_FIRST;
             default -> null;
         };
 
@@ -127,18 +123,11 @@ public final class QueuePriority implements ISubCommand {
             return 0;
         }
 
-        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
-        config.timePriorityDirection = normalized;
-        persistAndApplyChanges();
+        BoostersConfig.CORE_SERVER_CONFIG.timePriorityDirection.set(normalized);
+        BoostersConfig.CORE_SERVER_CONFIG.timePriorityDirection.save();
 
-        var message = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.queuePriorityUpdated;
+        var message = BoostersConfig.CORE_SERVER_CONFIG.messages_queuePriorityUpdated.get();
         Util.sendMessage(ctx, String.format(message, "timePriorityDirection=" + normalized));
         return status(ctx);
-    }
-
-    private void persistAndApplyChanges() {
-        CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().saveConfig();
-        BoostManager.reapplyQueuePriorities();
-        CacheConfig.setGlobalBoostData();
     }
 }

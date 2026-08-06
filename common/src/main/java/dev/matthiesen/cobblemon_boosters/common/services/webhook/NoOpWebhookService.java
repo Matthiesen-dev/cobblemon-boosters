@@ -1,7 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.services.webhook;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.cobblemon_boosters.common.config.WebhooksConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IWebhookService;
 
@@ -11,7 +11,7 @@ public final class NoOpWebhookService implements IWebhookService {
     }
 
     @Override
-    public void sendMessage(WebhooksConfig.DiscordEmbed embed, IBoost boost) {
+    public void sendMessage(DiscordEmbed embed, IBoost boost) {
         // No operation performed, as this is a no-op implementation.
     }
 }

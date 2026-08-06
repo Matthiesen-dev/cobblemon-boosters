@@ -10,21 +10,21 @@ import com.cobblemon.mod.common.api.reactive.EventObservable;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
-import dev.matthiesen.cobblemon_boosters.common.config.CoreConfig;
 import dev.matthiesen.cobblemon_boosters.common.boosts.CatchBoost;
 import dev.matthiesen.cobblemon_boosters.common.boosts.ExperienceBoost;
 import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
 import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.utils.SpawnBucketOverrideSelector;
+import dev.matthiesen.matthiesen_core.common.api.events.server.PlayerEvent;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -38,8 +38,8 @@ public final class BoostManager {
                     (boost, event) ->
                             event.addModificationFunction(((rate, player, pokemon) ->
                                     Math.max(rate / boost.getMultiplier(), 1))),
-                    CobblemonBoostersCommon.INSTANCE.getCacheConfigManager().getConfig().activeShinyBoost,
-                    CobblemonBoostersCommon.INSTANCE.getCacheConfigManager().getConfig().queuedShinyBoosts
+                    BoostersConfig.getActiveShinyBoost(),
+                    BoostersConfig.getQueuedShinyBoosts()
             );
     private static final BoostRecord<CatchBoost, PokemonCatchRateEvent> CATCH_RECORD =
             new BoostRecord<>(
@@ -49,8 +49,8 @@ public final class BoostManager {
                         float baseCatchRate = event.getCatchRate();
                         event.setCatchRate(Math.min(baseCatchRate * boost.getMultiplier(), 255F));
                     },
-                    CobblemonBoostersCommon.INSTANCE.getCacheConfigManager().getConfig().activeCatchBoost,
-                    CobblemonBoostersCommon.INSTANCE.getCacheConfigManager().getConfig().queuedCatchBoosts
+                    BoostersConfig.getActiveCatchBoost(),
+                    BoostersConfig.getQueuedCatchBoosts()
             );
     private static final BoostRecord<ExperienceBoost, ExperienceGainedEvent.Pre> EXPERIENCE_RECORD =
             new BoostRecord<>(
@@ -60,8 +60,8 @@ public final class BoostManager {
                         int exp = event.getExperience();
                         event.setExperience(Math.round(exp * boost.getMultiplier()));
                     },
-                    CobblemonBoostersCommon.INSTANCE.getCacheConfigManager().getConfig().activeExperienceBoost,
-                    CobblemonBoostersCommon.INSTANCE.getCacheConfigManager().getConfig().queuedExperienceBoosts
+                    BoostersConfig.getActiveExperienceBoost(),
+                    BoostersConfig.getQueuedExperienceBoosts()
             );
     private static final BoostRecord<SpawnBucketBoost, SpawnBucketChosenEvent> SPAWN_BUCKET_RECORD =
             new BoostRecord<>(
@@ -71,8 +71,8 @@ public final class BoostManager {
                         SpawnBucket newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, boost);
                         event.setBucket(newBucket);
                     },
-                    CobblemonBoostersCommon.INSTANCE.getCacheConfigManager().getConfig().activeSpawnBucketBoost,
-                    CobblemonBoostersCommon.INSTANCE.getCacheConfigManager().getConfig().queuedSpawnBucketBoosts
+                    BoostersConfig.getActiveSpawnBucketBoost(),
+                    BoostersConfig.getQueuedSpawnBucketBoosts()
             );
 
     public static void init() {}
@@ -108,12 +108,20 @@ public final class BoostManager {
         }
     }
 
+    public static void onPlayerJoin(PlayerEvent.Join event) {
+        appendPlayer(event.player());
+    }
+
     public static void clearPlayer(ServerPlayer player) {
         try {
             ServiceManager.getDisplayService().onPlayerLeave(player);
         } catch (RuntimeException e) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Error clearing player from boosts in BoostManager", e);
         }
+    }
+
+    public static void onPlayerLeave(PlayerEvent.Leave event) {
+        clearPlayer(event.player());
     }
 
     /** All currently-active boosts in a stable order (shiny, catch, experience, spawn bucket). */
@@ -169,7 +177,7 @@ public final class BoostManager {
             this.eventHandler = eventHandler;
             if (!queue.isEmpty()) {
                 this.queue = new LinkedList<>(queue);
-                if (CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig().verboseCacheLogging) {
+                if (BoostersConfig.CORE_SERVER_CONFIG.verboseCacheLogging.getAsBoolean()) {
                     CobblemonBoostersCommon.INSTANCE.createInfoLog("Re-Initializing BoostRecord for " + boostClass.getSimpleName() + " with non-empty queue. Queue size: " + queue.size());
                 }
             } else {
@@ -177,7 +185,7 @@ public final class BoostManager {
             }
             if (activeBoost != null) {
                 this.active = activeBoost;
-                if (CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig().verboseCacheLogging) {
+                if (BoostersConfig.CORE_SERVER_CONFIG.verboseCacheLogging.getAsBoolean()) {
                     CobblemonBoostersCommon.INSTANCE.createInfoLog("Re-Initialized BoostRecord for " + boostClass.getSimpleName() + " with active boost: " + activeBoost.getMultiplier());
                 }
             } else {
@@ -323,56 +331,23 @@ public final class BoostManager {
     }
 
     private static QueuePrioritySettings getQueuePrioritySettings() {
-        CoreConfig config = CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig();
-        if (config == null) {
-            return QueuePrioritySettings.defaults();
-        }
-
         return new QueuePrioritySettings(
-                config.queuePriorityEnabled,
-                QueuePriorityMode.fromString(config.queuePriorityMode),
-                TimePriorityDirection.fromString(config.timePriorityDirection),
-                config.activePreemptionEnabled
+                BoostersConfig.CORE_SERVER_CONFIG.queuePriorityEnabled.getAsBoolean(),
+                BoostersConfig.CORE_SERVER_CONFIG.queuePriorityMode.get(),
+                BoostersConfig.CORE_SERVER_CONFIG.timePriorityDirection.get(),
+                BoostersConfig.CORE_SERVER_CONFIG.activePreemptionEnabled.getAsBoolean()
         );
     }
 
     public enum QueuePriorityMode {
         FIFO,
         MULTIPLIER,
-        TIME_REMAINING;
-
-        public static QueuePriorityMode fromString(String value) {
-            if (value == null) {
-                return FIFO;
-            }
-
-            String normalized = value.trim().toUpperCase(Locale.ROOT);
-            for (QueuePriorityMode mode : values()) {
-                if (mode.name().equals(normalized)) {
-                    return mode;
-                }
-            }
-            return FIFO;
-        }
+        TIME_REMAINING
     }
 
     public enum TimePriorityDirection {
         SHORTEST_FIRST,
-        LONGEST_FIRST;
-
-        public static TimePriorityDirection fromString(String value) {
-            if (value == null) {
-                return SHORTEST_FIRST;
-            }
-
-            String normalized = value.trim().toUpperCase(Locale.ROOT);
-            for (TimePriorityDirection direction : values()) {
-                if (direction.name().equals(normalized)) {
-                    return direction;
-                }
-            }
-            return SHORTEST_FIRST;
-        }
+        LONGEST_FIRST
     }
 
     private record QueuePrioritySettings(
@@ -381,8 +356,5 @@ public final class BoostManager {
             TimePriorityDirection timeDirection,
             boolean activePreemptionEnabled
     ) {
-        private static QueuePrioritySettings defaults() {
-            return new QueuePrioritySettings(false, QueuePriorityMode.FIFO, TimePriorityDirection.SHORTEST_FIRST, false);
-        }
     }
 }

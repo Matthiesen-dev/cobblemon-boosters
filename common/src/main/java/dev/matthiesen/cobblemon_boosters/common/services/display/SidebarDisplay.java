@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.services.display;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostDisplayService;
 import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
@@ -107,7 +108,7 @@ public final class SidebarDisplay implements IBoostDisplayService {
     private Objective ensureObjective(ServerScoreboard scoreboard) {
         Objective objective = scoreboard.getObjective(OBJECTIVE_NAME);
         var title = TextUtils.deserialize(TextUtils.parse(
-                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.sidebarTitle));
+                BoostersConfig.CORE_SERVER_CONFIG.messages_sidebarTitle.get()));
 
         if (objective == null) {
             objective = scoreboard.addObjective(

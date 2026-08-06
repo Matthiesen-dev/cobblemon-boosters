@@ -18,6 +18,8 @@ chances of finding Shiny Pokemon, or increases the catch rate!
 
 - [Matthiesen Core](https://www.modrinth.com/mod/matthiesen-core)
 - [Cobblemon](https://www.modrinth.com/mod/cobblemon)
+- [Fabric API](https://modrinth.com/mod/fabric-api) (Fabric only)
+- [Forge Config API Port](https://modrinth.com/mod/forge-config-api-port) (Fabric only)
 
 ### Optional Dependencies
 - [Matthiesen Core Webhooks](https://modrinth.com/project/XP5CfD30) - Used for sending Discord webhooks when boosters are started or stopped.

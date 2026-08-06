@@ -3,8 +3,8 @@ package dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
@@ -55,22 +55,22 @@ public final class CheckQueues implements ISubCommand {
             case "bucket" -> Util.handleQueueResponse(
                     ctx,
                     BoostManager.getSpawnBucketBoostManager().getQueue(),
-                    CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages
+                    BoostersConfig.getSpawnBucketMessages()
             );
             case "catch" -> Util.handleQueueResponse(
                     ctx,
                     BoostManager.getCatchBoostManager().getQueue(),
-                    CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages
+                    BoostersConfig.getCatchMessages()
             );
             case "experience" -> Util.handleQueueResponse(
                     ctx,
                     BoostManager.getExperienceBoostManager().getQueue(),
-                    CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages
+                    BoostersConfig.getExperienceMessages()
             );
             case "shiny" -> Util.handleQueueResponse(
                     ctx,
                     BoostManager.getShinyBoostManager().getQueue(),
-                    CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages
+                    BoostersConfig.getShinyMessages()
             );
             default -> Util.sendMessage(ctx, "%prefix% &cUnknown booster type. Valid types are: " + String.join(", ", Constants.CURRENT_BOOSTERS) + ".");
         }

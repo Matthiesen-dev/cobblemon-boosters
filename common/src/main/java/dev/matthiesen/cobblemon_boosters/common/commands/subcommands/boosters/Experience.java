@@ -6,9 +6,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
-import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
 import dev.matthiesen.cobblemon_boosters.common.boosts.ExperienceBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
@@ -53,17 +54,17 @@ public final class Experience implements ISubCommand {
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
         BoostManager.IBoostManager<ExperienceBoost> manager = BoostManager.getExperienceBoostManager();
-        var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
+        var messages = BoostersConfig.getExperienceMessages();
         ExperienceBoost boost = new ExperienceBoost(multiplier, totalSeconds);
         manager.appendToQueue(boost);
-        Util.sendMessage(ctx, messages.boostAddedToQueued, boost);
-        CacheConfig.setGlobalBoostData();
+        Util.sendMessage(ctx, messages.boostAddedToQueue(), boost);
+        CacheServerConfig.setGlobalBoostData();
         return 1;
     }
 
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
         try {
-            var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
+            var messages = BoostersConfig.getExperienceMessages();
             Util.handleStopCommand(ctx, BoostManager.getExperienceBoostManager().getActive(), messages);
         } catch (RuntimeException e) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop experience boost", e);
@@ -72,7 +73,7 @@ public final class Experience implements ISubCommand {
     }
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-        var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages;
+        var messages = BoostersConfig.getExperienceMessages();
         Util.handleStatusCommand(ctx, BoostManager.getExperienceBoostManager().getActive(), messages);
         return 1;
     }

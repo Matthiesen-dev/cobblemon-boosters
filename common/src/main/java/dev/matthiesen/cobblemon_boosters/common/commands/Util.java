@@ -7,7 +7,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.config.MessagesConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
@@ -19,20 +19,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Queue;
 
 public final class Util {
-    public static void handleStopCommand(CommandContext<CommandSourceStack> ctx, IBoost active, MessagesConfig.BoostMessagesConfig messagesConfig) {
+    public static void handleStopCommand(CommandContext<CommandSourceStack> ctx, IBoost active, BoostMessagesConfig messagesConfig) {
         if (active == null) {
-            sendMessage(ctx, messagesConfig.noActiveBoosts);
+            sendMessage(ctx, messagesConfig.noActiveBoosts());
             return;
         }
         active.setTimeRemaining(1);
-        sendMessage(ctx, messagesConfig.boostStopped, active);
+        sendMessage(ctx, messagesConfig.boostStopped(), active);
     }
 
-    public static void handleStatusCommand(CommandContext<CommandSourceStack> ctx, IBoost active, MessagesConfig.BoostMessagesConfig messagesConfig) {
+    public static void handleStatusCommand(CommandContext<CommandSourceStack> ctx, IBoost active, BoostMessagesConfig messagesConfig) {
         if (active != null) {
-            sendMessage(ctx, messagesConfig.boostInfo, active);
+            sendMessage(ctx, messagesConfig.boostInfo(), active);
         } else {
-            sendMessage(ctx, messagesConfig.noActiveBoosts);
+            sendMessage(ctx, messagesConfig.noActiveBoosts());
         }
     }
 
@@ -41,12 +41,12 @@ public final class Util {
         sendMessage(ctx, clearedMessage);
     }
 
-    public static void handleQueueResponse(CommandContext<CommandSourceStack> ctx, Queue<? extends IBoost> queue, MessagesConfig.BoostMessagesConfig messagesConfig) {
+    public static void handleQueueResponse(CommandContext<CommandSourceStack> ctx, Queue<? extends IBoost> queue, BoostMessagesConfig messagesConfig) {
         if (queue.isEmpty()) {
-            sendMessage(ctx, messagesConfig.noQueuedBoosts);
+            sendMessage(ctx, messagesConfig.noQueuedBoosts());
         } else {
             for (IBoost iBoost : queue) {
-                sendMessage(ctx, messagesConfig.boostInfo, iBoost);
+                sendMessage(ctx, messagesConfig.boostInfo(), iBoost);
             }
         }
     }

@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.boosts;
 
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.utils.BoostersItemBuilder;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
@@ -10,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
+import java.util.Optional;
 
 public final class SpawnBucketBoost implements IBoost {
     public float multiplier;
@@ -22,7 +24,33 @@ public final class SpawnBucketBoost implements IBoost {
         this.multiplier = multiplier;
         this.duration = duration;
         this.timeRemaining = duration * 20L;
-        this.bossBar = createBossBar();
+    }
+
+    public SpawnBucketBoost(float multiplier, int duration, long timeRemaining, String bucket) {
+        this.multiplier = multiplier;
+        this.duration = duration;
+        this.timeRemaining = timeRemaining;
+        this.bucket = bucket;
+    }
+
+    public static Optional<SpawnBucketBoost> fromString(String raw) {
+        try {
+            String[] parts = raw.split(";");
+            if (parts.length != 4) return Optional.empty();
+
+            float multiplier = Float.parseFloat(parts[0]);
+            int duration = Integer.parseInt(parts[1]);
+            long timeRemaining = Long.parseLong(parts[2]);
+            String bucket = parts[3];
+
+            return Optional.of(new SpawnBucketBoost(multiplier, duration, timeRemaining, bucket));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public String serialize() {
+        return multiplier + ";" + duration + ";" + timeRemaining + ";" + bucket;
     }
 
     @Override
@@ -63,7 +91,6 @@ public final class SpawnBucketBoost implements IBoost {
     public void setDuration(int duration) {
         this.duration = duration;
         this.timeRemaining = duration * 20L;
-        this.bossBar = createBossBar();
     }
 
     public String getBucketDisplayName() {
@@ -88,12 +115,16 @@ public final class SpawnBucketBoost implements IBoost {
         return this.bossBar.getBuilder();
     }
 
+    private BoostMessagesConfig getMessages() {
+        return BoostersConfig.getSpawnBucketMessages();
+    }
+
     private BossBar createBossBar() {
         return new BossBar(
                 getBossBarText(),
                 1F,
-                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.barColor,
-                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.barOverlay
+                getMessages().barColor(),
+                getMessages().barOverlay()
         );
     }
 
@@ -101,7 +132,7 @@ public final class SpawnBucketBoost implements IBoost {
     public Component getBossBarText() {
         return TextUtils.deserialize(
                 TextUtils.parse(
-                        CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.barText,
+                        getMessages().barText(),
                         this
                 )
         );
@@ -109,8 +140,8 @@ public final class SpawnBucketBoost implements IBoost {
 
     @Override
     public Component getSidebarText() {
-        var cfg = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages;
-        String format = (cfg.sidebarLine == null || cfg.sidebarLine.isBlank()) ? cfg.barText : cfg.sidebarLine;
+        var cfg = getMessages();
+        String format = (cfg.sidebarLine() == null || cfg.sidebarLine().isBlank()) ? cfg.barText() : cfg.sidebarLine();
         return TextUtils.deserialize(TextUtils.parse(format, this));
     }
 
