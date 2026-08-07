@@ -58,6 +58,7 @@ public final class WebhooksServerConfig {
         builder.comment("Bucket Event Webhook Configuration").push("bucketEvent");
         builder.comment("Bucket Start Event").push("bucketStart");
         bucket_start_title = builder.comment("The title of the Discord webhook message for the start of a Spawn Bucket Boost event")
+                .translation("cobblemon_boosters.configuration.webhook_title")
                 .define("title", "Spawn Bucket Event Started!");
         bucket_start_description = builder.comment("The description of the Discord webhook message for the start of a Spawn Bucket Boost event")
                 .define("description", "A new Spawn Bucket Boost event has started! Here are the details:");
@@ -66,6 +67,7 @@ public final class WebhooksServerConfig {
         builder.pop();
         builder.comment("Bucket End Event").push("bucketEnd");
         bucket_end_title = builder.comment("The title of the Discord webhook message for the end of a Spawn Bucket Boost event")
+                .translation("cobblemon_boosters.configuration.webhook_title")
                 .define("title", "Spawn Bucket Event Ended!");
         bucket_end_description = builder.comment("The description of the Discord webhook message for the end of a Spawn Bucket Boost event")
                 .define("description", "The %bucket% Spawn Bucket Boost event has ended!");
@@ -77,6 +79,7 @@ public final class WebhooksServerConfig {
         builder.comment("Catch Event Webhook Configuration").push("catchEvent");
         builder.comment("Catch Start Event").push("catchStart");
         catch_start_title = builder.comment("The title of the Discord webhook message for the start of a Catch Boost event")
+                .translation("cobblemon_boosters.configuration.webhook_title")
                 .define("title", "Catch Event Started!");
         catch_start_description = builder.comment("The description of the Discord webhook message for the start of a Catch Boost event")
                 .define("description", "A new Catch Boost event has started! Here are the details:");
@@ -85,6 +88,7 @@ public final class WebhooksServerConfig {
         builder.pop();
         builder.comment("Catch End Event").push("catchEnd");
         catch_end_title = builder.comment("The title of the Discord webhook message for the end of a Catch Boost event")
+                .translation("cobblemon_boosters.configuration.webhook_title")
                 .define("title", "Catch Event Ended!");
         catch_end_description = builder.comment("The description of the Discord webhook message for the end of a Catch Boost event")
                 .define("description", "The %multiplier%x Catch Boost event has ended!");
@@ -96,6 +100,7 @@ public final class WebhooksServerConfig {
         builder.comment("Experience Event Webhook Configuration").push("experienceEvent");
         builder.comment("Experience Start Event").push("experienceStart");
         experience_start_title = builder.comment("The title of the Discord webhook message for the start of an Experience Boost event")
+                .translation("cobblemon_boosters.configuration.webhook_title")
                 .define("title", "Experience Event Started!");
         experience_start_description = builder.comment("The description of the Discord webhook message for the start of an Experience Boost event")
                 .define("description", "A new Experience Boost event has started! Here are the details:");
@@ -104,6 +109,7 @@ public final class WebhooksServerConfig {
         builder.pop();
         builder.comment("Experience End Event").push("experienceEnd");
         experience_end_title = builder.comment("The title of the Discord webhook message for the end of an Experience Boost event")
+                .translation("cobblemon_boosters.configuration.webhook_title")
                 .define("title", "Experience Event Ended!");
         experience_end_description = builder.comment("The description of the Discord webhook message for the end of an Experience Boost event")
                 .define("description", "The %multiplier%x Experience Boost event has ended!");
@@ -115,6 +121,7 @@ public final class WebhooksServerConfig {
         builder.comment("Shiny Event Webhook Configuration").push("shinyEvent");
         builder.comment("Shiny Start Event").push("shinyStart");
         shiny_start_title = builder.comment("The title of the Discord webhook message for the start of a Shiny Boost event")
+                .translation("cobblemon_boosters.configuration.webhook_title")
                 .define("title", "Shiny Event Started!");
         shiny_start_description = builder.comment("The description of the Discord webhook message for the start of a Shiny Boost event")
                 .define("description", "A new Shiny Boost event has started! Here are the details:");
@@ -123,6 +130,7 @@ public final class WebhooksServerConfig {
         builder.pop();
         builder.comment("Shiny End Event").push("shinyEnd");
         shiny_end_title = builder.comment("The title of the Discord webhook message for the end of a Shiny Boost event")
+                .translation("cobblemon_boosters.configuration.webhook_title")
                 .define("title", "Shiny Event Ended!");
         shiny_end_description = builder.comment("The description of the Discord webhook message for the end of a Shiny Boost event")
                 .define("description", "The %multiplier%x Shiny Boost event has ended!");

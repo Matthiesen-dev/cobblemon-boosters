@@ -45,14 +45,18 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         PlatformEvents.PLAYER_LEAVE.subscribe(BoostManager::onPlayerLeave);
     }
 
+    private boolean isServerRunning = false;
+
     public void onServerStarted(ServerEvent.Started event) {
         createInfoLog("Server starting, initializing Cobblemon Boosters");
+        isServerRunning = true;
         reloadTask();
         BoostManager.setupSubscriptions();
         ServiceManager.init();
     }
 
     public void onServerReload(ServerEvent.Reload event) {
+        if (!isServerRunning) return;
         CacheServerConfig.setGlobalBoostData();
         CacheServerConfig.loadFromConfig();
         BoostManager.reapplyQueuePriorities();
@@ -62,6 +66,7 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
 
     public void onServerStopping(ServerEvent.Stopping event) {
         createInfoLog("Server stopping, shutting down");
+        if (!isServerRunning) return;
         CacheServerConfig.setGlobalBoostData();
         BoostManager.teardownSubscriptions();
     }

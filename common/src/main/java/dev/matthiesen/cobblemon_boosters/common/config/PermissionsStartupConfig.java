@@ -73,7 +73,7 @@ public final class PermissionsStartupConfig {
         command_boosters_experience_stop = builder.comment("Permission level required to use the '/boosters experience stop' command", "Permission Node: 'cobblemon_boosters.command.boosters.experience.stop'")
                 .defineInRange("experience_stop", PermissionLevel.ALL_COMMANDS.getLevel(), 0, 4);
         command_boosters_experience_status = builder.comment("Permission level required to use the '/boosters experience status' command", "Permission Node: 'cobblemon_boosters.command.boosters.experience.status'")
-                .defineInRange("experience_status", PermissionLevel.ALL_COMMANDS.getLevel(), 0, 4);
+                .defineInRange("experience_status", PermissionLevel.NONE.getLevel(), 0, 4);
         builder.pop();
 
         builder.comment("Shiny Permissions").push("shiny");
