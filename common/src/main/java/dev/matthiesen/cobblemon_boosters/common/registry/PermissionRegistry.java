@@ -14,83 +14,83 @@ public final class PermissionRegistry {
     public static class Permissions {
         public Permission RELOAD_PERMISSION = toModPerm(
                 "command.boosters.reload",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_reload.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_reload.get().getLevel()
         );
         public Permission CATCH_PERMISSION = toModPerm(
                 "command.boosters.catch",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_catch.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_catch.get().getLevel()
         );
         public Permission CATCH_START_PERMISSION = toModPerm(
                 "command.boosters.catch.start",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_catch_start.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_catch_start.get().getLevel()
         );
         public Permission CATCH_STOP_PERMISSION = toModPerm(
                 "command.boosters.catch.stop",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_catch_stop.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_catch_stop.get().getLevel()
         );
         public Permission CATCH_STATUS_PERMISSION = toModPerm(
                 "command.boosters.catch.status",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_catch_status.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_catch_status.get().getLevel()
         );
         public Permission EXPERIENCE_PERMISSION = toModPerm(
                 "command.boosters.experience",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_experience.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_experience.get().getLevel()
         );
         public Permission EXPERIENCE_START_PERMISSION = toModPerm(
                 "command.boosters.experience.start",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_experience_start.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_experience_start.get().getLevel()
         );
         public Permission EXPERIENCE_STOP_PERMISSION = toModPerm(
                 "command.boosters.experience.stop",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_experience_stop.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_experience_stop.get().getLevel()
         );
         public Permission EXPERIENCE_STATUS_PERMISSION = toModPerm(
                 "command.boosters.experience.status",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_experience_status.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_experience_status.get().getLevel()
         );
         public Permission SHINY_PERMISSION = toModPerm(
                 "command.boosters.shiny",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_shiny.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_shiny.get().getLevel()
         );
         public Permission SHINY_START_PERMISSION = toModPerm(
                 "command.boosters.shiny.start",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_shiny_start.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_shiny_start.get().getLevel()
         );
         public Permission SHINY_STOP_PERMISSION = toModPerm(
                 "command.boosters.shiny.stop",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_shiny_stop.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_shiny_stop.get().getLevel()
         );
         public Permission SHINY_STATUS_PERMISSION = toModPerm(
                 "command.boosters.shiny.status",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_shiny_status.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_shiny_status.get().getLevel()
         );
         public Permission BUCKET_PERMISSION = toModPerm(
                 "command.boosters.bucket",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_bucket.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_bucket.get().getLevel()
         );
         public Permission BUCKET_START_PERMISSION = toModPerm(
                 "command.boosters.bucket.start",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_bucket_start.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_bucket_start.get().getLevel()
         );
         public Permission BUCKET_STOP_PERMISSION = toModPerm(
                 "command.boosters.bucket.stop",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_bucket_stop.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_bucket_stop.get().getLevel()
         );
         public Permission BUCKET_STATUS_PERMISSION = toModPerm(
                 "command.boosters.bucket.status",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_bucket_status.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_bucket_status.get().getLevel()
         );
         public Permission CLEAR_QUEUES_PERMISSION = toModPerm(
                 "command.boosters.clear_queues",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_clearQueues.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_clearQueues.get().getLevel()
         );
         public Permission CHECK_QUEUE_PERMISSION = toModPerm(
                 "command.boosters.check_queue",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_checkQueues.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_checkQueues.get().getLevel()
         );
         public Permission QUEUE_PRIORITY_PERMISSION = toModPerm(
                 "command.boosters.queue_priority",
-                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_queuePriority.getAsInt()
+                BoostersConfig.PERMISSIONS_STARTUP_CONFIG.command_boosters_queuePriority.get().getLevel()
         );
     }
 
