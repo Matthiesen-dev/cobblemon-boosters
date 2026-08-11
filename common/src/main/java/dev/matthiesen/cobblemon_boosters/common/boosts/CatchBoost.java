@@ -1,13 +1,16 @@
 package dev.matthiesen.cobblemon_boosters.common.boosts;
 
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.utils.BoostersItemBuilder;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
-import dev.matthiesen.common.matthiesen_lib_api.utility.BossBar;
+import dev.matthiesen.matthiesen_core.common.utility.BossBar;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Optional;
 
 public final class CatchBoost implements IBoost {
     public float multiplier;
@@ -15,11 +18,35 @@ public final class CatchBoost implements IBoost {
     public long timeRemaining;
     public transient BossBar bossBar;
 
+    public CatchBoost(float multiplier, int duration, long timeRemaining) {
+        this.multiplier = multiplier;
+        this.duration = duration;
+        this.timeRemaining = timeRemaining;
+    }
+
     public CatchBoost(float multiplier, int duration) {
         this.multiplier = multiplier;
         this.duration = duration;
         this.timeRemaining = duration * 20L;
-        this.bossBar = createBossBar();
+    }
+
+    public static Optional<CatchBoost> fromString(String raw) {
+        try {
+            String[] parts = raw.split(";");
+            if (parts.length != 3) return Optional.empty();
+
+            float multiplier = Float.parseFloat(parts[0]);
+            int duration = Integer.parseInt(parts[1]);
+            long timeRemaining = Long.parseLong(parts[2]);
+
+            return Optional.of(new CatchBoost(multiplier, duration, timeRemaining));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public String serialize() {
+        return multiplier + ";" + duration + ";" + timeRemaining;
     }
 
     @Override
@@ -36,7 +63,6 @@ public final class CatchBoost implements IBoost {
     public void setDuration(int duration) {
         this.duration = duration;
         this.timeRemaining = duration * 20L;
-        this.bossBar = createBossBar();
     }
 
     @Override
@@ -62,12 +88,16 @@ public final class CatchBoost implements IBoost {
         return this.bossBar.getBuilder();
     }
 
+    private BoostMessagesConfig getMessages() {
+        return BoostersConfig.getCatchMessages();
+    }
+
     private BossBar createBossBar() {
         return new BossBar(
                 getBossBarText(),
                 1F,
-                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.barColor,
-                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.barOverlay
+                getMessages().barColor(),
+                getMessages().barOverlay()
         );
     }
 
@@ -75,7 +105,7 @@ public final class CatchBoost implements IBoost {
     public Component getBossBarText() {
         return TextUtils.deserialize(
                 TextUtils.parse(
-                        CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.barText,
+                        getMessages().barText(),
                         this
                 )
         );
@@ -83,8 +113,8 @@ public final class CatchBoost implements IBoost {
 
     @Override
     public Component getSidebarText() {
-        var cfg = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages;
-        String format = (cfg.sidebarLine == null || cfg.sidebarLine.isBlank()) ? cfg.barText : cfg.sidebarLine;
+        var cfg = getMessages();
+        String format = (cfg.sidebarLine() == null || cfg.sidebarLine().isBlank()) ? cfg.barText() : cfg.sidebarLine();
         return TextUtils.deserialize(TextUtils.parse(format, this));
     }
 

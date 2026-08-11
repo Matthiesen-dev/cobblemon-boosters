@@ -2,6 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common.services;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.BoostDisplayMode;
 import dev.matthiesen.cobblemon_boosters.common.services.display.BossBarDisplay;
 import dev.matthiesen.cobblemon_boosters.common.services.display.NoOpDisplay;
@@ -53,19 +54,19 @@ public final class ServiceManager {
     }
 
     public static void loadCompat() {
-        if (CobblemonBoostersCommon.INSTANCE.isModLoaded(Constants.COMPAT.GOOEYLIBS)) {
+        if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(Constants.COMPAT.GOOEYLIBS)) {
             guiAdapter = new GooeyGUIAdapter();
         } else {
             guiAdapter = new FallbackGUIAdapter();
         }
 
-        if (CobblemonBoostersCommon.INSTANCE.isModLoaded(Constants.COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
+        if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(Constants.COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
             discordWebhookService = new DiscordWebhookService();
         } else {
             discordWebhookService = new NoOpWebhookService();
         }
 
-        cobbreedingAvailable = CobblemonBoostersCommon.INSTANCE.isModLoaded(Constants.COMPAT.COBBREEDING);
+        cobbreedingAvailable = CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(Constants.COMPAT.COBBREEDING);
     }
 
     /**
@@ -75,12 +76,12 @@ public final class ServiceManager {
      * active boosts are re-shown under the new one.
      */
     public static void applyDisplayMode() {
-        BoostDisplayMode mode = BoostDisplayMode.fromString(CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig().displayMode);
+        BoostDisplayMode mode = BoostersConfig.CORE_SERVER_CONFIG.displayMode.get();
         if (displayService != null && mode == displayMode) {
             return;
         }
 
-        MinecraftServer server = CobblemonBoostersCommon.INSTANCE.getMinecraftServer();
+        MinecraftServer server = CobblemonBoostersCommon.INSTANCE.getCommonUtils().getServer();
         if (displayService != null) {
             displayService.shutdown(server);
         }

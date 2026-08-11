@@ -3,7 +3,8 @@ package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens;
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
@@ -42,29 +43,28 @@ public final class AdminGui extends BaseMenuGuiTemplate {
     }
 
     private void getQueuesAndClear() {
-        var messages = CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages;
         List<QueueListEntry> queueEntries = new ArrayList<>();
         queueEntries.add(new QueueListEntry(
                 BoostManager.getShinyBoostManager().getQueue(),
-                messages.shinyMessages.boostQueueCleared
+                BoostersConfig.CORE_SERVER_CONFIG.messages_shiny_boostQueueCleared.get()
         ));
         queueEntries.add(new QueueListEntry(
                 BoostManager.getCatchBoostManager().getQueue(),
-                messages.catchBoostMessages.boostQueueCleared
+                BoostersConfig.CORE_SERVER_CONFIG.messages_catch_boostQueueCleared.get()
         ));
         queueEntries.add(new QueueListEntry(
                 BoostManager.getExperienceBoostManager().getQueue(),
-                messages.experienceBoostMessages.boostQueueCleared
+                BoostersConfig.CORE_SERVER_CONFIG.messages_experience_boostQueueCleared.get()
         ));
         queueEntries.add(new QueueListEntry(
                 BoostManager.getSpawnBucketBoostManager().getQueue(),
-                messages.spawnBucketBoostMessages.boostQueueCleared
+                BoostersConfig.CORE_SERVER_CONFIG.messages_spawnBucket_boostQueueCleared.get()
         ));
         for (QueueListEntry entry : queueEntries) {
             entry.queueEntry.clear();
             sendPlayerMessage(entry.clearedMessage);
         }
-        CacheConfig.setGlobalBoostData();
+        CacheServerConfig.setGlobalBoostData();
     }
 
     @Override
@@ -80,8 +80,8 @@ public final class AdminGui extends BaseMenuGuiTemplate {
                             player,
                             "&cConfirm to reload",
                             () -> {
-                                CobblemonBoostersCommon.INSTANCE.reloadTask(true);
-                                sendPlayerMessage(CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.commandReload);
+                                CobblemonBoostersCommon.INSTANCE.reloadTask();
+                                sendPlayerMessage(BoostersConfig.CORE_SERVER_CONFIG.messages_commandReload.get());
                                 close();
                             },
                             this::open

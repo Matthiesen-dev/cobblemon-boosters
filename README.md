@@ -1,7 +1,7 @@
 # Cobblemon Boosters
 
 <div>
-  <img src="https://mods.matthiesen.dev/badges/matthiesenLibAPI.svg" alt="Matthiesen Lib API">
+  <img src="https://mods.matthiesen.dev/badges/matthiesenCore.svg" alt="Matthiesen Core">
   <img src="https://mods.matthiesen.dev/badges/cobblemon.svg" alt="Cobblemon">
 </div>
 
@@ -15,11 +15,14 @@ chances of finding Shiny Pokemon, or increases the catch rate!
 - **Spawn Bucket Boosters**: Increases the spawn rates for Pokemon in a specific spawn bucket for all players on the server.
 
 ## Requirements
-- [Cobblemon 1.7.3+1.21.1](https://www.modrinth.com/mod/cobblemon)
-- [Matthiesen Lib API](https://www.modrinth.com/mod/matthiesen-lib-api)
+
+- [Matthiesen Core](https://www.modrinth.com/mod/matthiesen-core)
+- [Cobblemon](https://www.modrinth.com/mod/cobblemon)
+- [Fabric API](https://modrinth.com/mod/fabric-api) (Fabric only)
+- [Forge Config API Port](https://modrinth.com/mod/forge-config-api-port) (Fabric only)
 
 ### Optional Dependencies
-- [Matthiesen Lib Webhooks](https://www.modrinth.com/mod/matthiesen-lib-webhooks) - Used for sending Discord webhooks when boosters are started or stopped.
+- [Matthiesen Core Webhooks](https://modrinth.com/project/XP5CfD30) - Used for sending Discord webhooks when boosters are started or stopped.
 - [GooeyLibs 3.1.1-1.21.x](https://modrinth.com/mod/gooeylibs) - Used for optional GUIs
 
 ## Docs
@@ -28,9 +31,9 @@ Documentation for this mod can be found at [mods.matthiesen.dev](https://mods.ma
 
 ## Version Compatibility
 
-| Minecraft Version | Mod Version |
-|-------------------|-------------|
-| 1.21.1            | 1.x.x       |
+| Minecraft Version | Cobblemon Version | Mod Version |
+|-------------------|-------------------|-------------|
+| 1.21.1            | 1.7.3             | 1.x.x       |
 
 ## FastStats Metrics
 
@@ -40,7 +43,7 @@ how this mod is being used and improve it over time. You can learn more about th
 
 You can also view the data collected by this mod on the [FastStats: Cobblemon Boosters](https://faststats.dev/project/cobblemon-boosters) page.
 
-To opt out of this data collection, set the `enabled` property to `false` in the `<game_directory>/config/matthiesen_lib_api/metrics.properties` file.
+To opt out of this data collection, set the `enabled` property to `false` in the `<game_directory>/config/matthiesen_core/metrics.properties` file.
 
 ## License
 

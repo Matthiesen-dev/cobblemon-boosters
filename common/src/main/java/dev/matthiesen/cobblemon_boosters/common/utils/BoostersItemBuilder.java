@@ -1,6 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.utils;
 
-import dev.matthiesen.common.matthiesen_lib_api.utility.ItemBuilder;
+import dev.matthiesen.matthiesen_core.common.utility.item.ItemBuilder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;

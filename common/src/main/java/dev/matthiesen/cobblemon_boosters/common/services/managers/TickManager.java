@@ -1,24 +1,29 @@
 package dev.matthiesen.cobblemon_boosters.common.services.managers;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.config.*;
+import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
-import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfigManager;
-import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
-import dev.matthiesen.cobblemon_boosters.common.config.WebhooksConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
+import dev.matthiesen.matthiesen_core.common.api.events.server.ServerEvent;
 import net.minecraft.server.MinecraftServer;
 
 public final class TickManager {
     private static int tickCounter = 0;
 
     public static int getSaveIntervalTicks() {
-        return CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig().saveIntervalTicks;
+        return BoostersConfig.CORE_SERVER_CONFIG.saveIntervalTicks.getAsInt();
+    }
+
+    @SuppressWarnings("unused")
+    public static void onEndTick(ServerEvent.EndTick event) {
+        tick();
     }
 
     public static void tick() {
         try {
             tickBoosts();
-            MinecraftServer server = CobblemonBoostersCommon.INSTANCE.getMinecraftServer();
+            MinecraftServer server = CobblemonBoostersCommon.INSTANCE.getCommonUtils().getServer();
             if (server != null) {
                 ServiceManager.getDisplayService().tick(server);
             }
@@ -26,10 +31,10 @@ public final class TickManager {
             var saveInterval = getSaveIntervalTicks();
             if (tickCounter >= saveInterval) {
                 tickCounter = 0;
-                if (CobblemonBoostersCommon.INSTANCE.getCoreConfigManager().getConfig().verboseCacheLogging) {
+                if (BoostersConfig.CORE_SERVER_CONFIG.verboseCacheLogging.get()) {
                     CobblemonBoostersCommon.INSTANCE.createInfoLog("Saving Boosters to Cache...");
                 }
-                BoostersConfigManager.saveCache();
+                BoostersConfig.saveCacheToConfig();
             }
         } catch (IllegalArgumentException e) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Caught BossBar exception! ", e);
@@ -37,30 +42,28 @@ public final class TickManager {
     }
 
     public static void tickBoosts() {
-        var webhooks = CobblemonBoostersCommon.INSTANCE.getWebhooksConfigManager().getConfig().discordWebhookConfig;
-
         handleBoostTick(
                 BoostManager.getShinyBoostManager(),
-                webhooks.shinyEventEndEmbed,
-                webhooks.shinyEventStartEmbed
+                BoostersConfig.getShinyEventEndEmbed(),
+                BoostersConfig.getShinyEventStartEmbed()
         );
 
         handleBoostTick(
                 BoostManager.getCatchBoostManager(),
-                webhooks.catchEventEndEmbed,
-                webhooks.catchEventStartEmbed
+                BoostersConfig.getCatchEventEndEmbed(),
+                BoostersConfig.getCatchEventStartEmbed()
         );
 
         handleBoostTick(
                 BoostManager.getExperienceBoostManager(),
-                webhooks.experienceEventEndEmbed,
-                webhooks.experienceEventStartEmbed
+                BoostersConfig.getExperienceEventEndEmbed(),
+                BoostersConfig.getExperienceEventStartEmbed()
         );
 
         handleBoostTick(
                 BoostManager.getSpawnBucketBoostManager(),
-                webhooks.spawnBucketEventEndEmbed,
-                webhooks.spawnBucketEventStartEmbed
+                BoostersConfig.getSpawnBucketEventEndEmbed(),
+                BoostersConfig.getSpawnBucketEventStartEmbed()
         );
     }
 
@@ -70,8 +73,8 @@ public final class TickManager {
 
     private static <T extends IBoost> void handleBoostTick(
             BoostManager.IBoostManager<T> boostManager,
-            WebhooksConfig.DiscordEmbed boostEndEmbed,
-            WebhooksConfig.DiscordEmbed boostStartEmbed
+            DiscordEmbed boostEndEmbed,
+            DiscordEmbed boostStartEmbed
     ) {
         var activeBoost = boostManager.getActive();
         var queue = boostManager.getQueue();
@@ -94,6 +97,6 @@ public final class TickManager {
                     nextBoost
             );
         }
-        CacheConfig.setGlobalBoostData();
+        CacheServerConfig.setGlobalBoostData();
     }
 }

@@ -6,13 +6,11 @@ import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.services.managers.TickManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
-import dev.matthiesen.common.matthiesen_lib_api.abstracts.AbstractCommonMod;
-import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
-import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPlayerEventHandler;
-import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import dev.matthiesen.libs.faststats.Token;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
+import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
+import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
+import dev.matthiesen.matthiesen_core.common.api.events.server.ServerEvent;
+import dev.matthiesen.matthiesen_core.common.api.platform.loader.ModConfigType;
 import org.jetbrains.annotations.NotNull;
 
 public final class CobblemonBoostersCommon extends AbstractCommonMod {
@@ -29,15 +27,48 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
     @Override
     public void initialize() {
         super.initialize();
-        BoostersConfigManager.registerConfigs();
 
-        reloadTask(false);
+        registerModConfig(MOD_ID, ModConfigType.STARTUP, BoostersConfig.PERMISSIONS_STARTUP_SPEC, "cobblemon_boosters/permissions.toml");
+        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CORE_SERVER_SPEC, "cobblemon_boosters/core.toml");
+        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CACHE_SERVER_SPEC, "cobblemon_boosters/cache.toml");
+        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.WEBHOOKS_SERVER_SPEC, "cobblemon_boosters/webhooks.toml");
+
         PermissionRegistry.init();
-        registerCommand(BoostersCommand.CMD);
+        getCommandsRegistryManager().registerCommand(BoostersCommand.CMD);
 
+        PlatformEvents.CONFIG_LOADING(MOD_ID).subscribe(BoostersConfig::onConfigLoad);
+        PlatformEvents.SERVER_STARTED.subscribe(this::onServerStarted);
+        PlatformEvents.SERVER_RELOAD.subscribe(this::onServerReload);
+        PlatformEvents.SERVER_END_TICK.subscribe(TickManager::onEndTick);
+        PlatformEvents.SERVER_STOPPING.subscribe(this::onServerStopping);
+        PlatformEvents.PLAYER_JOIN.subscribe(BoostManager::onPlayerJoin);
+        PlatformEvents.PLAYER_LEAVE.subscribe(BoostManager::onPlayerLeave);
+    }
+
+    private boolean isServerRunning = false;
+
+    public void onServerStarted(ServerEvent.Started event) {
+        createInfoLog("Server starting, initializing Cobblemon Boosters");
+        isServerRunning = true;
+        reloadTask();
+        BoostManager.setupSubscriptions();
         ServiceManager.init();
-        registerPlayerEventHandler(PlayerEventsHandler.INSTANCE);
-        registerServerEventHandler(ServerEventHandler.INSTANCE);
+    }
+
+    public void onServerReload(ServerEvent.Reload event) {
+        if (!isServerRunning) return;
+        CacheServerConfig.setGlobalBoostData();
+        CacheServerConfig.loadFromConfig();
+        BoostManager.reapplyQueuePriorities();
+        CacheServerConfig.setGlobalBoostData();
+        reloadTask();
+    }
+
+    public void onServerStopping(ServerEvent.Stopping event) {
+        createInfoLog("Server stopping, shutting down");
+        if (!isServerRunning) return;
+        CacheServerConfig.setGlobalBoostData();
+        BoostManager.teardownSubscriptions();
     }
 
     @Override
@@ -45,79 +76,10 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         return METRICS_TOKEN;
     }
 
-    @Override
-    public Runnable reload() {
-        return () -> reloadTask(false);
-    }
-
-    public void reloadTask(boolean fromCommand) {
-        if (fromCommand) {
-            CacheConfig.setGlobalBoostData();
-            getCacheConfigManager().saveConfig();
-        }
-        BoostersConfigManager.loadAll();
+    public void reloadTask() {
         if (ServiceManager.isInitialized) {
             ServiceManager.applyDisplayMode();
         }
-        BoostManager.reapplyQueuePriorities();
-        CacheConfig.setGlobalBoostData();
-        createInfoLog("Reloaded Cobblemon Boosters configs");
-    }
-
-    public ConfigManager<CoreConfig> getCoreConfigManager() {
-        return BoostersConfigManager.getCoreConfigManager();
-    }
-
-    public ConfigManager<CacheConfig> getCacheConfigManager() {
-        return BoostersConfigManager.getCacheConfigManager();
-    }
-
-    public ConfigManager<MessagesConfig> getMessagesConfigManager() {
-        return BoostersConfigManager.getMessagesConfigManager();
-    }
-
-    public ConfigManager<PermissionsConfig> getPermissionsConfigManager() {
-        return BoostersConfigManager.getPermissionsConfigManager();
-    }
-
-    public ConfigManager<WebhooksConfig> getWebhooksConfigManager() {
-        return BoostersConfigManager.getWebhooksConfigManager();
-    }
-
-    public static class PlayerEventsHandler implements MatthiesenLibPlayerEventHandler {
-        public static PlayerEventsHandler INSTANCE = new PlayerEventsHandler();
-
-        @Override
-        public void onPlayerJoin(ServerPlayer player) {
-            BoostManager.appendPlayer(player);
-        }
-
-        @Override
-        public void onPlayerLeave(ServerPlayer player) {
-            BoostManager.clearPlayer(player);
-        }
-    }
-
-    public static class ServerEventHandler implements MatthiesenLibServerEventHandler {
-        public static ServerEventHandler INSTANCE = new ServerEventHandler();
-
-        @Override
-        public void onServerStart(MinecraftServer server) {
-            CobblemonBoostersCommon.INSTANCE.createInfoLog("Server started, initializing Cobblemon Boosters");
-            BoostManager.setupSubscriptions();
-        }
-
-        @Override
-        public void onServerTick(MinecraftServer server) {
-            TickManager.tick();
-        }
-
-        @Override
-        public void onServerStop(MinecraftServer server) {
-            CobblemonBoostersCommon.INSTANCE.createInfoLog("Server stopping, shutting down");
-            CacheConfig.setGlobalBoostData();
-            BoostersConfigManager.saveAll();
-            BoostManager.teardownSubscriptions();
-        }
+        createInfoLog("Reloaded Cobblemon Boosters Services");
     }
 }

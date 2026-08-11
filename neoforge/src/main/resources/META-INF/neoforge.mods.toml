@@ -11,7 +11,7 @@ authors = "Adam Matthiesen"
 description = '''
 Cobblemon related chance boosters
 '''
-#logoFile = ""
+logoFile = "icon.png"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
@@ -35,23 +35,24 @@ ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
-modId = "matthiesen_lib_api"
+modId = "matthiesen_core"
 mandatory = true
-versionRange = "[1.11.0,)"
+versionRange = "[1.0.0-beta.38,)"
 ordering = "AFTER"
 side = "SERVER"
 
 [[dependencies.${mod_id}]]
-modId = "matthiesen_lib_webhooks"
+modId = "matthiesen_core_webhooks"
 mandatory = false
 type = "optional"
-versionRange = "[1.1.0,)"
+versionRange = "[1.2.0,)"
 ordering = "AFTER"
 side = "SERVER"
 
 [[dependencies.${mod_id}]]
 modId = "gooeylibs"
 mandatory = false
+type = "optional"
 versionRange = "[3.1.1,)"
 ordering = "AFTER"
 side = "BOTH"
@@ -59,6 +60,7 @@ side = "BOTH"
 [[dependencies.${mod_id}]]
 modId = "cobbreeding"
 mandatory = false
+type = "optional"
 versionRange = "[2.0.0,)"
 ordering = "AFTER"
 side = "BOTH"

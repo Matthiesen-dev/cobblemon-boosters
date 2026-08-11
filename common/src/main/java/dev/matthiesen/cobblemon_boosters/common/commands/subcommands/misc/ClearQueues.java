@@ -2,9 +2,9 @@ package dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
-import dev.matthiesen.cobblemon_boosters.common.config.CacheConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
@@ -29,24 +29,24 @@ public final class ClearQueues implements ISubCommand {
         Util.handleQueueClear(
                 ctx,
                 BoostManager.getShinyBoostManager().getQueue(),
-                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.shinyMessages.boostQueueCleared
+                BoostersConfig.getShinyMessages().boostQueueCleared()
         );
         Util.handleQueueClear(
                 ctx,
                 BoostManager.getCatchBoostManager().getQueue(),
-                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.catchBoostMessages.boostQueueCleared
+                BoostersConfig.getCatchMessages().boostQueueCleared()
         );
         Util.handleQueueClear(
                 ctx,
                 BoostManager.getExperienceBoostManager().getQueue(),
-                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.experienceBoostMessages.boostQueueCleared
+                BoostersConfig.getExperienceMessages().boostQueueCleared()
         );
         Util.handleQueueClear(
                 ctx,
                 BoostManager.getSpawnBucketBoostManager().getQueue(),
-                CobblemonBoostersCommon.INSTANCE.getMessagesConfigManager().getConfig().messages.spawnBucketBoostMessages.boostQueueCleared
+                BoostersConfig.getSpawnBucketMessages().boostQueueCleared()
         );
-        CacheConfig.setGlobalBoostData();
+        CacheServerConfig.setGlobalBoostData();
         return 1;
     }
 }

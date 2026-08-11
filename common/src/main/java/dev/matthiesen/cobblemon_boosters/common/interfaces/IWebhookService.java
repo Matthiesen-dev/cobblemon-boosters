@@ -1,7 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.interfaces;
 
-import dev.matthiesen.cobblemon_boosters.common.config.WebhooksConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
 
 public interface IWebhookService {
-    void sendMessage(WebhooksConfig.DiscordEmbed embed, IBoost boost);
+    void sendMessage(DiscordEmbed embed, IBoost boost);
 }
