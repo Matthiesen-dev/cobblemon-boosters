@@ -16,22 +16,16 @@ public final class SpawnBucketBoost extends AbstractSimpleBoost {
         this.bucket = "common";
     }
 
-    public SpawnBucketBoost(float multiplier, int duration, long timeRemaining, String bucket) {
-        super(multiplier, duration, timeRemaining);
-        this.bucket = bucket;
+    public SpawnBucketBoost(BoostParts parts) {
+        super(parts.multiplier(), parts.duration(), parts.timeRemaining());
+        this.bucket = parts.getRemainingPart(0);
     }
 
     public static Optional<SpawnBucketBoost> fromString(String raw) {
         try {
-            String[] parts = raw.split(";");
-            if (parts.length != 4) return Optional.empty();
-
-            float multiplier = Float.parseFloat(parts[0]);
-            int duration = Integer.parseInt(parts[1]);
-            long timeRemaining = Long.parseLong(parts[2]);
-            String bucket = parts[3];
-
-            return Optional.of(new SpawnBucketBoost(multiplier, duration, timeRemaining, bucket));
+            BoostParts parts = parseRawStringToParts(raw, 4);
+            if (parts == null) return Optional.empty();
+            return Optional.of(new SpawnBucketBoost(parts));
         } catch (Exception e) {
             return Optional.empty();
         }

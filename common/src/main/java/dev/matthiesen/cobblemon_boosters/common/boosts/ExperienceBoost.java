@@ -8,8 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Optional;
 
 public final class ExperienceBoost extends AbstractSimpleBoost {
-    public ExperienceBoost(float multiplier, int duration, long timeRemaining) {
-        super(multiplier, duration, timeRemaining);
+    public ExperienceBoost(BoostParts parts) {
+        super(parts.multiplier(), parts.duration(), parts.timeRemaining());
     }
 
     public ExperienceBoost(float multiplier, int duration) {
@@ -18,14 +18,9 @@ public final class ExperienceBoost extends AbstractSimpleBoost {
 
     public static Optional<ExperienceBoost> fromString(String raw) {
         try {
-            String[] parts = raw.split(";");
-            if (parts.length != 3) return Optional.empty();
-
-            float multiplier = Float.parseFloat(parts[0]);
-            int duration = Integer.parseInt(parts[1]);
-            long timeRemaining = Long.parseLong(parts[2]);
-
-            return Optional.of(new ExperienceBoost(multiplier, duration, timeRemaining));
+            BoostParts parts = parseRawStringToParts(raw, 3);
+            if (parts == null) return Optional.empty();
+            return Optional.of(new ExperienceBoost(parts));
         } catch (Exception e) {
             return Optional.empty();
         }
