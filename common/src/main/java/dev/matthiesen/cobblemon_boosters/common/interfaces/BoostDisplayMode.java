@@ -1,7 +1,5 @@
 package dev.matthiesen.cobblemon_boosters.common.interfaces;
 
-import java.util.Locale;
-
 /**
  * How active boosts are shown to players.
  *
@@ -14,19 +12,5 @@ import java.util.Locale;
 public enum BoostDisplayMode {
     BOSSBAR,
     SIDEBAR,
-    NONE;
-
-    public static BoostDisplayMode fromString(String value) {
-        if (value == null) {
-            return BOSSBAR;
-        }
-
-        String normalized = value.trim().toUpperCase(Locale.ROOT);
-        for (BoostDisplayMode mode : values()) {
-            if (mode.name().equals(normalized)) {
-                return mode;
-            }
-        }
-        return BOSSBAR;
-    }
+    NONE
 }
