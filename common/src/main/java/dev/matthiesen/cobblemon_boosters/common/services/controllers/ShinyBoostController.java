@@ -1,7 +1,8 @@
-package dev.matthiesen.cobblemon_boosters.common.boosts;
+package dev.matthiesen.cobblemon_boosters.common.services.controllers;
 
+import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
-import com.cobblemon.mod.common.api.events.pokeball.PokemonCatchRateEvent;
+import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -10,6 +11,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
@@ -29,63 +31,63 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public final class CatchBoostController implements Booster<CatchBoost> {
-    public static final String BOOSTER_ID = "catch";
-    public static final CatchBoostController INSTANCE = new CatchBoostController();
+public final class ShinyBoostController implements Booster<ShinyBoost> {
+    public static final String BOOSTER_ID = "shiny";
+    public static final ShinyBoostController INSTANCE = new ShinyBoostController();
 
-    private volatile ObservableSubscription<PokemonCatchRateEvent> subscription;
+    private volatile ObservableSubscription<ShinyChanceCalculationEvent> subscription;
 
-    private volatile CatchBoost activeBoost;
-    private final Queue<CatchBoost> queue = new LinkedList<>();
+    private volatile ShinyBoost activeBoost;
+    private final Queue<ShinyBoost> queue = new LinkedList<>();
 
     public static void register() {
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
-        BoostersCommand.registerSubCommand(new CatchBoostCMD());
-        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, CatchBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, CatchBoostController::queueClearHandler);
+        BoostersCommand.registerSubCommand(new ShinyBoostCMD());
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, ShinyBoostController::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, ShinyBoostController::queueClearHandler);
     }
 
-    public static BoosterGuiDefinition<CatchBoost> getGuiDefinition() {
+    public static BoosterGuiDefinition<ShinyBoost> getGuiDefinition() {
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
-                "Catch",
-                "&dCatch Boosts&r",
-                MenuUtils::getCatchItem,
+                "Shiny",
+                "&6Shiny Boosts&r",
+                MenuUtils::getShinyItem,
                 () -> INSTANCE,
-                BoostersConfig::getCatchMessages,
-                permissions.CATCH_PERMISSION,
-                permissions.CATCH_START_PERMISSION,
-                permissions.CATCH_STOP_PERMISSION,
-                permissions.CATCH_STATUS_PERMISSION,
+                BoostersConfig::getShinyMessages,
+                permissions.SHINY_PERMISSION,
+                permissions.SHINY_START_PERMISSION,
+                permissions.SHINY_STOP_PERMISSION,
+                permissions.SHINY_STATUS_PERMISSION,
                 permissions.CHECK_QUEUE_PERMISSION,
                 BoosterGuiDefinition.BuilderType.MULTIPLIER,
-                CatchBoost.class,
+                ShinyBoost.class,
                 INSTANCE::appendToQueue
         );
     }
 
     public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueResponse(ctx, BoostController.getCatchBoostManager().getBoostQueue(), BoostersConfig.getCatchMessages());
+        Util.handleQueueResponse(ctx, BoostController.getShinyBoostManager().getBoostQueue(), BoostersConfig.getShinyMessages());
     }
 
     public static void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueClear(ctx, BoostController.getCatchBoostManager().getBoostQueue(), BoostersConfig.getCatchMessages().boostQueueCleared());
+        Util.handleQueueClear(ctx, BoostController.getShinyBoostManager().getBoostQueue(), BoostersConfig.getShinyMessages().boostQueueCleared());
     }
 
     @Override
     public Constants.SupportedBoosterTypes getType() {
-        return Constants.SupportedBoosterTypes.CATCH;
+        return Constants.SupportedBoosterTypes.SHINY;
     }
 
     @Override
     public void setupSubscriber() {
-        subscription = CobblemonEvents.POKEMON_CATCH_RATE.subscribe(event -> {
-            CatchBoost activeBoost = getActiveBoost();
+        subscription = CobblemonEvents.SHINY_CHANCE_CALCULATION.subscribe(event -> {
+            ShinyBoost activeBoost = getActiveBoost();
             if (activeBoost == null) return;
-            float baseCatchRate = event.getCatchRate();
-            event.setCatchRate(Math.min(baseCatchRate * activeBoost.getMultiplier(), 255F));
+            event.addModificationFunction(((rate, player, pokemon) ->
+                    Math.max(rate / activeBoost.getMultiplier(), 1)));
         });
     }
 
@@ -98,10 +100,10 @@ public final class CatchBoostController implements Booster<CatchBoost> {
     }
 
     @Override
-    public CatchBoost getActiveBoost() {
+    public ShinyBoost getActiveBoost() {
         if (activeBoost == null) {
             // If there is no current active boost check the config to see if there is a default boost that should be active
-            var defaultBoost = BoostersConfig.getActiveCatchBoost();
+            var defaultBoost = BoostersConfig.getActiveShinyBoost();
             if (defaultBoost != null) {
                 setActiveBoost(defaultBoost);
             }
@@ -110,15 +112,15 @@ public final class CatchBoostController implements Booster<CatchBoost> {
     }
 
     @Override
-    public void setActiveBoost(CatchBoost boost) {
+    public void setActiveBoost(ShinyBoost boost) {
         this.activeBoost = boost;
     }
 
     @Override
-    public Queue<CatchBoost> getBoostQueue() {
+    public Queue<ShinyBoost> getBoostQueue() {
         if (queue.isEmpty()) {
             // If the queue is empty check the config to see if there is a default boost that should be queued
-            var defaultBoost = BoostersConfig.getQueuedCatchBoosts();
+            var defaultBoost = BoostersConfig.getQueuedShinyBoosts();
             if (defaultBoost != null) {
                 setBoostQueue(new LinkedList<>(defaultBoost));
             }
@@ -127,49 +129,50 @@ public final class CatchBoostController implements Booster<CatchBoost> {
     }
 
     @Override
-    public void setBoostQueue(Queue<CatchBoost> boostQueue) {
+    public void setBoostQueue(Queue<ShinyBoost> boostQueue) {
         this.queue.clear();
         this.queue.addAll(boostQueue);
     }
 
     @Override
-    public void internal_addToQueue(CatchBoost boost) {
+    public void internal_addToQueue(ShinyBoost boost) {
         this.queue.add(boost);
     }
 
     @Override
     public DiscordEmbed getBoostStartEmbed() {
-        return BoostersConfig.getCatchEventStartEmbed();
+        return BoostersConfig.getShinyEventStartEmbed();
     }
 
     @Override
     public DiscordEmbed getBoostEndEmbed() {
-        return BoostersConfig.getCatchEventEndEmbed();
+        return BoostersConfig.getShinyEventEndEmbed();
     }
 
-
-    // '/boosters catch start <multiplier> <duration> <seconds/minutes/hours/days>'
-    // '/boosters catch stop'
-    // '/boosters catch status'
-    public static final class CatchBoostCMD implements ISubCommand {
+    // '/boosters shiny start <multiplier> <duration> <seconds/minutes/hours/days>'
+    // '/boosters shiny stop'
+    // '/boosters shiny status'
+    public static final class ShinyBoostCMD implements ISubCommand {
         @Override
         public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
             var permissions = PermissionRegistry.getPermissions();
             return Util.newBasicMultiplierBoosterCommand(
                     BOOSTER_ID,
-                    permissions.CATCH_PERMISSION,
+                    permissions.SHINY_PERMISSION,
                     this::openGUI,
                     this::startCommand,
-                    maxMultiplier,
-                    permissions.CATCH_START_PERMISSION,
+                    maxMultiplier(),
+                    permissions.SHINY_START_PERMISSION,
                     this::stopCommand,
-                    permissions.CATCH_STOP_PERMISSION,
+                    permissions.SHINY_STOP_PERMISSION,
                     this::statusCommand,
-                    permissions.CATCH_STATUS_PERMISSION
+                    permissions.SHINY_STATUS_PERMISSION
             );
         }
 
-        public static final Float maxMultiplier = 100F;
+        public static Float maxMultiplier() {
+            return Cobblemon.config.getShinyRate();
+        }
 
         public int openGUI(CommandContext<CommandSourceStack> ctx) {
             ServerPlayer player = ctx.getSource().getPlayer();
@@ -184,9 +187,9 @@ public final class CatchBoostController implements Booster<CatchBoost> {
             int duration = IntegerArgumentType.getInteger(ctx, "duration");
             String unit = StringArgumentType.getString(ctx, "unit");
             int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
-            var manager = BoostController.getCatchBoostManager();
-            var messages = BoostersConfig.getCatchMessages();
-            CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
+            var manager = BoostController.getShinyBoostManager();
+            var messages = BoostersConfig.getShinyMessages();
+            ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
             manager.appendToQueue(boost);
             Util.sendMessage(ctx, messages.boostAddedToQueue(), boost);
             CacheServerConfig.setGlobalBoostData();
@@ -195,19 +198,18 @@ public final class CatchBoostController implements Booster<CatchBoost> {
 
         public int stopCommand(CommandContext<CommandSourceStack> ctx) {
             try {
-                var messages = BoostersConfig.getCatchMessages();
-                Util.handleStopCommand(ctx, BoostController.getCatchBoostManager().getActiveBoost(), messages);
+                var messages = BoostersConfig.getShinyMessages();
+                Util.handleStopCommand(ctx, BoostController.getShinyBoostManager().getActiveBoost(), messages);
             } catch (RuntimeException e) {
-                CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop catch boost", e);
+                CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop shiny boost", e);
             }
             return 1;
         }
 
         public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-            var messages = BoostersConfig.getCatchMessages();
-            Util.handleStatusCommand(ctx, BoostController.getCatchBoostManager().getActiveBoost(), messages);
+            var messages = BoostersConfig.getShinyMessages();
+            Util.handleStatusCommand(ctx, BoostController.getShinyBoostManager().getActiveBoost(), messages);
             return 1;
         }
-
     }
 }

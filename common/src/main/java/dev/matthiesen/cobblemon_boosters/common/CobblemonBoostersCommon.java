@@ -1,11 +1,14 @@
 package dev.matthiesen.cobblemon_boosters.common;
 
-import dev.matthiesen.cobblemon_boosters.common.boosts.*;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.config.*;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.services.controllers.CatchBoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.controllers.ExperienceBoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.controllers.ShinyBoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.controllers.SpawnBucketBoostController;
 import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;

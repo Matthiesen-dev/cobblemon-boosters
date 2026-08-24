@@ -1,4 +1,4 @@
-package dev.matthiesen.cobblemon_boosters.common.boosts;
+package dev.matthiesen.cobblemon_boosters.common.services.boosts;
 
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.matthiesen_core.common.utility.BossBar;

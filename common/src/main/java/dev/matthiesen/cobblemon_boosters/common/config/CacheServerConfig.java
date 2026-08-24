@@ -1,9 +1,9 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
-import dev.matthiesen.cobblemon_boosters.common.boosts.CatchBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ExperienceBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import net.neoforged.neoforge.common.ModConfigSpec;
 

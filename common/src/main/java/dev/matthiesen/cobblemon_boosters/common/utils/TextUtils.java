@@ -2,7 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common.utils;
 
 import com.cobblemon.mod.common.Cobblemon;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.matthiesen_core.common.api.text_parsers.BuiltInTextParsers;

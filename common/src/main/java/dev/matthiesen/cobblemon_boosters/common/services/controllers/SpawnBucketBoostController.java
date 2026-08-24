@@ -1,9 +1,9 @@
-package dev.matthiesen.cobblemon_boosters.common.boosts;
+package dev.matthiesen.cobblemon_boosters.common.services.controllers;
 
-import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
-import com.cobblemon.mod.common.api.events.pokemon.ShinyChanceCalculationEvent;
+import com.cobblemon.mod.common.api.events.entity.SpawnBucketChosenEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
+import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -11,6 +11,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
@@ -24,69 +25,70 @@ import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
+import dev.matthiesen.cobblemon_boosters.common.utils.SpawnBucketOverrideSelector;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public final class ShinyBoostController implements Booster<ShinyBoost> {
-    public static final String BOOSTER_ID = "shiny";
-    public static final ShinyBoostController INSTANCE = new ShinyBoostController();
+public final class SpawnBucketBoostController implements Booster<SpawnBucketBoost> {
+    public static final String BOOSTER_ID = "bucket";
+    public static final SpawnBucketBoostController INSTANCE = new SpawnBucketBoostController();
 
-    private volatile ObservableSubscription<ShinyChanceCalculationEvent> subscription;
+    private volatile ObservableSubscription<SpawnBucketChosenEvent> subscription;
 
-    private volatile ShinyBoost activeBoost;
-    private final Queue<ShinyBoost> queue = new LinkedList<>();
+    private volatile SpawnBucketBoost activeBoost;
+    private final Queue<SpawnBucketBoost> queue = new LinkedList<>();
 
     public static void register() {
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
-        BoostersCommand.registerSubCommand(new ShinyBoostCMD());
-        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, ShinyBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, ShinyBoostController::queueClearHandler);
+        BoostersCommand.registerSubCommand(new SpawnBucketCMD());
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, SpawnBucketBoostController::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, SpawnBucketBoostController::queueClearHandler);
     }
 
-    public static BoosterGuiDefinition<ShinyBoost> getGuiDefinition() {
+    public static BoosterGuiDefinition<SpawnBucketBoost> getGuiDefinition() {
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
-                "Shiny",
-                "&6Shiny Boosts&r",
-                MenuUtils::getShinyItem,
+                "Spawn Bucket",
+                "&bSpawn Bucket Boosts&r",
+                MenuUtils::getBucketItem,
                 () -> INSTANCE,
-                BoostersConfig::getShinyMessages,
-                permissions.SHINY_PERMISSION,
-                permissions.SHINY_START_PERMISSION,
-                permissions.SHINY_STOP_PERMISSION,
-                permissions.SHINY_STATUS_PERMISSION,
+                BoostersConfig::getSpawnBucketMessages,
+                permissions.BUCKET_PERMISSION,
+                permissions.BUCKET_START_PERMISSION,
+                permissions.BUCKET_STOP_PERMISSION,
+                permissions.BUCKET_STATUS_PERMISSION,
                 permissions.CHECK_QUEUE_PERMISSION,
-                BoosterGuiDefinition.BuilderType.MULTIPLIER,
-                ShinyBoost.class,
+                BoosterGuiDefinition.BuilderType.SPAWN_BUCKET,
+                SpawnBucketBoost.class,
                 INSTANCE::appendToQueue
         );
     }
 
     public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueResponse(ctx, BoostController.getShinyBoostManager().getBoostQueue(), BoostersConfig.getShinyMessages());
+        Util.handleQueueResponse(ctx, BoostController.getSpawnBucketBoostManager().getBoostQueue(), BoostersConfig.getSpawnBucketMessages());
     }
 
     public static void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueClear(ctx, BoostController.getShinyBoostManager().getBoostQueue(), BoostersConfig.getShinyMessages().boostQueueCleared());
+        Util.handleQueueClear(ctx, BoostController.getSpawnBucketBoostManager().getBoostQueue(), BoostersConfig.getSpawnBucketMessages().boostQueueCleared());
     }
 
     @Override
     public Constants.SupportedBoosterTypes getType() {
-        return Constants.SupportedBoosterTypes.SHINY;
+        return Constants.SupportedBoosterTypes.SPAWN_BUCKET;
     }
 
     @Override
     public void setupSubscriber() {
-        subscription = CobblemonEvents.SHINY_CHANCE_CALCULATION.subscribe(event -> {
-            ShinyBoost activeBoost = getActiveBoost();
+        subscription = CobblemonEvents.SPAWN_BUCKET_CHOSEN.subscribe(event -> {
+            SpawnBucketBoost activeBoost = getActiveBoost();
             if (activeBoost == null) return;
-            event.addModificationFunction(((rate, player, pokemon) ->
-                    Math.max(rate / activeBoost.getMultiplier(), 1)));
+            SpawnBucket newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, activeBoost);
+            event.setBucket(newBucket);
         });
     }
 
@@ -99,10 +101,10 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
     }
 
     @Override
-    public ShinyBoost getActiveBoost() {
+    public SpawnBucketBoost getActiveBoost() {
         if (activeBoost == null) {
             // If there is no current active boost check the config to see if there is a default boost that should be active
-            var defaultBoost = BoostersConfig.getActiveShinyBoost();
+            var defaultBoost = BoostersConfig.getActiveSpawnBucketBoost();
             if (defaultBoost != null) {
                 setActiveBoost(defaultBoost);
             }
@@ -111,15 +113,15 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
     }
 
     @Override
-    public void setActiveBoost(ShinyBoost boost) {
+    public void setActiveBoost(SpawnBucketBoost boost) {
         this.activeBoost = boost;
     }
 
     @Override
-    public Queue<ShinyBoost> getBoostQueue() {
+    public Queue<SpawnBucketBoost> getBoostQueue() {
         if (queue.isEmpty()) {
             // If the queue is empty check the config to see if there is a default boost that should be queued
-            var defaultBoost = BoostersConfig.getQueuedShinyBoosts();
+            var defaultBoost = BoostersConfig.getQueuedSpawnBucketBoosts();
             if (defaultBoost != null) {
                 setBoostQueue(new LinkedList<>(defaultBoost));
             }
@@ -128,49 +130,44 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
     }
 
     @Override
-    public void setBoostQueue(Queue<ShinyBoost> boostQueue) {
+    public void setBoostQueue(Queue<SpawnBucketBoost> boostQueue) {
         this.queue.clear();
         this.queue.addAll(boostQueue);
     }
 
     @Override
-    public void internal_addToQueue(ShinyBoost boost) {
+    public void internal_addToQueue(SpawnBucketBoost boost) {
         this.queue.add(boost);
     }
 
     @Override
     public DiscordEmbed getBoostStartEmbed() {
-        return BoostersConfig.getShinyEventStartEmbed();
+        return BoostersConfig.getSpawnBucketEventStartEmbed();
     }
 
     @Override
     public DiscordEmbed getBoostEndEmbed() {
-        return BoostersConfig.getShinyEventEndEmbed();
+        return BoostersConfig.getSpawnBucketEventEndEmbed();
     }
 
-    // '/boosters shiny start <multiplier> <duration> <seconds/minutes/hours/days>'
-    // '/boosters shiny stop'
-    // '/boosters shiny status'
-    public static final class ShinyBoostCMD implements ISubCommand {
+    // '/boosters bucket start <common/uncommon/rare/ultra-rare> <multiplier> <duration> <seconds/minutes/hours/days>'
+    // '/boosters bucket stop'
+    // '/boosters bucket status'
+    public static final class SpawnBucketCMD implements ISubCommand {
+
         @Override
         public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
             var permissions = PermissionRegistry.getPermissions();
-            return Util.newBasicMultiplierBoosterCommand(
-                    BOOSTER_ID,
-                    permissions.SHINY_PERMISSION,
+            return Util.newBucketBoosterCommand(
+                    permissions.BUCKET_PERMISSION,
                     this::openGUI,
                     this::startCommand,
-                    maxMultiplier(),
-                    permissions.SHINY_START_PERMISSION,
+                    permissions.BUCKET_START_PERMISSION,
                     this::stopCommand,
-                    permissions.SHINY_STOP_PERMISSION,
+                    permissions.BUCKET_STOP_PERMISSION,
                     this::statusCommand,
-                    permissions.SHINY_STATUS_PERMISSION
+                    permissions.BUCKET_STATUS_PERMISSION
             );
-        }
-
-        public static Float maxMultiplier() {
-            return Cobblemon.config.getShinyRate();
         }
 
         public int openGUI(CommandContext<CommandSourceStack> ctx) {
@@ -182,13 +179,14 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
         }
 
         public int startCommand(CommandContext<CommandSourceStack> ctx) {
+            String bucket = StringArgumentType.getString(ctx, BOOSTER_ID);
             float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
             int duration = IntegerArgumentType.getInteger(ctx, "duration");
             String unit = StringArgumentType.getString(ctx, "unit");
             int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
-            var manager = BoostController.getShinyBoostManager();
-            var messages = BoostersConfig.getShinyMessages();
-            ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
+            var manager = BoostController.getSpawnBucketBoostManager();
+            var messages = BoostersConfig.getSpawnBucketMessages();
+            SpawnBucketBoost boost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
             manager.appendToQueue(boost);
             Util.sendMessage(ctx, messages.boostAddedToQueue(), boost);
             CacheServerConfig.setGlobalBoostData();
@@ -197,17 +195,17 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
 
         public int stopCommand(CommandContext<CommandSourceStack> ctx) {
             try {
-                var messages = BoostersConfig.getShinyMessages();
-                Util.handleStopCommand(ctx, BoostController.getShinyBoostManager().getActiveBoost(), messages);
+                var messages = BoostersConfig.getSpawnBucketMessages();
+                Util.handleStopCommand(ctx, BoostController.getSpawnBucketBoostManager().getActiveBoost(), messages);
             } catch (RuntimeException e) {
-                CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop shiny boost", e);
+                CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop bucket boost", e);
             }
             return 1;
         }
 
         public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-            var messages = BoostersConfig.getShinyMessages();
-            Util.handleStatusCommand(ctx, BoostController.getShinyBoostManager().getActiveBoost(), messages);
+            var messages = BoostersConfig.getSpawnBucketMessages();
+            Util.handleStatusCommand(ctx, BoostController.getSpawnBucketBoostManager().getActiveBoost(), messages);
             return 1;
         }
     }

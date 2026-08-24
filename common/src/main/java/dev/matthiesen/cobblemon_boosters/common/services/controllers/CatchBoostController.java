@@ -1,9 +1,8 @@
-package dev.matthiesen.cobblemon_boosters.common.boosts;
+package dev.matthiesen.cobblemon_boosters.common.services.controllers;
 
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
-import com.cobblemon.mod.common.api.events.entity.SpawnBucketChosenEvent;
+import com.cobblemon.mod.common.api.events.pokeball.PokemonCatchRateEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
-import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -11,6 +10,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
@@ -24,70 +24,69 @@ import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
-import dev.matthiesen.cobblemon_boosters.common.utils.SpawnBucketOverrideSelector;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-public final class SpawnBucketBoostController implements Booster<SpawnBucketBoost> {
-    public static final String BOOSTER_ID = "bucket";
-    public static final SpawnBucketBoostController INSTANCE = new SpawnBucketBoostController();
+public final class CatchBoostController implements Booster<CatchBoost> {
+    public static final String BOOSTER_ID = "catch";
+    public static final CatchBoostController INSTANCE = new CatchBoostController();
 
-    private volatile ObservableSubscription<SpawnBucketChosenEvent> subscription;
+    private volatile ObservableSubscription<PokemonCatchRateEvent> subscription;
 
-    private volatile SpawnBucketBoost activeBoost;
-    private final Queue<SpawnBucketBoost> queue = new LinkedList<>();
+    private volatile CatchBoost activeBoost;
+    private final Queue<CatchBoost> queue = new LinkedList<>();
 
     public static void register() {
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
-        BoostersCommand.registerSubCommand(new SpawnBucketCMD());
-        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, SpawnBucketBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, SpawnBucketBoostController::queueClearHandler);
+        BoostersCommand.registerSubCommand(new CatchBoostCMD());
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, CatchBoostController::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, CatchBoostController::queueClearHandler);
     }
 
-    public static BoosterGuiDefinition<SpawnBucketBoost> getGuiDefinition() {
+    public static BoosterGuiDefinition<CatchBoost> getGuiDefinition() {
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
-                "Spawn Bucket",
-                "&bSpawn Bucket Boosts&r",
-                MenuUtils::getBucketItem,
+                "Catch",
+                "&dCatch Boosts&r",
+                MenuUtils::getCatchItem,
                 () -> INSTANCE,
-                BoostersConfig::getSpawnBucketMessages,
-                permissions.BUCKET_PERMISSION,
-                permissions.BUCKET_START_PERMISSION,
-                permissions.BUCKET_STOP_PERMISSION,
-                permissions.BUCKET_STATUS_PERMISSION,
+                BoostersConfig::getCatchMessages,
+                permissions.CATCH_PERMISSION,
+                permissions.CATCH_START_PERMISSION,
+                permissions.CATCH_STOP_PERMISSION,
+                permissions.CATCH_STATUS_PERMISSION,
                 permissions.CHECK_QUEUE_PERMISSION,
-                BoosterGuiDefinition.BuilderType.SPAWN_BUCKET,
-                SpawnBucketBoost.class,
+                BoosterGuiDefinition.BuilderType.MULTIPLIER,
+                CatchBoost.class,
                 INSTANCE::appendToQueue
         );
     }
 
     public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueResponse(ctx, BoostController.getSpawnBucketBoostManager().getBoostQueue(), BoostersConfig.getSpawnBucketMessages());
+        Util.handleQueueResponse(ctx, BoostController.getCatchBoostManager().getBoostQueue(), BoostersConfig.getCatchMessages());
     }
 
     public static void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueClear(ctx, BoostController.getSpawnBucketBoostManager().getBoostQueue(), BoostersConfig.getSpawnBucketMessages().boostQueueCleared());
+        Util.handleQueueClear(ctx, BoostController.getCatchBoostManager().getBoostQueue(), BoostersConfig.getCatchMessages().boostQueueCleared());
     }
 
     @Override
     public Constants.SupportedBoosterTypes getType() {
-        return Constants.SupportedBoosterTypes.SPAWN_BUCKET;
+        return Constants.SupportedBoosterTypes.CATCH;
     }
 
     @Override
     public void setupSubscriber() {
-        subscription = CobblemonEvents.SPAWN_BUCKET_CHOSEN.subscribe(event -> {
-            SpawnBucketBoost activeBoost = getActiveBoost();
+        subscription = CobblemonEvents.POKEMON_CATCH_RATE.subscribe(event -> {
+            CatchBoost activeBoost = getActiveBoost();
             if (activeBoost == null) return;
-            SpawnBucket newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, activeBoost);
-            event.setBucket(newBucket);
+            float baseCatchRate = event.getCatchRate();
+            event.setCatchRate(Math.min(baseCatchRate * activeBoost.getMultiplier(), 255F));
         });
     }
 
@@ -100,10 +99,10 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
     }
 
     @Override
-    public SpawnBucketBoost getActiveBoost() {
+    public CatchBoost getActiveBoost() {
         if (activeBoost == null) {
             // If there is no current active boost check the config to see if there is a default boost that should be active
-            var defaultBoost = BoostersConfig.getActiveSpawnBucketBoost();
+            var defaultBoost = BoostersConfig.getActiveCatchBoost();
             if (defaultBoost != null) {
                 setActiveBoost(defaultBoost);
             }
@@ -112,15 +111,15 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
     }
 
     @Override
-    public void setActiveBoost(SpawnBucketBoost boost) {
+    public void setActiveBoost(CatchBoost boost) {
         this.activeBoost = boost;
     }
 
     @Override
-    public Queue<SpawnBucketBoost> getBoostQueue() {
+    public Queue<CatchBoost> getBoostQueue() {
         if (queue.isEmpty()) {
             // If the queue is empty check the config to see if there is a default boost that should be queued
-            var defaultBoost = BoostersConfig.getQueuedSpawnBucketBoosts();
+            var defaultBoost = BoostersConfig.getQueuedCatchBoosts();
             if (defaultBoost != null) {
                 setBoostQueue(new LinkedList<>(defaultBoost));
             }
@@ -129,45 +128,49 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
     }
 
     @Override
-    public void setBoostQueue(Queue<SpawnBucketBoost> boostQueue) {
+    public void setBoostQueue(Queue<CatchBoost> boostQueue) {
         this.queue.clear();
         this.queue.addAll(boostQueue);
     }
 
     @Override
-    public void internal_addToQueue(SpawnBucketBoost boost) {
+    public void internal_addToQueue(CatchBoost boost) {
         this.queue.add(boost);
     }
 
     @Override
     public DiscordEmbed getBoostStartEmbed() {
-        return BoostersConfig.getSpawnBucketEventStartEmbed();
+        return BoostersConfig.getCatchEventStartEmbed();
     }
 
     @Override
     public DiscordEmbed getBoostEndEmbed() {
-        return BoostersConfig.getSpawnBucketEventEndEmbed();
+        return BoostersConfig.getCatchEventEndEmbed();
     }
 
-    // '/boosters bucket start <common/uncommon/rare/ultra-rare> <multiplier> <duration> <seconds/minutes/hours/days>'
-    // '/boosters bucket stop'
-    // '/boosters bucket status'
-    public static final class SpawnBucketCMD implements ISubCommand {
 
+    // '/boosters catch start <multiplier> <duration> <seconds/minutes/hours/days>'
+    // '/boosters catch stop'
+    // '/boosters catch status'
+    public static final class CatchBoostCMD implements ISubCommand {
         @Override
         public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
             var permissions = PermissionRegistry.getPermissions();
-            return Util.newBucketBoosterCommand(
-                    permissions.BUCKET_PERMISSION,
+            return Util.newBasicMultiplierBoosterCommand(
+                    BOOSTER_ID,
+                    permissions.CATCH_PERMISSION,
                     this::openGUI,
                     this::startCommand,
-                    permissions.BUCKET_START_PERMISSION,
+                    maxMultiplier,
+                    permissions.CATCH_START_PERMISSION,
                     this::stopCommand,
-                    permissions.BUCKET_STOP_PERMISSION,
+                    permissions.CATCH_STOP_PERMISSION,
                     this::statusCommand,
-                    permissions.BUCKET_STATUS_PERMISSION
+                    permissions.CATCH_STATUS_PERMISSION
             );
         }
+
+        public static final Float maxMultiplier = 100F;
 
         public int openGUI(CommandContext<CommandSourceStack> ctx) {
             ServerPlayer player = ctx.getSource().getPlayer();
@@ -178,14 +181,13 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
         }
 
         public int startCommand(CommandContext<CommandSourceStack> ctx) {
-            String bucket = StringArgumentType.getString(ctx, BOOSTER_ID);
             float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
             int duration = IntegerArgumentType.getInteger(ctx, "duration");
             String unit = StringArgumentType.getString(ctx, "unit");
             int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
-            var manager = BoostController.getSpawnBucketBoostManager();
-            var messages = BoostersConfig.getSpawnBucketMessages();
-            SpawnBucketBoost boost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
+            var manager = BoostController.getCatchBoostManager();
+            var messages = BoostersConfig.getCatchMessages();
+            CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
             manager.appendToQueue(boost);
             Util.sendMessage(ctx, messages.boostAddedToQueue(), boost);
             CacheServerConfig.setGlobalBoostData();
@@ -194,18 +196,19 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
 
         public int stopCommand(CommandContext<CommandSourceStack> ctx) {
             try {
-                var messages = BoostersConfig.getSpawnBucketMessages();
-                Util.handleStopCommand(ctx, BoostController.getSpawnBucketBoostManager().getActiveBoost(), messages);
+                var messages = BoostersConfig.getCatchMessages();
+                Util.handleStopCommand(ctx, BoostController.getCatchBoostManager().getActiveBoost(), messages);
             } catch (RuntimeException e) {
-                CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop bucket boost", e);
+                CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop catch boost", e);
             }
             return 1;
         }
 
         public int statusCommand(CommandContext<CommandSourceStack> ctx) {
-            var messages = BoostersConfig.getSpawnBucketMessages();
-            Util.handleStatusCommand(ctx, BoostController.getSpawnBucketBoostManager().getActiveBoost(), messages);
+            var messages = BoostersConfig.getCatchMessages();
+            Util.handleStatusCommand(ctx, BoostController.getCatchBoostManager().getActiveBoost(), messages);
             return 1;
         }
+
     }
 }
