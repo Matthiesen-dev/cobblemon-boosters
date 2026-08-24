@@ -4,8 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
-import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
@@ -51,28 +50,11 @@ public final class CheckQueues implements ISubCommand {
 
     public int command(CommandContext<CommandSourceStack> ctx) {
         String booster = StringArgumentType.getString(ctx, "booster").toLowerCase();
-        switch (booster) {
-            case "bucket" -> Util.handleQueueResponse(
-                    ctx,
-                    BoostController.getSpawnBucketBoostManager().getBoostQueue(),
-                    BoostersConfig.getSpawnBucketMessages()
-            );
-            case "catch" -> Util.handleQueueResponse(
-                    ctx,
-                    BoostController.getCatchBoostManager().getBoostQueue(),
-                    BoostersConfig.getCatchMessages()
-            );
-            case "experience" -> Util.handleQueueResponse(
-                    ctx,
-                    BoostController.getExperienceBoostManager().getBoostQueue(),
-                    BoostersConfig.getExperienceMessages()
-            );
-            case "shiny" -> Util.handleQueueResponse(
-                    ctx,
-                    BoostController.getShinyBoostManager().getBoostQueue(),
-                    BoostersConfig.getShinyMessages()
-            );
-            default -> Util.sendMessage(ctx, "%prefix% &cUnknown booster type. Valid types are: " + String.join(", ", Constants.CURRENT_BOOSTERS) + ".");
+        var handler = BoostersCommand.QUEUE_RESPONSE_HANDLERS.get(booster);
+        if (handler != null) {
+            handler.accept(ctx);
+        } else {
+            Util.sendMessage(ctx, "%prefix% &cUnknown booster type. Valid types are: " + String.join(", ", Constants.CURRENT_BOOSTERS) + ".");
         }
         return 1;
     }

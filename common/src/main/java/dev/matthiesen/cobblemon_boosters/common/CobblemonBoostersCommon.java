@@ -39,12 +39,13 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.WEBHOOKS_SERVER_SPEC, modConfig("webhooks"));
 
         PermissionRegistry.init();
-        getCommandsRegistryManager().registerCommand(BoostersCommand.CMD);
 
-        BoostController.registerBooster(new ShinyBoostController());
-        BoostController.registerBooster(new CatchBoostController());
-        BoostController.registerBooster(new ExperienceBoostController());
-        BoostController.registerBooster(new SpawnBucketBoostController());
+        CatchBoostController.register();
+        ShinyBoostController.register();
+        ExperienceBoostController.register();
+        SpawnBucketBoostController.register();
+
+        getCommandsRegistryManager().registerCommand(BoostersCommand.CMD);
 
         PlatformEvents.CONFIG_LOADING(MOD_ID).subscribe(BoostersConfig::onConfigLoad);
         PlatformEvents.SERVER_STARTED.subscribe(this::onServerStarted);

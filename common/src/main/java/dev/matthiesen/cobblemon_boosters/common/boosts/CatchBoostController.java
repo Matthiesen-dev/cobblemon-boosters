@@ -3,19 +3,52 @@ package dev.matthiesen.cobblemon_boosters.common.boosts;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.cobblemon.mod.common.api.events.pokeball.PokemonCatchRateEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
+import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
+import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.Booster;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
+import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 public final class CatchBoostController implements Booster<CatchBoost> {
+    public static final CatchBoostController INSTANCE = new CatchBoostController();
+
     private volatile ObservableSubscription<PokemonCatchRateEvent> subscription;
 
     private volatile CatchBoost activeBoost;
     private final Queue<CatchBoost> queue = new LinkedList<>();
+
+    public static void register() {
+        BoostController.registerBooster(INSTANCE);
+        BoostersCommand.registerSubCommand(new CatchBoostCMD());
+        BoostersCommand.registerQueueResponseHandler("catch", CatchBoostController::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler("catch", CatchBoostController::queueClearHandler);
+    }
+
+    public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
+        Util.handleQueueResponse(ctx, BoostController.getCatchBoostManager().getBoostQueue(), BoostersConfig.getCatchMessages());
+    }
+
+    public static void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
+        Util.handleQueueClear(ctx, BoostController.getCatchBoostManager().getBoostQueue(), BoostersConfig.getCatchMessages().boostQueueCleared());
+    }
 
     @Override
     public Constants.SupportedBoosterTypes getType() {
@@ -93,5 +126,69 @@ public final class CatchBoostController implements Booster<CatchBoost> {
     @Override
     public DiscordEmbed getBoostEndEmbed() {
         return BoostersConfig.getCatchEventEndEmbed();
+    }
+
+
+    // '/boosters catch start <multiplier> <duration> <seconds/minutes/hours/days>'
+    // '/boosters catch stop'
+    // '/boosters catch status'
+    public static final class CatchBoostCMD implements ISubCommand {
+        @Override
+        public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
+            var permissions = PermissionRegistry.getPermissions();
+            return Util.newBasicMultiplierBoosterCommand(
+                    "catch",
+                    permissions.CATCH_PERMISSION,
+                    this::openGUI,
+                    this::startCommand,
+                    maxMultiplier,
+                    permissions.CATCH_START_PERMISSION,
+                    this::stopCommand,
+                    permissions.CATCH_STOP_PERMISSION,
+                    this::statusCommand,
+                    permissions.CATCH_STATUS_PERMISSION
+            );
+        }
+
+        public static final Float maxMultiplier = 100F;
+
+        public int openGUI(CommandContext<CommandSourceStack> ctx) {
+            ServerPlayer player = ctx.getSource().getPlayer();
+            if (player != null) {
+                ServiceManager.getGuiAdapter().openCatchBoosterGUI(player);
+            }
+            return 1;
+        }
+
+        public int startCommand(CommandContext<CommandSourceStack> ctx) {
+            float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
+            int duration = IntegerArgumentType.getInteger(ctx, "duration");
+            String unit = StringArgumentType.getString(ctx, "unit");
+            int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
+            var manager = BoostController.getCatchBoostManager();
+            var messages = BoostersConfig.getCatchMessages();
+            CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
+            manager.appendToQueue(boost);
+            Util.sendMessage(ctx, messages.boostAddedToQueue(), boost);
+            CacheServerConfig.setGlobalBoostData();
+            return 1;
+        }
+
+        public int stopCommand(CommandContext<CommandSourceStack> ctx) {
+            try {
+                var messages = BoostersConfig.getCatchMessages();
+                Util.handleStopCommand(ctx, BoostController.getCatchBoostManager().getActiveBoost(), messages);
+            } catch (RuntimeException e) {
+                CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop catch boost", e);
+            }
+            return 1;
+        }
+
+        public int statusCommand(CommandContext<CommandSourceStack> ctx) {
+            var messages = BoostersConfig.getCatchMessages();
+            Util.handleStatusCommand(ctx, BoostController.getCatchBoostManager().getActiveBoost(), messages);
+            return 1;
+        }
+
     }
 }

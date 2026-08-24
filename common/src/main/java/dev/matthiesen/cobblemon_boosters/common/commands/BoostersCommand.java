@@ -3,10 +3,6 @@ package dev.matthiesen.cobblemon_boosters.common.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
-import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.boosters.Bucket;
-import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.boosters.Catch;
-import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.boosters.Experience;
-import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.boosters.Shiny;
 import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc.CheckQueues;
 import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc.ClearQueues;
 import dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc.QueuePriority;
@@ -20,45 +16,43 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 // '/boosters reload' - Reload config
-
-// '/boosters catch start <multiplier> <duration> <seconds/minutes/hours/days>'
-// '/boosters catch stop'
-// '/boosters catch status'
-
-// '/boosters experience start <multiplier> <duration> <seconds/minutes/hours/days>'
-// '/boosters experience stop'
-// '/boosters experience status'
-
-// '/boosters shiny start <multiplier> <duration> <seconds/minutes/hours/days>'
-// '/boosters shiny stop'
-// '/boosters shiny status'
-
-// '/boosters bucket start <common/uncommon/rare/ultra-rare> <multiplier> <duration> <seconds/minutes/hours/days>'
-// '/boosters bucket stop'
-// '/boosters bucket status'
-
 // '/boosters clear-queues'
-
 // '/boosters check-queues <booster>'
-
 // '/boosters queue-priority'
 
 public final class BoostersCommand implements CoreCommand {
     public static final BoostersCommand CMD = new BoostersCommand();
     public static List<ISubCommand> SUB_COMMANDS = new ArrayList<>();
+    public static Map<String, Consumer<CommandContext<CommandSourceStack>>> QUEUE_RESPONSE_HANDLERS = new ConcurrentHashMap<>();
+    public static Map<String, Consumer<CommandContext<CommandSourceStack>>> QUEUE_CLEAR_HANDLERS = new ConcurrentHashMap<>();
+
+    public static void registerSubCommand(ISubCommand subCommand) {
+        SUB_COMMANDS.add(subCommand);
+    }
+
+    public static void registerQueueResponseHandler(String booster, Consumer<CommandContext<CommandSourceStack>> handler) {
+        QUEUE_RESPONSE_HANDLERS.put(booster, handler);
+    }
+
+    public static void registerQueueClearHandler(String booster, Consumer<CommandContext<CommandSourceStack>> handler) {
+        QUEUE_CLEAR_HANDLERS.put(booster, handler);
+    }
+
+    public static void clearQueues(CommandContext<CommandSourceStack> ctx) {
+        for (Consumer<CommandContext<CommandSourceStack>> handler : QUEUE_CLEAR_HANDLERS.values()) {
+            handler.accept(ctx);
+        }
+    }
 
     public BoostersCommand() {
     }
 
     static {
-        // Boosters Sub Commands
-        SUB_COMMANDS.add(Bucket.CMD);
-        SUB_COMMANDS.add(Catch.CMD);
-        SUB_COMMANDS.add(Experience.CMD);
-        SUB_COMMANDS.add(Shiny.CMD);
-
         // Misc Sub Commands
         SUB_COMMANDS.add(Reload.CMD);
         SUB_COMMANDS.add(ClearQueues.CMD);

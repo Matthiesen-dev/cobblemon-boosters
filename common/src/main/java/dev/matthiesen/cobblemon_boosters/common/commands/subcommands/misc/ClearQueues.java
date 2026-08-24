@@ -2,11 +2,9 @@ package dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.commands.Util;
-import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
+import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -26,26 +24,7 @@ public final class ClearQueues implements ISubCommand {
     }
 
     public int command(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueClear(
-                ctx,
-                BoostController.getShinyBoostManager().getBoostQueue(),
-                BoostersConfig.getShinyMessages().boostQueueCleared()
-        );
-        Util.handleQueueClear(
-                ctx,
-                BoostController.getCatchBoostManager().getBoostQueue(),
-                BoostersConfig.getCatchMessages().boostQueueCleared()
-        );
-        Util.handleQueueClear(
-                ctx,
-                BoostController.getExperienceBoostManager().getBoostQueue(),
-                BoostersConfig.getExperienceMessages().boostQueueCleared()
-        );
-        Util.handleQueueClear(
-                ctx,
-                BoostController.getSpawnBucketBoostManager().getBoostQueue(),
-                BoostersConfig.getSpawnBucketMessages().boostQueueCleared()
-        );
+        BoostersCommand.clearQueues(ctx);
         CacheServerConfig.setGlobalBoostData();
         return 1;
     }
