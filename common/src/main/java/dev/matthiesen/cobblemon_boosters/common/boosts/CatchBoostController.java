@@ -42,6 +42,13 @@ public final class CatchBoostController implements Booster<CatchBoost> {
 
     @Override
     public CatchBoost getActiveBoost() {
+        if (activeBoost == null) {
+            // If there is no current active boost check the config to see if there is a default boost that should be active
+            var defaultBoost = BoostersConfig.getActiveCatchBoost();
+            if (defaultBoost != null) {
+                setActiveBoost(defaultBoost);
+            }
+        }
         return activeBoost;
     }
 
@@ -52,6 +59,13 @@ public final class CatchBoostController implements Booster<CatchBoost> {
 
     @Override
     public Queue<CatchBoost> getBoostQueue() {
+        if (queue.isEmpty()) {
+            // If the queue is empty check the config to see if there is a default boost that should be queued
+            var defaultBoost = BoostersConfig.getQueuedCatchBoosts();
+            if (defaultBoost != null) {
+                setBoostQueue(new LinkedList<>(defaultBoost));
+            }
+        }
         return queue;
     }
 
@@ -59,7 +73,6 @@ public final class CatchBoostController implements Booster<CatchBoost> {
     public void setBoostQueue(Queue<CatchBoost> boostQueue) {
         this.queue.clear();
         this.queue.addAll(boostQueue);
-
     }
 
     @Override

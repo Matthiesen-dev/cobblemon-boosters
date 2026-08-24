@@ -42,6 +42,13 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
 
     @Override
     public ExperienceBoost getActiveBoost() {
+        if (activeBoost == null) {
+            // If there is no current active boost check the config to see if there is a default boost that should be active
+            var defaultBoost = BoostersConfig.getActiveExperienceBoost();
+            if (defaultBoost != null) {
+                setActiveBoost(defaultBoost);
+            }
+        }
         return activeBoost;
     }
 
@@ -52,6 +59,13 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
 
     @Override
     public Queue<ExperienceBoost> getBoostQueue() {
+        if (queue.isEmpty()) {
+            // If the queue is empty check the config to see if there is a default boost that should be queued
+            var defaultBoost = BoostersConfig.getQueuedExperienceBoosts();
+            if (defaultBoost != null) {
+                setBoostQueue(new LinkedList<>(defaultBoost));
+            }
+        }
         return queue;
     }
 
