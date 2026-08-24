@@ -134,11 +134,6 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
     }
 
     @Override
-    public void clearBoostQueue() {
-        this.queue.clear();
-    }
-
-    @Override
     public void internal_addToQueue(ShinyBoost boost) {
         this.queue.add(boost);
     }

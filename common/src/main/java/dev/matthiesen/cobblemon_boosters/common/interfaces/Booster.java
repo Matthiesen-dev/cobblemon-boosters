@@ -25,7 +25,6 @@ public interface Booster<T extends IBoost> {
 
     Queue<T> getBoostQueue();
     void setBoostQueue(Queue<T> boostQueue);
-    void clearBoostQueue();
     void internal_addToQueue(T boost);
 
     DiscordEmbed getBoostStartEmbed();

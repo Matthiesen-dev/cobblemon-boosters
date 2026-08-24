@@ -135,11 +135,6 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
     }
 
     @Override
-    public void clearBoostQueue() {
-        this.queue.clear();
-    }
-
-    @Override
     public void internal_addToQueue(SpawnBucketBoost boost) {
         this.queue.add(boost);
     }

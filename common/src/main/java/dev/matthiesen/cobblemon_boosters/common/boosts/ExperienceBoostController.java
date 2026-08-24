@@ -133,11 +133,6 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
     }
 
     @Override
-    public void clearBoostQueue() {
-        this.queue.clear();
-    }
-
-    @Override
     public void internal_addToQueue(ExperienceBoost boost) {
         this.queue.add(boost);
     }

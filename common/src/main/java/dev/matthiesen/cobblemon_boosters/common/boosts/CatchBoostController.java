@@ -133,11 +133,6 @@ public final class CatchBoostController implements Booster<CatchBoost> {
     }
 
     @Override
-    public void clearBoostQueue() {
-        this.queue.clear();
-    }
-
-    @Override
     public void internal_addToQueue(CatchBoost boost) {
         this.queue.add(boost);
     }
