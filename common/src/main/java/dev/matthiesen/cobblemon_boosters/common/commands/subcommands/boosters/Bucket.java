@@ -8,11 +8,11 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
 import net.minecraft.commands.CommandSourceStack;
@@ -50,7 +50,7 @@ public final class Bucket implements ISubCommand {
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
-        BoostManager.IBoostManager<SpawnBucketBoost> manager = BoostManager.getSpawnBucketBoostManager();
+        var manager = BoostController.getSpawnBucketBoostManager();
         var messages = BoostersConfig.getSpawnBucketMessages();
         SpawnBucketBoost boost = new SpawnBucketBoost(multiplier, totalSeconds).setBucket(bucket);
         manager.appendToQueue(boost);
@@ -62,7 +62,7 @@ public final class Bucket implements ISubCommand {
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
         try {
             var messages = BoostersConfig.getSpawnBucketMessages();
-            Util.handleStopCommand(ctx, BoostManager.getSpawnBucketBoostManager().getActive(), messages);
+            Util.handleStopCommand(ctx, BoostController.getSpawnBucketBoostManager().getActiveBoost(), messages);
         } catch (RuntimeException e) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop bucket boost", e);
         }
@@ -71,7 +71,7 @@ public final class Bucket implements ISubCommand {
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
         var messages = BoostersConfig.getSpawnBucketMessages();
-        Util.handleStatusCommand(ctx, BoostManager.getSpawnBucketBoostManager().getActive(), messages);
+        Util.handleStatusCommand(ctx, BoostController.getSpawnBucketBoostManager().getActiveBoost(), messages);
         return 1;
     }
 }

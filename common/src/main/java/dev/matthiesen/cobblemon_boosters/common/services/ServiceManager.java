@@ -13,7 +13,6 @@ import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostDisplayService;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGUIAdapter;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IWebhookService;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.services.webhook.DiscordWebhookService;
 import dev.matthiesen.cobblemon_boosters.common.services.webhook.NoOpWebhookService;
 import net.minecraft.server.MinecraftServer;
@@ -31,7 +30,6 @@ public final class ServiceManager {
         if (isInitialized) return;
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Initializing ServiceManager");
         loadCompat();
-        BoostManager.init();
         applyDisplayMode();
 
         isInitialized = true;
@@ -94,7 +92,7 @@ public final class ServiceManager {
         displayMode = mode;
 
         if (server != null) {
-            for (IBoost boost : BoostManager.getActiveBoosts()) {
+            for (IBoost boost : BoostController.getActiveBoosts()) {
                 displayService.onBoostActivated(boost);
             }
         }

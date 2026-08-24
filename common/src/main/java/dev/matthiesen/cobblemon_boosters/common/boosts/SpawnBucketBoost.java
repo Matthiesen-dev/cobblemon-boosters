@@ -7,7 +7,6 @@ import dev.matthiesen.cobblemon_boosters.common.utils.BoostersItemBuilder;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
 import dev.matthiesen.matthiesen_core.common.utility.BossBar;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
@@ -115,34 +114,9 @@ public final class SpawnBucketBoost implements IBoost {
         return this.bossBar.getBuilder();
     }
 
-    private BoostMessagesConfig getMessages() {
+    @Override
+    public BoostMessagesConfig getMessages() {
         return BoostersConfig.getSpawnBucketMessages();
-    }
-
-    private BossBar createBossBar() {
-        return new BossBar(
-                getBossBarText(),
-                1F,
-                getMessages().barColor(),
-                getMessages().barOverlay()
-        );
-    }
-
-    @Override
-    public Component getBossBarText() {
-        return TextUtils.deserialize(
-                TextUtils.parse(
-                        getMessages().barText(),
-                        this
-                )
-        );
-    }
-
-    @Override
-    public Component getSidebarText() {
-        var cfg = getMessages();
-        String format = (cfg.sidebarLine() == null || cfg.sidebarLine().isBlank()) ? cfg.barText() : cfg.sidebarLine();
-        return TextUtils.deserialize(TextUtils.parse(format, this));
     }
 
     @Override

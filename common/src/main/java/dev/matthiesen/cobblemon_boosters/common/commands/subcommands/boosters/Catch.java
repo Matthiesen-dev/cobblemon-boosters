@@ -8,11 +8,11 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.boosts.CatchBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
 import net.minecraft.commands.CommandSourceStack;
@@ -53,7 +53,7 @@ public final class Catch implements ISubCommand {
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
-        BoostManager.IBoostManager<CatchBoost> manager = BoostManager.getCatchBoostManager();
+        var manager = BoostController.getCatchBoostManager();
         var messages = BoostersConfig.getCatchMessages();
         CatchBoost boost = new CatchBoost(multiplier, totalSeconds);
         manager.appendToQueue(boost);
@@ -65,7 +65,7 @@ public final class Catch implements ISubCommand {
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
         try {
             var messages = BoostersConfig.getCatchMessages();
-            Util.handleStopCommand(ctx, BoostManager.getCatchBoostManager().getActive(), messages);
+            Util.handleStopCommand(ctx, BoostController.getCatchBoostManager().getActiveBoost(), messages);
         } catch (RuntimeException e) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop catch boost", e);
         }
@@ -74,7 +74,7 @@ public final class Catch implements ISubCommand {
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
         var messages = BoostersConfig.getCatchMessages();
-        Util.handleStatusCommand(ctx, BoostManager.getCatchBoostManager().getActive(), messages);
+        Util.handleStatusCommand(ctx, BoostController.getCatchBoostManager().getActiveBoost(), messages);
         return 1;
     }
 }

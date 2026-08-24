@@ -9,11 +9,11 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
 import net.minecraft.commands.CommandSourceStack;
@@ -56,7 +56,7 @@ public final class Shiny implements ISubCommand {
         int duration = IntegerArgumentType.getInteger(ctx, "duration");
         String unit = StringArgumentType.getString(ctx, "unit");
         int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
-        BoostManager.IBoostManager<ShinyBoost> manager = BoostManager.getShinyBoostManager();
+        var manager = BoostController.getShinyBoostManager();
         var messages = BoostersConfig.getShinyMessages();
         ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
         manager.appendToQueue(boost);
@@ -68,7 +68,7 @@ public final class Shiny implements ISubCommand {
     public int stopCommand(CommandContext<CommandSourceStack> ctx) {
         try {
             var messages = BoostersConfig.getShinyMessages();
-            Util.handleStopCommand(ctx, BoostManager.getShinyBoostManager().getActive(), messages);
+            Util.handleStopCommand(ctx, BoostController.getShinyBoostManager().getActiveBoost(), messages);
         } catch (RuntimeException e) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop shiny boost", e);
         }
@@ -77,7 +77,7 @@ public final class Shiny implements ISubCommand {
 
     public int statusCommand(CommandContext<CommandSourceStack> ctx) {
         var messages = BoostersConfig.getShinyMessages();
-        Util.handleStatusCommand(ctx, BoostManager.getShinyBoostManager().getActive(), messages);
+        Util.handleStatusCommand(ctx, BoostController.getShinyBoostManager().getActiveBoost(), messages);
         return 1;
     }
 }

@@ -1,7 +1,8 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
 import dev.matthiesen.cobblemon_boosters.common.interfaces.BoostDisplayMode;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.QueuePriorityMode;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.TimePriorityDirection;
 import net.minecraft.world.BossEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -12,8 +13,8 @@ public final class CoreServerConfig {
     public ModConfigSpec.BooleanValue verboseCacheLogging;
     public ModConfigSpec.EnumValue<BoostDisplayMode> displayMode;
     public ModConfigSpec.BooleanValue queuePriorityEnabled;
-    public ModConfigSpec.EnumValue<BoostManager.QueuePriorityMode> queuePriorityMode;
-    public ModConfigSpec.EnumValue<BoostManager.TimePriorityDirection> timePriorityDirection;
+    public ModConfigSpec.EnumValue<QueuePriorityMode> queuePriorityMode;
+    public ModConfigSpec.EnumValue<TimePriorityDirection> timePriorityDirection;
     public ModConfigSpec.BooleanValue activePreemptionEnabled;
 
     // Messages Configuration
@@ -82,9 +83,9 @@ public final class CoreServerConfig {
         queuePriorityEnabled = builder.comment("Enable queue priority system.")
                 .define("queuePriorityEnabled", true);
         queuePriorityMode = builder.comment("The mode for queue priority.")
-                .defineEnum("queuePriorityMode", BoostManager.QueuePriorityMode.FIFO);
+                .defineEnum("queuePriorityMode", QueuePriorityMode.FIFO);
         timePriorityDirection = builder.comment("The direction for time-based priority.")
-                .defineEnum("timePriorityDirection", BoostManager.TimePriorityDirection.SHORTEST_FIRST);
+                .defineEnum("timePriorityDirection", TimePriorityDirection.SHORTEST_FIRST);
         activePreemptionEnabled = builder.comment("Enable active preemption in the queue.")
                 .define("activePreemptionEnabled", false);
         builder.pop(); // Closes "general" block

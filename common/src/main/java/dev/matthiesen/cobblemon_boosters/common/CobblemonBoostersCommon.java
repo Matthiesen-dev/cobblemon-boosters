@@ -1,14 +1,15 @@
 package dev.matthiesen.cobblemon_boosters.common;
 
+import dev.matthiesen.cobblemon_boosters.common.boosts.*;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.config.*;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.TickManager;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
+import dev.matthiesen.matthiesen_core.common.api.events.server.PlayerEvent;
 import dev.matthiesen.matthiesen_core.common.api.events.server.ServerEvent;
 import dev.matthiesen.matthiesen_core.common.api.platform.loader.ModConfigType;
 import org.jetbrains.annotations.NotNull;
@@ -24,25 +25,34 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         super(MOD_ID, MOD_NAME);
     }
 
+    public static String modConfig(String key) {
+        return MOD_ID + "/" + key + ".toml";
+    }
+
     @Override
     public void initialize() {
         super.initialize();
 
-        registerModConfig(MOD_ID, ModConfigType.STARTUP, BoostersConfig.PERMISSIONS_STARTUP_SPEC, "cobblemon_boosters/permissions.toml");
-        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CORE_SERVER_SPEC, "cobblemon_boosters/core.toml");
-        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CACHE_SERVER_SPEC, "cobblemon_boosters/cache.toml");
-        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.WEBHOOKS_SERVER_SPEC, "cobblemon_boosters/webhooks.toml");
+        registerModConfig(MOD_ID, ModConfigType.STARTUP, BoostersConfig.PERMISSIONS_STARTUP_SPEC, modConfig("permissions"));
+        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CORE_SERVER_SPEC, modConfig("core"));
+        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CACHE_SERVER_SPEC, modConfig("cache"));
+        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.WEBHOOKS_SERVER_SPEC, modConfig("webhooks"));
 
         PermissionRegistry.init();
         getCommandsRegistryManager().registerCommand(BoostersCommand.CMD);
 
+        BoostController.registerBooster(new ShinyBoostController());
+        BoostController.registerBooster(new CatchBoostController());
+        BoostController.registerBooster(new ExperienceBoostController());
+        BoostController.registerBooster(new SpawnBucketBoostController());
+
         PlatformEvents.CONFIG_LOADING(MOD_ID).subscribe(BoostersConfig::onConfigLoad);
         PlatformEvents.SERVER_STARTED.subscribe(this::onServerStarted);
         PlatformEvents.SERVER_RELOAD.subscribe(this::onServerReload);
-        PlatformEvents.SERVER_END_TICK.subscribe(TickManager::onEndTick);
+        PlatformEvents.SERVER_END_TICK.subscribe(this::onServerEndTick);
         PlatformEvents.SERVER_STOPPING.subscribe(this::onServerStopping);
-        PlatformEvents.PLAYER_JOIN.subscribe(BoostManager::onPlayerJoin);
-        PlatformEvents.PLAYER_LEAVE.subscribe(BoostManager::onPlayerLeave);
+        PlatformEvents.PLAYER_JOIN.subscribe(this::onPlayerJoin);
+        PlatformEvents.PLAYER_LEAVE.subscribe(this::onPlayerLeave);
     }
 
     private boolean isServerRunning = false;
@@ -51,7 +61,7 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         createInfoLog("Server starting, initializing Cobblemon Boosters");
         isServerRunning = true;
         reloadTask();
-        BoostManager.setupSubscriptions();
+        BoostController.setupSubscribers();
         ServiceManager.init();
     }
 
@@ -59,7 +69,7 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         if (!isServerRunning) return;
         CacheServerConfig.setGlobalBoostData();
         CacheServerConfig.loadFromConfig();
-        BoostManager.reapplyQueuePriorities();
+        BoostController.refreshQueuePriorities();
         CacheServerConfig.setGlobalBoostData();
         reloadTask();
     }
@@ -68,7 +78,43 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         createInfoLog("Server stopping, shutting down");
         if (!isServerRunning) return;
         CacheServerConfig.setGlobalBoostData();
-        BoostManager.teardownSubscriptions();
+        BoostController.teardownSubscribers();
+    }
+
+    public static int tickCounter = 0;
+
+    public void onServerEndTick(ServerEvent.EndTick event) {
+        try {
+            BoostController.tickBoosts();
+            ServiceManager.getDisplayService().tick(event.server());
+            tickCounter++;
+            var saveInterval = BoostersConfig.CORE_SERVER_CONFIG.saveIntervalTicks.getAsInt();
+            if (tickCounter >= saveInterval) {
+                tickCounter = 0;
+                if (BoostersConfig.CORE_SERVER_CONFIG.verboseCacheLogging.get()) {
+                    createInfoLog("Saving Boosters to Cache...");
+                }
+                BoostersConfig.saveCacheToConfig();
+            }
+        } catch (IllegalArgumentException e) {
+            createErrorLog("Caught BossBar exception! ", e);
+        }
+    }
+
+    public void onPlayerJoin(PlayerEvent.Join event) {
+        try {
+            ServiceManager.getDisplayService().onPlayerJoin(event.player());
+        } catch (RuntimeException e) {
+            createErrorLog("Error appending player to boosts in BoostManager", e);
+        }
+    }
+
+    public void onPlayerLeave(PlayerEvent.Leave event) {
+        try {
+            ServiceManager.getDisplayService().onPlayerLeave(event.player());
+        } catch (RuntimeException e) {
+            createErrorLog("Error clearing player from boosts in BoostManager", e);
+        }
     }
 
     @Override

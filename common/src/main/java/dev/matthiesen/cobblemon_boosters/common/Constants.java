@@ -18,4 +18,11 @@ public final class Constants {
         public static final String COBBREEDING = "cobbreeding";
         public static final ResourceLocation COBBREEDING_EGG = ResourceLocation.parse("cobbreeding:manaphy_egg");
     }
+
+    public enum SupportedBoosterTypes {
+        SPAWN_BUCKET,
+        CATCH,
+        EXPERIENCE,
+        SHINY
+    }
 }

@@ -4,10 +4,10 @@ import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.ButtonAction;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.Booster;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.QueueGui;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
@@ -38,7 +38,7 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
             String guiTitle,
             String boostType,
             ServerPlayer player,
-            BoostManager.IBoostManager<? extends IBoost> boostManager,
+            Booster<? extends IBoost> boostManager,
             BoostMessagesConfig messagesConfig,
             Permission startPermission,
             Permission stopPermission,
@@ -49,8 +49,8 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
         super(player);
         this.guiTitle = guiTitle;
         this.boostType = boostType;
-        this.activeBoost = boostManager.getActive();
-        this.queuedBoosts = boostManager.getQueue();
+        this.activeBoost = boostManager.getActiveBoost();
+        this.queuedBoosts = boostManager.getBoostQueue();
         this.noActiveBoost = messagesConfig.noActiveBoosts();
         this.stopBoostMsg = messagesConfig.boostStopped();
         this.boostInfo = messagesConfig.boostInfo();

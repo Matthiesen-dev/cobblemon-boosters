@@ -3,17 +3,14 @@ package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens;
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
-import dev.matthiesen.cobblemon_boosters.common.boosts.CatchBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ExperienceBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.boosts.*;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.BoostBuilderGui;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.BucketBoostBuilderGui;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BoostersGuiTemplate;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
@@ -34,7 +31,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openBucketGui(ServerPlayer player) {
         String boostType = "Spawn Bucket";
-        var spawnBucketManager = BoostManager.getSpawnBucketBoostManager();
+        var spawnBucketManager = BoostController.getSpawnBucketBoostManager();
         var messages = BoostersConfig.getSpawnBucketMessages();
         var permissions = PermissionRegistry.getPermissions();
         new BoostersGuiTemplate(
@@ -62,7 +59,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openCatchGUI(ServerPlayer player) {
         String boostType = "Catch";
-        var catchBoostManager = BoostManager.getCatchBoostManager();
+        var catchBoostManager = BoostController.getCatchBoostManager();
         var messages = BoostersConfig.getCatchMessages();
         var permissions = PermissionRegistry.getPermissions();
         new BoostersGuiTemplate(
@@ -91,7 +88,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openExperienceGUI(ServerPlayer player) {
         String boostType = "Experience";
-        var experienceBoostManager = BoostManager.getExperienceBoostManager();
+        var experienceBoostManager = BoostController.getExperienceBoostManager();
         var messages = BoostersConfig.getExperienceMessages();
         var permissions = PermissionRegistry.getPermissions();
         new BoostersGuiTemplate(
@@ -120,7 +117,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void openShinyGUI(ServerPlayer player) {
         String boostType = "Shiny";
-        var shinyBoostManager = BoostManager.getShinyBoostManager();
+        var shinyBoostManager = BoostController.getShinyBoostManager();
         var messages = BoostersConfig.getShinyMessages();
         var permissions = PermissionRegistry.getPermissions();
         new BoostersGuiTemplate(

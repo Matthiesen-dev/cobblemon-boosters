@@ -5,10 +5,10 @@ import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
@@ -45,19 +45,19 @@ public final class AdminGui extends BaseMenuGuiTemplate {
     private void getQueuesAndClear() {
         List<QueueListEntry> queueEntries = new ArrayList<>();
         queueEntries.add(new QueueListEntry(
-                BoostManager.getShinyBoostManager().getQueue(),
+                BoostController.getShinyBoostManager().getBoostQueue(),
                 BoostersConfig.CORE_SERVER_CONFIG.messages_shiny_boostQueueCleared.get()
         ));
         queueEntries.add(new QueueListEntry(
-                BoostManager.getCatchBoostManager().getQueue(),
+                BoostController.getCatchBoostManager().getBoostQueue(),
                 BoostersConfig.CORE_SERVER_CONFIG.messages_catch_boostQueueCleared.get()
         ));
         queueEntries.add(new QueueListEntry(
-                BoostManager.getExperienceBoostManager().getQueue(),
+                BoostController.getExperienceBoostManager().getBoostQueue(),
                 BoostersConfig.CORE_SERVER_CONFIG.messages_experience_boostQueueCleared.get()
         ));
         queueEntries.add(new QueueListEntry(
-                BoostManager.getSpawnBucketBoostManager().getQueue(),
+                BoostController.getSpawnBucketBoostManager().getBoostQueue(),
                 BoostersConfig.CORE_SERVER_CONFIG.messages_spawnBucket_boostQueueCleared.get()
         ));
         for (QueueListEntry entry : queueEntries) {
