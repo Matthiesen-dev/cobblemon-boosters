@@ -1,4 +1,4 @@
-package dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc;
+package dev.matthiesen.cobblemon_boosters.common.commands.subcommands;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;

@@ -78,7 +78,7 @@ public final class BoostController {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Booster<?>> T getBoosterByType(Constants.SupportedBoosterTypes type) {
+    private static <T extends Booster<?>> T getBoosterByType(Constants.SupportedBoosterTypes type) {
         for (Booster<?> booster : REGISTERED_BOOSTERS) {
             if (booster.getType() == type) {
                 return (T) booster;
