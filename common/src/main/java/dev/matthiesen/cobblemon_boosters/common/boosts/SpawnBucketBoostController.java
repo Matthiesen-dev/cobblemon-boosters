@@ -21,7 +21,9 @@ import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
+import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.SpawnBucketOverrideSelector;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,6 +32,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public final class SpawnBucketBoostController implements Booster<SpawnBucketBoost> {
+    public static final String BOOSTER_ID = "bucket";
     public static final SpawnBucketBoostController INSTANCE = new SpawnBucketBoostController();
 
     private volatile ObservableSubscription<SpawnBucketChosenEvent> subscription;
@@ -39,9 +42,30 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
 
     public static void register() {
         BoostController.registerBooster(INSTANCE);
+        BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(new SpawnBucketCMD());
-        BoostersCommand.registerQueueResponseHandler("spawn_bucket", SpawnBucketBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler("spawn_bucket", SpawnBucketBoostController::queueClearHandler);
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, SpawnBucketBoostController::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, SpawnBucketBoostController::queueClearHandler);
+    }
+
+    public static BoosterGuiDefinition<SpawnBucketBoost> getGuiDefinition() {
+        var permissions = PermissionRegistry.getPermissions();
+        return new BoosterGuiDefinition<>(
+                BOOSTER_ID,
+                "Spawn Bucket",
+                "&bSpawn Bucket Boosts&r",
+                MenuUtils::getBucketItem,
+                () -> INSTANCE,
+                BoostersConfig::getSpawnBucketMessages,
+                permissions.BUCKET_PERMISSION,
+                permissions.BUCKET_START_PERMISSION,
+                permissions.BUCKET_STOP_PERMISSION,
+                permissions.BUCKET_STATUS_PERMISSION,
+                permissions.CHECK_QUEUE_PERMISSION,
+                BoosterGuiDefinition.BuilderType.SPAWN_BUCKET,
+                SpawnBucketBoost.class,
+                INSTANCE::appendToQueue
+        );
     }
 
     public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
@@ -153,13 +177,13 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
         public int openGUI(CommandContext<CommandSourceStack> ctx) {
             ServerPlayer player = ctx.getSource().getPlayer();
             if (player != null) {
-                ServiceManager.getGuiAdapter().openBucketBoosterGUI(player);
+                ServiceManager.getGuiAdapter().openBoosterGUI(player, BOOSTER_ID);
             }
             return 1;
         }
 
         public int startCommand(CommandContext<CommandSourceStack> ctx) {
-            String bucket = StringArgumentType.getString(ctx, "bucket");
+            String bucket = StringArgumentType.getString(ctx, BOOSTER_ID);
             float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
             int duration = IntegerArgumentType.getInteger(ctx, "duration");
             String unit = StringArgumentType.getString(ctx, "unit");

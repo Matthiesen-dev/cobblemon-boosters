@@ -21,7 +21,9 @@ import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
+import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -29,6 +31,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public final class ShinyBoostController implements Booster<ShinyBoost> {
+    public static final String BOOSTER_ID = "shiny";
     public static final ShinyBoostController INSTANCE = new ShinyBoostController();
 
     private volatile ObservableSubscription<ShinyChanceCalculationEvent> subscription;
@@ -38,9 +41,30 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
 
     public static void register() {
         BoostController.registerBooster(INSTANCE);
+        BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(new ShinyBoostCMD());
-        BoostersCommand.registerQueueResponseHandler("shiny", ShinyBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler("shiny", ShinyBoostController::queueClearHandler);
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, ShinyBoostController::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, ShinyBoostController::queueClearHandler);
+    }
+
+    public static BoosterGuiDefinition<ShinyBoost> getGuiDefinition() {
+        var permissions = PermissionRegistry.getPermissions();
+        return new BoosterGuiDefinition<>(
+                BOOSTER_ID,
+                "Shiny",
+                "&6Shiny Boosts&r",
+                MenuUtils::getShinyItem,
+                () -> INSTANCE,
+                BoostersConfig::getShinyMessages,
+                permissions.SHINY_PERMISSION,
+                permissions.SHINY_START_PERMISSION,
+                permissions.SHINY_STOP_PERMISSION,
+                permissions.SHINY_STATUS_PERMISSION,
+                permissions.CHECK_QUEUE_PERMISSION,
+                BoosterGuiDefinition.BuilderType.MULTIPLIER,
+                ShinyBoost.class,
+                INSTANCE::appendToQueue
+        );
     }
 
     public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
@@ -137,7 +161,7 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
         public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
             var permissions = PermissionRegistry.getPermissions();
             return Util.newBasicMultiplierBoosterCommand(
-                    "shiny",
+                    BOOSTER_ID,
                     permissions.SHINY_PERMISSION,
                     this::openGUI,
                     this::startCommand,
@@ -157,7 +181,7 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
         public int openGUI(CommandContext<CommandSourceStack> ctx) {
             ServerPlayer player = ctx.getSource().getPlayer();
             if (player != null) {
-                ServiceManager.getGuiAdapter().openShinyBoosterGUI(player);
+                ServiceManager.getGuiAdapter().openBoosterGUI(player, BOOSTER_ID);
             }
             return 1;
         }

@@ -20,7 +20,9 @@ import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
+import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -28,6 +30,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public final class CatchBoostController implements Booster<CatchBoost> {
+    public static final String BOOSTER_ID = "catch";
     public static final CatchBoostController INSTANCE = new CatchBoostController();
 
     private volatile ObservableSubscription<PokemonCatchRateEvent> subscription;
@@ -37,9 +40,30 @@ public final class CatchBoostController implements Booster<CatchBoost> {
 
     public static void register() {
         BoostController.registerBooster(INSTANCE);
+        BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(new CatchBoostCMD());
-        BoostersCommand.registerQueueResponseHandler("catch", CatchBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler("catch", CatchBoostController::queueClearHandler);
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, CatchBoostController::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, CatchBoostController::queueClearHandler);
+    }
+
+    public static BoosterGuiDefinition<CatchBoost> getGuiDefinition() {
+        var permissions = PermissionRegistry.getPermissions();
+        return new BoosterGuiDefinition<>(
+                BOOSTER_ID,
+                "Catch",
+                "&dCatch Boosts&r",
+                MenuUtils::getCatchItem,
+                () -> INSTANCE,
+                BoostersConfig::getCatchMessages,
+                permissions.CATCH_PERMISSION,
+                permissions.CATCH_START_PERMISSION,
+                permissions.CATCH_STOP_PERMISSION,
+                permissions.CATCH_STATUS_PERMISSION,
+                permissions.CHECK_QUEUE_PERMISSION,
+                BoosterGuiDefinition.BuilderType.MULTIPLIER,
+                CatchBoost.class,
+                INSTANCE::appendToQueue
+        );
     }
 
     public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
@@ -137,7 +161,7 @@ public final class CatchBoostController implements Booster<CatchBoost> {
         public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
             var permissions = PermissionRegistry.getPermissions();
             return Util.newBasicMultiplierBoosterCommand(
-                    "catch",
+                    BOOSTER_ID,
                     permissions.CATCH_PERMISSION,
                     this::openGUI,
                     this::startCommand,
@@ -155,7 +179,7 @@ public final class CatchBoostController implements Booster<CatchBoost> {
         public int openGUI(CommandContext<CommandSourceStack> ctx) {
             ServerPlayer player = ctx.getSource().getPlayer();
             if (player != null) {
-                ServiceManager.getGuiAdapter().openCatchBoosterGUI(player);
+                ServiceManager.getGuiAdapter().openBoosterGUI(player, BOOSTER_ID);
             }
             return 1;
         }

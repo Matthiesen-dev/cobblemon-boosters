@@ -7,15 +7,35 @@ import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
 import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.Booster;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class BoostController {
     private static final List<Booster<?>> REGISTERED_BOOSTERS = new ArrayList<>();
+    private static final Map<String, BoosterGuiDefinition<?>> REGISTERED_GUI_DEFINITIONS = new LinkedHashMap<>();
 
     public static void registerBooster(Booster<?> booster) {
         REGISTERED_BOOSTERS.add(booster);
+    }
+
+    public static void registerGuiDefinition(BoosterGuiDefinition<?> definition) {
+        REGISTERED_GUI_DEFINITIONS.put(definition.getCommandId(), definition);
+    }
+
+    public static List<BoosterGuiDefinition<?>> getGuiDefinitions() {
+        return List.copyOf(REGISTERED_GUI_DEFINITIONS.values());
+    }
+
+    public static List<String> getGuiDefinitionIds() {
+        return List.copyOf(REGISTERED_GUI_DEFINITIONS.keySet());
+    }
+
+    public static BoosterGuiDefinition<?> getGuiDefinition(String commandId) {
+        return REGISTERED_GUI_DEFINITIONS.get(commandId);
     }
 
     public static void setupSubscribers() {
@@ -44,10 +64,12 @@ public final class BoostController {
 
     public static List<IBoost> getActiveBoosts() {
         List<IBoost> activeBoosts = new ArrayList<>();
-        addIfActive(activeBoosts, Constants.SupportedBoosterTypes.SHINY);
-        addIfActive(activeBoosts, Constants.SupportedBoosterTypes.CATCH);
-        addIfActive(activeBoosts, Constants.SupportedBoosterTypes.EXPERIENCE);
-        addIfActive(activeBoosts, Constants.SupportedBoosterTypes.SPAWN_BUCKET);
+        for (Booster<?> booster : REGISTERED_BOOSTERS) {
+            IBoost activeBoost = booster.getActiveBoost();
+            if (activeBoost != null) {
+                activeBoosts.add(activeBoost);
+            }
+        }
         return activeBoosts;
     }
 
@@ -67,15 +89,6 @@ public final class BoostController {
         return getBoosterByType(Constants.SupportedBoosterTypes.SPAWN_BUCKET);
     }
 
-    private static void addIfActive(List<IBoost> activeBoosts, Constants.SupportedBoosterTypes type) {
-        Booster<?> booster = getBoosterByType(type);
-        if (booster != null) {
-            IBoost activeBoost = booster.getActiveBoost();
-            if (activeBoost != null) {
-                activeBoosts.add(activeBoost);
-            }
-        }
-    }
 
     @SuppressWarnings("unchecked")
     private static <T extends Booster<?>> T getBoosterByType(Constants.SupportedBoosterTypes type) {

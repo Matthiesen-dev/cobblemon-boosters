@@ -2,15 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common;
 
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.List;
-
 public final class Constants {
-    public static final List<String> CURRENT_BOOSTERS = List.of(
-            "bucket",
-            "catch",
-            "experience",
-            "shiny"
-    );
 
     public static class COMPAT {
         public static final String GOOEYLIBS = "gooeylibs";

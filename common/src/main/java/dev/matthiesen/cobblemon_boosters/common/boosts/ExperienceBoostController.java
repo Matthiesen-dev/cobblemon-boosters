@@ -20,7 +20,9 @@ import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
+import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -28,6 +30,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public final class ExperienceBoostController implements Booster<ExperienceBoost> {
+    public static final String BOOSTER_ID = "experience";
     public static final ExperienceBoostController INSTANCE = new ExperienceBoostController();
 
     private volatile ObservableSubscription<ExperienceGainedEvent.Pre> subscription;
@@ -37,9 +40,30 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
 
     public static void register() {
         BoostController.registerBooster(INSTANCE);
+        BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(new ExperienceBoostCMD());
-        BoostersCommand.registerQueueResponseHandler("experience", ExperienceBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler("experience", ExperienceBoostController::queueClearHandler);
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, ExperienceBoostController::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, ExperienceBoostController::queueClearHandler);
+    }
+
+    public static BoosterGuiDefinition<ExperienceBoost> getGuiDefinition() {
+        var permissions = PermissionRegistry.getPermissions();
+        return new BoosterGuiDefinition<>(
+                BOOSTER_ID,
+                "Experience",
+                "&aExperience Boosts&r",
+                MenuUtils::getExperienceItem,
+                () -> INSTANCE,
+                BoostersConfig::getExperienceMessages,
+                permissions.EXPERIENCE_PERMISSION,
+                permissions.EXPERIENCE_START_PERMISSION,
+                permissions.EXPERIENCE_STOP_PERMISSION,
+                permissions.EXPERIENCE_STATUS_PERMISSION,
+                permissions.CHECK_QUEUE_PERMISSION,
+                BoosterGuiDefinition.BuilderType.MULTIPLIER,
+                ExperienceBoost.class,
+                INSTANCE::appendToQueue
+        );
     }
 
     public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
@@ -136,7 +160,7 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
         public LiteralArgumentBuilder<CommandSourceStack> getCmd() {
             var permissions = PermissionRegistry.getPermissions();
             return Util.newBasicMultiplierBoosterCommand(
-                    "experience",
+                    BOOSTER_ID,
                     permissions.EXPERIENCE_PERMISSION,
                     this::openGUI,
                     this::startCommand,
@@ -154,7 +178,7 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
         public int openGUI(CommandContext<CommandSourceStack> ctx) {
             ServerPlayer player = ctx.getSource().getPlayer();
             if (player != null) {
-                ServiceManager.getGuiAdapter().openExperienceBoosterGUI(player);
+                ServiceManager.getGuiAdapter().openBoosterGUI(player, BOOSTER_ID);
             }
             return 1;
         }

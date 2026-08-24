@@ -3,15 +3,17 @@ package dev.matthiesen.cobblemon_boosters.common.commands.subcommands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.matthiesen.cobblemon_boosters.common.Constants;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
-import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.util.List;
 
 public final class CheckQueues implements ISubCommand {
     public static final CheckQueues CMD = new CheckQueues();
@@ -31,7 +33,7 @@ public final class CheckQueues implements ISubCommand {
                                 permissions.CHECK_QUEUE_PERMISSION
                         ))
                         .suggests((ctx, builder) -> {
-                            for (String entry : Constants.CURRENT_BOOSTERS) {
+                            for (String entry : getRegisteredBoosterIds()) {
                                 builder.suggest(entry);
                             }
                             return builder.buildFuture();
@@ -54,8 +56,12 @@ public final class CheckQueues implements ISubCommand {
         if (handler != null) {
             handler.accept(ctx);
         } else {
-            Util.sendMessage(ctx, "%prefix% &cUnknown booster type. Valid types are: " + String.join(", ", Constants.CURRENT_BOOSTERS) + ".");
+            Util.sendMessage(ctx, "%prefix% &cUnknown booster type. Valid types are: " + String.join(", ", getRegisteredBoosterIds()) + ".");
         }
         return 1;
+    }
+
+    private List<String> getRegisteredBoosterIds() {
+        return BoostController.getGuiDefinitionIds();
     }
 }
