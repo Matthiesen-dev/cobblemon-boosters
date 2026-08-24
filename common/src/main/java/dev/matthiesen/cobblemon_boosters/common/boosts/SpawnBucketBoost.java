@@ -2,33 +2,22 @@ package dev.matthiesen.cobblemon_boosters.common.boosts;
 
 import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.utils.BoostersItemBuilder;
-import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
-import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
-import dev.matthiesen.matthiesen_core.common.utility.BossBar;
+import dev.matthiesen.cobblemon_boosters.common.utils.*;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
 import java.util.Optional;
 
-public final class SpawnBucketBoost implements IBoost {
-    public float multiplier;
-    public int duration;
-    public long timeRemaining;
-    public transient BossBar bossBar;
+public final class SpawnBucketBoost extends AbstractSimpleBoost {
     public String bucket;
 
     public SpawnBucketBoost(float multiplier, int duration) {
-        this.multiplier = multiplier;
-        this.duration = duration;
-        this.timeRemaining = duration * 20L;
+        super(multiplier, duration);
+        this.bucket = "common";
     }
 
     public SpawnBucketBoost(float multiplier, int duration, long timeRemaining, String bucket) {
-        this.multiplier = multiplier;
-        this.duration = duration;
-        this.timeRemaining = timeRemaining;
+        super(multiplier, duration, timeRemaining);
         this.bucket = bucket;
     }
 
@@ -48,48 +37,18 @@ public final class SpawnBucketBoost implements IBoost {
         }
     }
 
-    public String serialize() {
-        return multiplier + ";" + duration + ";" + timeRemaining + ";" + bucket;
-    }
-
-    @Override
-    public float getMultiplier() {
-        return this.multiplier;
-    }
-
-    @Override
-    public int getDuration() {
-        return this.duration;
-    }
-
-    @Override
-    public long getTimeRemaining() {
-        return this.timeRemaining;
-    }
-
-    @Override
-    public void setTimeRemaining(long timeRemaining) {
-        this.timeRemaining = timeRemaining;
-    }
-
     public SpawnBucketBoost setBucket(String bucket) {
         this.bucket = bucket;
         return this;
     }
 
+    @Override
+    public String serialize() {
+        return multiplier + ";" + duration + ";" + timeRemaining + ";" + bucket;
+    }
+
     public String getBucket() {
         return this.bucket;
-    }
-
-    @Override
-    public void setMultiplier(float multiplier) {
-        this.multiplier = multiplier;
-    }
-
-    @Override
-    public void setDuration(int duration) {
-        this.duration = duration;
-        this.timeRemaining = duration * 20L;
     }
 
     public String getBucketDisplayName() {
@@ -104,14 +63,6 @@ public final class SpawnBucketBoost implements IBoost {
 
     public String getBucketName() {
         return this.bucket;
-    }
-
-    @Override
-    public BossBar.Builder getBossBar() {
-        if (this.bossBar == null) {
-            this.bossBar = createBossBar();
-        }
-        return this.bossBar.getBuilder();
     }
 
     @Override

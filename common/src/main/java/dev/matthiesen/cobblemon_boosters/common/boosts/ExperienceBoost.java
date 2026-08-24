@@ -2,31 +2,18 @@ package dev.matthiesen.cobblemon_boosters.common.boosts;
 
 import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.utils.BoostersItemBuilder;
-import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
-import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
-import dev.matthiesen.matthiesen_core.common.utility.BossBar;
+import dev.matthiesen.cobblemon_boosters.common.utils.*;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public final class ExperienceBoost implements IBoost {
-    public float multiplier;
-    public int duration;
-    public long timeRemaining;
-    public transient BossBar bossBar;
-
-    public ExperienceBoost(float multiplier, int duration) {
-        this.multiplier = multiplier;
-        this.duration = duration;
-        this.timeRemaining = duration * 20L;
+public final class ExperienceBoost extends AbstractSimpleBoost {
+    public ExperienceBoost(float multiplier, int duration, long timeRemaining) {
+        super(multiplier, duration, timeRemaining);
     }
 
-    public ExperienceBoost(float multiplier, int duration, long timeRemaining) {
-        this.multiplier = multiplier;
-        this.duration = duration;
-        this.timeRemaining = timeRemaining;
+    public ExperienceBoost(float multiplier, int duration) {
+        super(multiplier, duration);
     }
 
     public static Optional<ExperienceBoost> fromString(String raw) {
@@ -42,49 +29,6 @@ public final class ExperienceBoost implements IBoost {
         } catch (Exception e) {
             return Optional.empty();
         }
-    }
-
-    public String serialize() {
-        return multiplier + ";" + duration + ";" + timeRemaining;
-    }
-
-    @Override
-    public void setMultiplier(float multiplier) {
-        this.multiplier = multiplier;
-    }
-
-    @Override
-    public void setDuration(int duration) {
-        this.duration = duration;
-        this.timeRemaining = duration * 20L;
-    }
-
-    @Override
-    public float getMultiplier() {
-        return this.multiplier;
-    }
-
-    @Override
-    public int getDuration() {
-        return this.duration;
-    }
-
-    @Override
-    public long getTimeRemaining() {
-        return this.timeRemaining;
-    }
-
-    @Override
-    public void setTimeRemaining(long timeRemaining) {
-        this.timeRemaining = timeRemaining;
-    }
-
-    @Override
-    public BossBar.Builder getBossBar() {
-        if (this.bossBar == null) {
-            this.bossBar = createBossBar();
-        }
-        return this.bossBar.getBuilder();
     }
 
     @Override
