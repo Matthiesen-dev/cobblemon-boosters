@@ -4,13 +4,12 @@ import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.cobblemon.mod.common.api.events.entity.SpawnBucketChosenEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
-import com.mojang.brigadier.arguments.FloatArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.CmdArgsParser;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
@@ -179,10 +178,11 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
         }
 
         public int startCommand(CommandContext<CommandSourceStack> ctx) {
+            var context = CmdArgsParser.getBaseArgs(ctx);
+            float multiplier = context.multiplier();
+            int duration = context.duration();
+            String unit = context.unit();
             String bucket = StringArgumentType.getString(ctx, BOOSTER_ID);
-            float multiplier = FloatArgumentType.getFloat(ctx, "multiplier");
-            int duration = IntegerArgumentType.getInteger(ctx, "duration");
-            String unit = StringArgumentType.getString(ctx, "unit");
             int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
             var manager = BoostController.getSpawnBucketBoostManager();
             var messages = BoostersConfig.getSpawnBucketMessages();
