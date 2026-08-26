@@ -6,8 +6,8 @@ import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.cobblemon_boosters.common.Constants;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.CmdArgsParser;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.SupportedBoosterTypes;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
@@ -74,8 +74,8 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
     }
 
     @Override
-    public Constants.SupportedBoosterTypes getType() {
-        return Constants.SupportedBoosterTypes.EXPERIENCE;
+    public SupportedBoosterTypes getType() {
+        return SupportedBoosterTypes.EXPERIENCE;
     }
 
     @Override

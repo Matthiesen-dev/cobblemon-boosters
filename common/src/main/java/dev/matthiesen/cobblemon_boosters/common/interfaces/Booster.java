@@ -1,6 +1,5 @@
 package dev.matthiesen.cobblemon_boosters.common.interfaces;
 
-import dev.matthiesen.cobblemon_boosters.common.Constants;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.Queue;
 
 public interface Booster<T extends IBoost> {
-    Constants.SupportedBoosterTypes getType();
+    SupportedBoosterTypes getType();
 
     void setupSubscriber();
     void teardownSubscriber();

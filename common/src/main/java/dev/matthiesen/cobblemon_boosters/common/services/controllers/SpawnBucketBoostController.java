@@ -8,8 +8,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.cobblemon_boosters.common.Constants;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.CmdArgsParser;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.SupportedBoosterTypes;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
@@ -77,8 +77,8 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
     }
 
     @Override
-    public Constants.SupportedBoosterTypes getType() {
-        return Constants.SupportedBoosterTypes.SPAWN_BUCKET;
+    public SupportedBoosterTypes getType() {
+        return SupportedBoosterTypes.SPAWN_BUCKET;
     }
 
     @Override

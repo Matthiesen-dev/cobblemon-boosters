@@ -1,6 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.services;
 
-import dev.matthiesen.cobblemon_boosters.common.Constants;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.SupportedBoosterTypes;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
@@ -74,24 +74,24 @@ public final class BoostController {
     }
 
     public static Booster<ShinyBoost> getShinyBoostManager() {
-        return getBoosterByType(Constants.SupportedBoosterTypes.SHINY);
+        return getBoosterByType(SupportedBoosterTypes.SHINY);
     }
 
     public static Booster<CatchBoost> getCatchBoostManager() {
-        return getBoosterByType(Constants.SupportedBoosterTypes.CATCH);
+        return getBoosterByType(SupportedBoosterTypes.CATCH);
     }
 
     public static Booster<ExperienceBoost> getExperienceBoostManager() {
-        return getBoosterByType(Constants.SupportedBoosterTypes.EXPERIENCE);
+        return getBoosterByType(SupportedBoosterTypes.EXPERIENCE);
     }
 
     public static Booster<SpawnBucketBoost> getSpawnBucketBoostManager() {
-        return getBoosterByType(Constants.SupportedBoosterTypes.SPAWN_BUCKET);
+        return getBoosterByType(SupportedBoosterTypes.SPAWN_BUCKET);
     }
 
 
     @SuppressWarnings("unchecked")
-    private static <T extends Booster<?>> T getBoosterByType(Constants.SupportedBoosterTypes type) {
+    private static <T extends Booster<?>> T getBoosterByType(SupportedBoosterTypes type) {
         for (Booster<?> booster : REGISTERED_BOOSTERS) {
             if (booster.getType() == type) {
                 return (T) booster;
