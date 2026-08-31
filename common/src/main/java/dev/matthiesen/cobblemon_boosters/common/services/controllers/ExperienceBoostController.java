@@ -71,12 +71,12 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
 
     @Override
     public void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueResponse(ctx, BoostController.getExperienceBoostManager().getBoostQueue(), BoostersConfig.getExperienceMessages());
+        Util.handleQueueResponse(ctx, getBoostQueue(), BoostersConfig.getExperienceMessages());
     }
 
     @Override
     public void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueClear(ctx, BoostController.getExperienceBoostManager().getBoostQueue(), BoostersConfig.getExperienceMessages().boostQueueCleared());
+        Util.handleQueueClear(ctx, getBoostQueue(), BoostersConfig.getExperienceMessages().boostQueueCleared());
     }
 
     @Override

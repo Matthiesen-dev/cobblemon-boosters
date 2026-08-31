@@ -72,12 +72,12 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
 
     @Override
     public void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueResponse(ctx, BoostController.getShinyBoostManager().getBoostQueue(), BoostersConfig.getShinyMessages());
+        Util.handleQueueResponse(ctx, getBoostQueue(), BoostersConfig.getShinyMessages());
     }
 
     @Override
     public void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueClear(ctx, BoostController.getShinyBoostManager().getBoostQueue(), BoostersConfig.getShinyMessages().boostQueueCleared());
+        Util.handleQueueClear(ctx, getBoostQueue(), BoostersConfig.getShinyMessages().boostQueueCleared());
     }
 
     @Override

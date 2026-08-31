@@ -74,12 +74,12 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
 
     @Override
     public void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueResponse(ctx, BoostController.getSpawnBucketBoostManager().getBoostQueue(), BoostersConfig.getSpawnBucketMessages());
+        Util.handleQueueResponse(ctx, getBoostQueue(), BoostersConfig.getSpawnBucketMessages());
     }
 
     @Override
     public void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
-        Util.handleQueueClear(ctx, BoostController.getSpawnBucketBoostManager().getBoostQueue(), BoostersConfig.getSpawnBucketMessages().boostQueueCleared());
+        Util.handleQueueClear(ctx, getBoostQueue(), BoostersConfig.getSpawnBucketMessages().boostQueueCleared());
     }
 
     @Override
