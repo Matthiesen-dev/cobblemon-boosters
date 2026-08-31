@@ -38,16 +38,18 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
     private volatile ExperienceBoost activeBoost;
     private final Queue<ExperienceBoost> queue = new LinkedList<>();
 
-    public static void register() {
+    @Override
+    public void register() {
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Experience Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(INSTANCE_CMD);
-        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, ExperienceBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, ExperienceBoostController::queueClearHandler);
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, INSTANCE::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, INSTANCE::queueClearHandler);
     }
 
-    public static BoosterGuiDefinition<ExperienceBoost> getGuiDefinition() {
+    @Override
+    public BoosterGuiDefinition<ExperienceBoost> getGuiDefinition() {
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
@@ -67,11 +69,13 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
         );
     }
 
-    public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
+    @Override
+    public void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
         Util.handleQueueResponse(ctx, BoostController.getExperienceBoostManager().getBoostQueue(), BoostersConfig.getExperienceMessages());
     }
 
-    public static void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
+    @Override
+    public void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
         Util.handleQueueClear(ctx, BoostController.getExperienceBoostManager().getBoostQueue(), BoostersConfig.getExperienceMessages().boostQueueCleared());
     }
 

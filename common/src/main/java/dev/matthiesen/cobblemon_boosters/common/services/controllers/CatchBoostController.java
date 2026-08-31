@@ -38,16 +38,18 @@ public final class CatchBoostController implements Booster<CatchBoost> {
     private volatile CatchBoost activeBoost;
     private final Queue<CatchBoost> queue = new LinkedList<>();
 
-    public static void register() {
+    @Override
+    public void register() {
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Catch Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(INSTANCE_CMD);
-        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, CatchBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, CatchBoostController::queueClearHandler);
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, INSTANCE::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, INSTANCE::queueClearHandler);
     }
 
-    public static BoosterGuiDefinition<CatchBoost> getGuiDefinition() {
+    @Override
+    public BoosterGuiDefinition<CatchBoost> getGuiDefinition() {
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
@@ -67,11 +69,13 @@ public final class CatchBoostController implements Booster<CatchBoost> {
         );
     }
 
-    public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
+    @Override
+    public void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
         Util.handleQueueResponse(ctx, BoostController.getCatchBoostManager().getBoostQueue(), BoostersConfig.getCatchMessages());
     }
 
-    public static void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
+    @Override
+    public void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
         Util.handleQueueClear(ctx, BoostController.getCatchBoostManager().getBoostQueue(), BoostersConfig.getCatchMessages().boostQueueCleared());
     }
 

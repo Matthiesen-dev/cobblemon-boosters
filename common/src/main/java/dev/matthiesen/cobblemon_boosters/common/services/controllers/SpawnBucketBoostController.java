@@ -41,16 +41,18 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
     private volatile SpawnBucketBoost activeBoost;
     private final Queue<SpawnBucketBoost> queue = new LinkedList<>();
 
-    public static void register() {
+    @Override
+    public void register() {
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Spawn Bucket Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(INSTANCE_CMD);
-        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, SpawnBucketBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, SpawnBucketBoostController::queueClearHandler);
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, INSTANCE::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, INSTANCE::queueClearHandler);
     }
 
-    public static BoosterGuiDefinition<SpawnBucketBoost> getGuiDefinition() {
+    @Override
+    public BoosterGuiDefinition<SpawnBucketBoost> getGuiDefinition() {
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
@@ -70,11 +72,13 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
         );
     }
 
-    public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
+    @Override
+    public void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
         Util.handleQueueResponse(ctx, BoostController.getSpawnBucketBoostManager().getBoostQueue(), BoostersConfig.getSpawnBucketMessages());
     }
 
-    public static void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
+    @Override
+    public void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
         Util.handleQueueClear(ctx, BoostController.getSpawnBucketBoostManager().getBoostQueue(), BoostersConfig.getSpawnBucketMessages().boostQueueCleared());
     }
 

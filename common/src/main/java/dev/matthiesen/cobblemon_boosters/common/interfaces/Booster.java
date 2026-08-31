@@ -1,5 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.interfaces;
 
+import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
@@ -7,6 +8,8 @@ import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.QueuePriorityMo
 import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.QueuePrioritySettings;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.TimePriorityDirection;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -15,6 +18,13 @@ import java.util.Queue;
 
 public interface Booster<T extends IBoost> {
     SupportedBoosterTypes getType();
+
+    void register();
+
+    BoosterGuiDefinition<T> getGuiDefinition();
+
+    void queueResponseHandler(CommandContext<CommandSourceStack> ctx);
+    void queueClearHandler(CommandContext<CommandSourceStack> ctx);
 
     void setupSubscriber();
     void teardownSubscriber();

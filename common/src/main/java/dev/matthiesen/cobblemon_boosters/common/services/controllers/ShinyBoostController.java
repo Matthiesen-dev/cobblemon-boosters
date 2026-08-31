@@ -39,16 +39,18 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
     private volatile ShinyBoost activeBoost;
     private final Queue<ShinyBoost> queue = new LinkedList<>();
 
-    public static void register() {
+    @Override
+    public void register() {
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Shiny Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(INSTANCE_CMD);
-        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, ShinyBoostController::queueResponseHandler);
-        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, ShinyBoostController::queueClearHandler);
+        BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, INSTANCE::queueResponseHandler);
+        BoostersCommand.registerQueueClearHandler(BOOSTER_ID, INSTANCE::queueClearHandler);
     }
 
-    public static BoosterGuiDefinition<ShinyBoost> getGuiDefinition() {
+    @Override
+    public BoosterGuiDefinition<ShinyBoost> getGuiDefinition() {
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
@@ -68,11 +70,13 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
         );
     }
 
-    public static void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
+    @Override
+    public void queueResponseHandler(CommandContext<CommandSourceStack> ctx) {
         Util.handleQueueResponse(ctx, BoostController.getShinyBoostManager().getBoostQueue(), BoostersConfig.getShinyMessages());
     }
 
-    public static void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
+    @Override
+    public void queueClearHandler(CommandContext<CommandSourceStack> ctx) {
         Util.handleQueueClear(ctx, BoostController.getShinyBoostManager().getBoostQueue(), BoostersConfig.getShinyMessages().boostQueueCleared());
     }
 

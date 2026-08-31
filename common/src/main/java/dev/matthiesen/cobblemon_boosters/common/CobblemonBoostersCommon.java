@@ -49,10 +49,10 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
 
         createInfoLog("Registering Cobblemon Boosters Boost Controllers");
 
-        CatchBoostController.register();
-        ShinyBoostController.register();
-        ExperienceBoostController.register();
-        SpawnBucketBoostController.register();
+        CatchBoostController.INSTANCE.register();
+        ShinyBoostController.INSTANCE.register();
+        ExperienceBoostController.INSTANCE.register();
+        SpawnBucketBoostController.INSTANCE.register();
 
         createInfoLog("Registering Cobblemon Boosters Commands");
 
