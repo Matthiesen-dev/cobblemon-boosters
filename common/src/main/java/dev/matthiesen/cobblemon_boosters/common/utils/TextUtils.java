@@ -28,8 +28,8 @@ public final class TextUtils {
 
     public static String parse(String text, IBoost boost) {
         text = parse(text);
-        if (boost instanceof SpawnBucketBoost && ((SpawnBucketBoost) boost).bucket != null) {
-            text = text.replaceAll("%bucket%", ((SpawnBucketBoost) boost).getBucketDisplayName());
+        if (boost instanceof SpawnBucketBoost spawnBucketBoost && spawnBucketBoost.bucket != null) {
+            text = text.replaceAll("%bucket%", spawnBucketBoost.getBucketDisplayName());
         }
         return text
                 .replaceAll("%multiplier%", formatMultiplier(boost.getMultiplier()))
