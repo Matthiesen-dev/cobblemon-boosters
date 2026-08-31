@@ -31,6 +31,7 @@ import java.util.Queue;
 public final class ExperienceBoostController implements Booster<ExperienceBoost> {
     public static final String BOOSTER_ID = "experience";
     public static final ExperienceBoostController INSTANCE = new ExperienceBoostController();
+    public static final ExperienceBoostCMD INSTANCE_CMD = new ExperienceBoostCMD();
 
     private volatile ObservableSubscription<ExperienceGainedEvent.Pre> subscription;
 
@@ -41,7 +42,7 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Experience Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
-        BoostersCommand.registerSubCommand(new ExperienceBoostCMD());
+        BoostersCommand.registerSubCommand(INSTANCE_CMD);
         BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, ExperienceBoostController::queueResponseHandler);
         BoostersCommand.registerQueueClearHandler(BOOSTER_ID, ExperienceBoostController::queueClearHandler);
     }

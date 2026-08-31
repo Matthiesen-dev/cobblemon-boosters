@@ -34,6 +34,7 @@ import java.util.Queue;
 public final class SpawnBucketBoostController implements Booster<SpawnBucketBoost> {
     public static final String BOOSTER_ID = "bucket";
     public static final SpawnBucketBoostController INSTANCE = new SpawnBucketBoostController();
+    public static final SpawnBucketCMD INSTANCE_CMD = new SpawnBucketCMD();
 
     private volatile ObservableSubscription<SpawnBucketChosenEvent> subscription;
 
@@ -44,7 +45,7 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Spawn Bucket Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
-        BoostersCommand.registerSubCommand(new SpawnBucketCMD());
+        BoostersCommand.registerSubCommand(INSTANCE_CMD);
         BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, SpawnBucketBoostController::queueResponseHandler);
         BoostersCommand.registerQueueClearHandler(BOOSTER_ID, SpawnBucketBoostController::queueClearHandler);
     }

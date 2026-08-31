@@ -1,5 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.services.boosts;
 
+import dev.matthiesen.cobblemon_boosters.common.interfaces.BoostParts;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.matthiesen_core.common.utility.BossBar;
 
@@ -17,6 +18,10 @@ public abstract class AbstractSimpleBoost implements IBoost {
         this.timeRemaining = timeRemaining;
     }
 
+    public AbstractSimpleBoost(float multiplier, int duration) {
+        this(multiplier, duration, duration * 20L);
+    }
+
     public static BoostParts parseRawStringToParts(String string, int expectedParts) {
         String[] parts = string.split(";");
         if (parts.length != expectedParts) return null;
@@ -28,19 +33,6 @@ public abstract class AbstractSimpleBoost implements IBoost {
         List<String> remainingParts = List.of(parts).subList(3, parts.length);
 
         return new BoostParts(multiplier, duration, timeRemaining, remainingParts);
-    }
-
-    public record BoostParts(float multiplier, int duration, long timeRemaining, List<String> remainingParts) {
-        public String getRemainingPart(int index) {
-            if (index < 0 || index >= remainingParts.size()) {
-                throw new IndexOutOfBoundsException("Index " + index + " is out of bounds for remainingParts of size " + remainingParts.size());
-            }
-            return remainingParts.get(index);
-        }
-    }
-
-    public AbstractSimpleBoost(float multiplier, int duration) {
-        this(multiplier, duration, duration * 20L);
     }
 
     public String serialize() {

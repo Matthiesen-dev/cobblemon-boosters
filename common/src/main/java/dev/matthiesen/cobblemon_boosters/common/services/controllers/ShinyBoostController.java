@@ -32,6 +32,7 @@ import java.util.Queue;
 public final class ShinyBoostController implements Booster<ShinyBoost> {
     public static final String BOOSTER_ID = "shiny";
     public static final ShinyBoostController INSTANCE = new ShinyBoostController();
+    public static final ShinyBoostCMD INSTANCE_CMD = new ShinyBoostCMD();
 
     private volatile ObservableSubscription<ShinyChanceCalculationEvent> subscription;
 
@@ -42,7 +43,7 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Shiny Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
-        BoostersCommand.registerSubCommand(new ShinyBoostCMD());
+        BoostersCommand.registerSubCommand(INSTANCE_CMD);
         BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, ShinyBoostController::queueResponseHandler);
         BoostersCommand.registerQueueClearHandler(BOOSTER_ID, ShinyBoostController::queueClearHandler);
     }

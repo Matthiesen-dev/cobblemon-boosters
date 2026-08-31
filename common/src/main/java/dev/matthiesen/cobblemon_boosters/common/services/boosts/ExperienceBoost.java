@@ -2,6 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common.services.boosts;
 
 import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.BoostParts;
 import dev.matthiesen.cobblemon_boosters.common.utils.*;
 import net.minecraft.world.item.ItemStack;
 

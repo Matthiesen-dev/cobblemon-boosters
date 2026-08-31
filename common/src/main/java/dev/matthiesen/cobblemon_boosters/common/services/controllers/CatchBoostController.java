@@ -31,6 +31,7 @@ import java.util.Queue;
 public final class CatchBoostController implements Booster<CatchBoost> {
     public static final String BOOSTER_ID = "catch";
     public static final CatchBoostController INSTANCE = new CatchBoostController();
+    public static final CatchBoostCMD INSTANCE_CMD = new CatchBoostCMD();
 
     private volatile ObservableSubscription<PokemonCatchRateEvent> subscription;
 
@@ -41,7 +42,7 @@ public final class CatchBoostController implements Booster<CatchBoost> {
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Catch Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
-        BoostersCommand.registerSubCommand(new CatchBoostCMD());
+        BoostersCommand.registerSubCommand(INSTANCE_CMD);
         BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, CatchBoostController::queueResponseHandler);
         BoostersCommand.registerQueueClearHandler(BOOSTER_ID, CatchBoostController::queueClearHandler);
     }
