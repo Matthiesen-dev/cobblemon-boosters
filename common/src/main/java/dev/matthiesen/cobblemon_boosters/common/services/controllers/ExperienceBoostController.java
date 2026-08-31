@@ -38,6 +38,7 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
     private final Queue<ExperienceBoost> queue = new LinkedList<>();
 
     public static void register() {
+        CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Experience Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(new ExperienceBoostCMD());

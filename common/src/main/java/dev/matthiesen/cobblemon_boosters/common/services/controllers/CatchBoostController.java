@@ -38,6 +38,7 @@ public final class CatchBoostController implements Booster<CatchBoost> {
     private final Queue<CatchBoost> queue = new LinkedList<>();
 
     public static void register() {
+        CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Catch Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(new CatchBoostCMD());

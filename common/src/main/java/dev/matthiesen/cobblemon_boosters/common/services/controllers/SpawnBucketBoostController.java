@@ -41,6 +41,7 @@ public final class SpawnBucketBoostController implements Booster<SpawnBucketBoos
     private final Queue<SpawnBucketBoost> queue = new LinkedList<>();
 
     public static void register() {
+        CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Spawn Bucket Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(new SpawnBucketCMD());

@@ -39,6 +39,7 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
     private final Queue<ShinyBoost> queue = new LinkedList<>();
 
     public static void register() {
+        CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Shiny Boost Controller");
         BoostController.registerBooster(INSTANCE);
         BoostController.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(new ShinyBoostCMD());
