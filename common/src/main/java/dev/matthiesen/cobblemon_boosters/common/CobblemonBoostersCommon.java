@@ -36,19 +36,29 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
     public void initialize() {
         super.initialize();
 
+        createInfoLog("Registering Cobblemon Boosters Mod Configs");
+
         registerModConfig(MOD_ID, ModConfigType.STARTUP, BoostersConfig.PERMISSIONS_STARTUP_SPEC, modConfig("permissions"));
         registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CORE_SERVER_SPEC, modConfig("core"));
         registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CACHE_SERVER_SPEC, modConfig("cache"));
         registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.WEBHOOKS_SERVER_SPEC, modConfig("webhooks"));
 
+        createInfoLog("Registering Cobblemon Boosters Permissions");
+
         PermissionRegistry.init();
+
+        createInfoLog("Registering Cobblemon Boosters Boost Controllers");
 
         CatchBoostController.register();
         ShinyBoostController.register();
         ExperienceBoostController.register();
         SpawnBucketBoostController.register();
 
+        createInfoLog("Registering Cobblemon Boosters Commands");
+
         getCommandsRegistryManager().registerCommand(BoostersCommand.CMD);
+
+        createInfoLog("Registering Cobblemon Boosters Services");
 
         PlatformEvents.CONFIG_LOADING(MOD_ID).subscribe(BoostersConfig::onConfigLoad);
         PlatformEvents.SERVER_STARTED.subscribe(this::onServerStarted);
@@ -57,6 +67,8 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         PlatformEvents.SERVER_STOPPING.subscribe(this::onServerStopping);
         PlatformEvents.PLAYER_JOIN.subscribe(this::onPlayerJoin);
         PlatformEvents.PLAYER_LEAVE.subscribe(this::onPlayerLeave);
+
+        createInfoLog("Finished initializing Cobblemon Boosters, waiting for server...");
     }
 
     private boolean isServerRunning = false;
