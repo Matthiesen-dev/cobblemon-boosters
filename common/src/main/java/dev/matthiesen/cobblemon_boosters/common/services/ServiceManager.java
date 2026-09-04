@@ -99,7 +99,7 @@ public final class ServiceManager {
         displayMode = mode;
 
         if (server != null) {
-            for (IBoost boost : BoostController.getActiveBoosts()) {
+            for (IBoost boost : BoostControllerServiceManager.getActiveBoosts()) {
                 displayService.onBoostActivated(boost);
             }
         }

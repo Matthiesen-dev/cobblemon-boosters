@@ -5,7 +5,7 @@ import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.Booster;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostController;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 
@@ -14,11 +14,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class BoostController {
-    private static final List<Booster<?>> REGISTERED_BOOSTERS = new ArrayList<>();
+public final class BoostControllerServiceManager {
+    private static final List<IBoostController<?>> REGISTERED_BOOSTERS = new ArrayList<>();
     private static final Map<String, BoosterGuiDefinition<?>> REGISTERED_GUI_DEFINITIONS = new LinkedHashMap<>();
 
-    public static void registerBooster(Booster<?> booster) {
+    public static void registerBooster(IBoostController<?> booster) {
         REGISTERED_BOOSTERS.add(booster);
     }
 
@@ -39,32 +39,32 @@ public final class BoostController {
     }
 
     public static void setupSubscribers() {
-        for (Booster<?> booster : REGISTERED_BOOSTERS) {
+        for (IBoostController<?> booster : REGISTERED_BOOSTERS) {
             booster.setupSubscriber();
         }
     }
 
     public static void teardownSubscribers() {
-        for (Booster<?> booster : REGISTERED_BOOSTERS) {
+        for (IBoostController<?> booster : REGISTERED_BOOSTERS) {
             booster.teardownSubscriber();
         }
     }
 
     public static void refreshQueuePriorities() {
-        for (Booster<?> booster : REGISTERED_BOOSTERS) {
+        for (IBoostController<?> booster : REGISTERED_BOOSTERS) {
             booster.refreshQueuePriority();
         }
     }
 
     public static void tickBoosts() {
-        for (Booster<?> booster : REGISTERED_BOOSTERS) {
+        for (IBoostController<?> booster : REGISTERED_BOOSTERS) {
             booster.tickBoosts();
         }
     }
 
     public static List<IBoost> getActiveBoosts() {
         List<IBoost> activeBoosts = new ArrayList<>();
-        for (Booster<?> booster : REGISTERED_BOOSTERS) {
+        for (IBoostController<?> booster : REGISTERED_BOOSTERS) {
             IBoost activeBoost = booster.getActiveBoost();
             if (activeBoost != null) {
                 activeBoosts.add(activeBoost);
@@ -73,26 +73,26 @@ public final class BoostController {
         return activeBoosts;
     }
 
-    public static Booster<ShinyBoost> getShinyBoostManager() {
+    public static IBoostController<ShinyBoost> getShinyBoostManager() {
         return getBoosterByType(SupportedBoosterTypes.SHINY);
     }
 
-    public static Booster<CatchBoost> getCatchBoostManager() {
+    public static IBoostController<CatchBoost> getCatchBoostManager() {
         return getBoosterByType(SupportedBoosterTypes.CATCH);
     }
 
-    public static Booster<ExperienceBoost> getExperienceBoostManager() {
+    public static IBoostController<ExperienceBoost> getExperienceBoostManager() {
         return getBoosterByType(SupportedBoosterTypes.EXPERIENCE);
     }
 
-    public static Booster<SpawnBucketBoost> getSpawnBucketBoostManager() {
+    public static IBoostController<SpawnBucketBoost> getSpawnBucketBoostManager() {
         return getBoosterByType(SupportedBoosterTypes.SPAWN_BUCKET);
     }
 
 
     @SuppressWarnings("unchecked")
-    private static <T extends Booster<?>> T getBoosterByType(SupportedBoosterTypes type) {
-        for (Booster<?> booster : REGISTERED_BOOSTERS) {
+    private static <T extends IBoostController<?>> T getBoosterByType(SupportedBoosterTypes type) {
+        for (IBoostController<?> booster : REGISTERED_BOOSTERS) {
             if (booster.getType() == type) {
                 return (T) booster;
             }

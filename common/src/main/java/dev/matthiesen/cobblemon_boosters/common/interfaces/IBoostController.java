@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-public interface Booster<T extends IBoost> {
+public interface IBoostController<T extends IBoost> {
     SupportedBoosterTypes getType();
 
     void register();

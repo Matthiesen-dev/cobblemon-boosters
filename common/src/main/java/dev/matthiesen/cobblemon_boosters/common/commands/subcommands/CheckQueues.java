@@ -7,7 +7,7 @@ import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -62,6 +62,6 @@ public final class CheckQueues implements ISubCommand {
     }
 
     private List<String> getRegisteredBoosterIds() {
-        return BoostController.getGuiDefinitionIds();
+        return BoostControllerServiceManager.getGuiDefinitionIds();
     }
 }

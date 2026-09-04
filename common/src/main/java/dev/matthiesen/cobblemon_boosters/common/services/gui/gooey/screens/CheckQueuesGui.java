@@ -2,7 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens;
 
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.QueueGui;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
@@ -41,7 +41,7 @@ public final class CheckQueuesGui extends BaseMenuGuiTemplate {
     @Override
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
-        for (BoosterGuiDefinition<?> definition : BoostController.getGuiDefinitions()) {
+        for (BoosterGuiDefinition<?> definition : BoostControllerServiceManager.getGuiDefinitions()) {
             buttons.add(getQueueButton(definition));
         }
         return buttons;

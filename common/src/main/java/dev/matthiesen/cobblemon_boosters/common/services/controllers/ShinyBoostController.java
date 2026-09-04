@@ -15,10 +15,10 @@ import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.Booster;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostController;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
@@ -29,7 +29,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public final class ShinyBoostController implements Booster<ShinyBoost> {
+public final class ShinyBoostController implements IBoostController<ShinyBoost> {
     public static final String BOOSTER_ID = "shiny";
     public static final ShinyBoostController INSTANCE = new ShinyBoostController();
     public static final ShinyBoostCMD INSTANCE_CMD = new ShinyBoostCMD();
@@ -42,8 +42,8 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
     @Override
     public void register() {
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Shiny Boost Controller");
-        BoostController.registerBooster(INSTANCE);
-        BoostController.registerGuiDefinition(getGuiDefinition());
+        BoostControllerServiceManager.registerBooster(INSTANCE);
+        BoostControllerServiceManager.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(INSTANCE_CMD);
         BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, INSTANCE::queueResponseHandler);
         BoostersCommand.registerQueueClearHandler(BOOSTER_ID, INSTANCE::queueClearHandler);
@@ -192,7 +192,7 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
             int duration = context.duration();
             String unit = context.unit();
             int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
-            var manager = BoostController.getShinyBoostManager();
+            var manager = BoostControllerServiceManager.getShinyBoostManager();
             var messages = BoostersConfig.getShinyMessages();
             ShinyBoost boost = new ShinyBoost(multiplier, totalSeconds);
             manager.appendToQueue(boost);
@@ -204,7 +204,7 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
         public int stopCommand(CommandContext<CommandSourceStack> ctx) {
             try {
                 var messages = BoostersConfig.getShinyMessages();
-                Util.handleStopCommand(ctx, BoostController.getShinyBoostManager().getActiveBoost(), messages);
+                Util.handleStopCommand(ctx, BoostControllerServiceManager.getShinyBoostManager().getActiveBoost(), messages);
             } catch (RuntimeException e) {
                 CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop shiny boost", e);
             }
@@ -213,7 +213,7 @@ public final class ShinyBoostController implements Booster<ShinyBoost> {
 
         public int statusCommand(CommandContext<CommandSourceStack> ctx) {
             var messages = BoostersConfig.getShinyMessages();
-            Util.handleStatusCommand(ctx, BoostController.getShinyBoostManager().getActiveBoost(), messages);
+            Util.handleStatusCommand(ctx, BoostControllerServiceManager.getShinyBoostManager().getActiveBoost(), messages);
             return 1;
         }
     }

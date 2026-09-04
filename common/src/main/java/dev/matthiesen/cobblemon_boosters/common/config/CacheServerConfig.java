@@ -4,7 +4,7 @@ import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Collections;
@@ -87,25 +87,25 @@ public final class CacheServerConfig {
     }
 
     public static void setGlobalBoostData() {
-        var shinyBoostManager = BoostController.getShinyBoostManager();
+        var shinyBoostManager = BoostControllerServiceManager.getShinyBoostManager();
         if (shinyBoostManager != null) {
             setActiveShinyBoost(shinyBoostManager.getActiveBoost());
             setQueuedShinyBoosts(shinyBoostManager.getBoostQueueAsList());
         }
 
-        var catchBoostManager = BoostController.getCatchBoostManager();
+        var catchBoostManager = BoostControllerServiceManager.getCatchBoostManager();
         if (catchBoostManager != null) {
             setActiveCatchBoost(catchBoostManager.getActiveBoost());
             setQueuedCatchBoosts(catchBoostManager.getBoostQueueAsList());
         }
 
-        var experienceBoostManager = BoostController.getExperienceBoostManager();
+        var experienceBoostManager = BoostControllerServiceManager.getExperienceBoostManager();
         if (experienceBoostManager != null) {
             setActiveExperienceBoost(experienceBoostManager.getActiveBoost());
             setQueuedExperienceBoosts(experienceBoostManager.getBoostQueueAsList());
         }
 
-        var spawnBucketBoostManager = BoostController.getSpawnBucketBoostManager();
+        var spawnBucketBoostManager = BoostControllerServiceManager.getSpawnBucketBoostManager();
         if (spawnBucketBoostManager != null) {
             setActiveSpawnBucketBoost(spawnBucketBoostManager.getActiveBoost());
             setQueuedSpawnBucketBoosts(spawnBucketBoostManager.getBoostQueueAsList());

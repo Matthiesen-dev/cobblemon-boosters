@@ -3,7 +3,7 @@ package dev.matthiesen.cobblemon_boosters.common.services.display;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostDisplayService;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -15,14 +15,14 @@ public final class BossBarDisplay implements IBoostDisplayService {
 
     @Override
     public void onPlayerJoin(ServerPlayer player) {
-        for (IBoost boost : BoostController.getActiveBoosts()) {
+        for (IBoost boost : BoostControllerServiceManager.getActiveBoosts()) {
             boost.getBossBar().addPlayer(player);
         }
     }
 
     @Override
     public void onPlayerLeave(ServerPlayer player) {
-        for (IBoost boost : BoostController.getActiveBoosts()) {
+        for (IBoost boost : BoostControllerServiceManager.getActiveBoosts()) {
             boost.getBossBar().removePlayer(player);
         }
     }
@@ -46,7 +46,7 @@ public final class BossBarDisplay implements IBoostDisplayService {
     @Override
     public void tick(MinecraftServer server) {
         boolean verifyPlayers = server.getTickCount() % 20 == 0;
-        for (IBoost boost : BoostController.getActiveBoosts()) {
+        for (IBoost boost : BoostControllerServiceManager.getActiveBoosts()) {
             updateBossBar(boost);
             if (verifyPlayers) {
                 boost.getBossBar().verifyPlayerList(server.getPlayerList());
@@ -59,7 +59,7 @@ public final class BossBarDisplay implements IBoostDisplayService {
         if (server == null) {
             return;
         }
-        for (IBoost boost : BoostController.getActiveBoosts()) {
+        for (IBoost boost : BoostControllerServiceManager.getActiveBoosts()) {
             boost.getBossBar().hideBossBarFromPlayerList(server.getPlayerList());
         }
     }

@@ -2,7 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common;
 
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.config.*;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.controllers.CatchBoostController;
@@ -77,7 +77,7 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         createInfoLog("Server starting, initializing Cobblemon Boosters");
         isServerRunning = true;
         reloadTask();
-        BoostController.setupSubscribers();
+        BoostControllerServiceManager.setupSubscribers();
         ServiceManager.init();
     }
 
@@ -85,7 +85,7 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         if (!isServerRunning) return;
         CacheServerConfig.setGlobalBoostData();
         CacheServerConfig.loadFromConfig();
-        BoostController.refreshQueuePriorities();
+        BoostControllerServiceManager.refreshQueuePriorities();
         CacheServerConfig.setGlobalBoostData();
         reloadTask();
     }
@@ -94,14 +94,14 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         createInfoLog("Server stopping, shutting down");
         if (!isServerRunning) return;
         CacheServerConfig.setGlobalBoostData();
-        BoostController.teardownSubscribers();
+        BoostControllerServiceManager.teardownSubscribers();
     }
 
     public static int tickCounter = 0;
 
     public void onServerEndTick(ServerEvent.EndTick event) {
         try {
-            BoostController.tickBoosts();
+            BoostControllerServiceManager.tickBoosts();
             ServiceManager.getDisplayService().tick(event.server());
             tickCounter++;
             var saveInterval = BoostersConfig.CORE_SERVER_CONFIG.saveIntervalTicks.getAsInt();

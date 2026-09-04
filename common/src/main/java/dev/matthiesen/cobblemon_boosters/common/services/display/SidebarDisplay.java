@@ -4,7 +4,7 @@ import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostDisplayService;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
 import net.minecraft.network.chat.numbers.BlankFormat;
 import net.minecraft.server.MinecraftServer;
@@ -79,7 +79,7 @@ public final class SidebarDisplay implements IBoostDisplayService {
         }
 
         ServerScoreboard scoreboard = server.getScoreboard();
-        List<IBoost> active = BoostController.getActiveBoosts();
+        List<IBoost> active = BoostControllerServiceManager.getActiveBoosts();
 
         if (active.isEmpty()) {
             shutdown(server);

@@ -5,7 +5,7 @@ import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
@@ -32,7 +32,7 @@ public final class AdminGui extends BaseMenuGuiTemplate {
     }
 
     private void getQueuesAndClear() {
-        List<BoosterGuiDefinition<?>> definitions = BoostController.getGuiDefinitions();
+        List<BoosterGuiDefinition<?>> definitions = BoostControllerServiceManager.getGuiDefinitions();
         for (BoosterGuiDefinition<?> definition : definitions) {
             definition.getBoostQueue().clear();
             sendPlayerMessage(definition.getMessages().boostQueueCleared());

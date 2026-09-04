@@ -14,10 +14,10 @@ import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.Booster;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostController;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
@@ -28,7 +28,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public final class ExperienceBoostController implements Booster<ExperienceBoost> {
+public final class ExperienceBoostController implements IBoostController<ExperienceBoost> {
     public static final String BOOSTER_ID = "experience";
     public static final ExperienceBoostController INSTANCE = new ExperienceBoostController();
     public static final ExperienceBoostCMD INSTANCE_CMD = new ExperienceBoostCMD();
@@ -41,8 +41,8 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
     @Override
     public void register() {
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Registering Experience Boost Controller");
-        BoostController.registerBooster(INSTANCE);
-        BoostController.registerGuiDefinition(getGuiDefinition());
+        BoostControllerServiceManager.registerBooster(INSTANCE);
+        BoostControllerServiceManager.registerGuiDefinition(getGuiDefinition());
         BoostersCommand.registerSubCommand(INSTANCE_CMD);
         BoostersCommand.registerQueueResponseHandler(BOOSTER_ID, INSTANCE::queueResponseHandler);
         BoostersCommand.registerQueueClearHandler(BOOSTER_ID, INSTANCE::queueClearHandler);
@@ -189,7 +189,7 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
             int duration = context.duration();
             String unit = context.unit();
             int totalSeconds = GuiCmdHelpers.parseTotalSeconds(duration, unit);
-            var manager = BoostController.getExperienceBoostManager();
+            var manager = BoostControllerServiceManager.getExperienceBoostManager();
             var messages = BoostersConfig.getExperienceMessages();
             ExperienceBoost boost = new ExperienceBoost(multiplier, totalSeconds);
             manager.appendToQueue(boost);
@@ -201,7 +201,7 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
         public int stopCommand(CommandContext<CommandSourceStack> ctx) {
             try {
                 var messages = BoostersConfig.getExperienceMessages();
-                Util.handleStopCommand(ctx, BoostController.getExperienceBoostManager().getActiveBoost(), messages);
+                Util.handleStopCommand(ctx, BoostControllerServiceManager.getExperienceBoostManager().getActiveBoost(), messages);
             } catch (RuntimeException e) {
                 CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to stop experience boost", e);
             }
@@ -210,7 +210,7 @@ public final class ExperienceBoostController implements Booster<ExperienceBoost>
 
         public int statusCommand(CommandContext<CommandSourceStack> ctx) {
             var messages = BoostersConfig.getExperienceMessages();
-            Util.handleStatusCommand(ctx, BoostController.getExperienceBoostManager().getActiveBoost(), messages);
+            Util.handleStatusCommand(ctx, BoostControllerServiceManager.getExperienceBoostManager().getActiveBoost(), messages);
             return 1;
         }
     }

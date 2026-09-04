@@ -1,7 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.services.gui;
 
 import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.Booster;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostController;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.matthiesen_core.common.api.permissions.Permission;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,7 @@ public final class BoosterGuiDefinition<T extends IBoost> {
     private final String displayName;
     private final String menuTitle;
     private final Supplier<ItemStack> menuItemSupplier;
-    private final Supplier<Booster<T>> boosterSupplier;
+    private final Supplier<IBoostController<T>> boosterSupplier;
     private final Supplier<BoostMessagesConfig> messagesSupplier;
     private final Permission rootPermission;
     private final Permission startPermission;
@@ -36,7 +36,7 @@ public final class BoosterGuiDefinition<T extends IBoost> {
             String displayName,
             String menuTitle,
             Supplier<ItemStack> menuItemSupplier,
-            Supplier<Booster<T>> boosterSupplier,
+            Supplier<IBoostController<T>> boosterSupplier,
             Supplier<BoostMessagesConfig> messagesSupplier,
             Permission rootPermission,
             Permission startPermission,
@@ -79,7 +79,7 @@ public final class BoosterGuiDefinition<T extends IBoost> {
         return menuItemSupplier.get().copy();
     }
 
-    public Booster<T> getBooster() {
+    public IBoostController<T> getBooster() {
         return boosterSupplier.get();
     }
 

@@ -4,7 +4,7 @@ import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostController;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.BoostBuilderGui;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.BucketBoostBuilderGui;
@@ -51,7 +51,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
     }
 
     public static void openBoosterGui(ServerPlayer player, String boosterId) {
-        var definition = BoostController.getGuiDefinition(boosterId);
+        var definition = BoostControllerServiceManager.getGuiDefinition(boosterId);
         if (definition == null) {
             player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse("%prefix% &cUnknown booster type: &f" + boosterId + "&c.")));
             return;
@@ -69,7 +69,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
         List<Button> buttons = new ArrayList<>();
         var permissions = PermissionRegistry.getPermissions();
 
-        for (BoosterGuiDefinition<?> definition : BoostController.getGuiDefinitions()) {
+        for (BoosterGuiDefinition<?> definition : BoostControllerServiceManager.getGuiDefinitions()) {
             if (!PermissionRegistry.checkPermission(player, definition.getRootPermission())) {
                 continue;
             }
