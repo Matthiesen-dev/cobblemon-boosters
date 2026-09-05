@@ -2,7 +2,7 @@ package dev.matthiesen.cobblemon_boosters.common.utils;
 
 import com.cobblemon.mod.common.Cobblemon;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.matthiesen_core.common.api.text_parsers.BuiltInTextParsers;
@@ -28,8 +28,8 @@ public final class TextUtils {
 
     public static String parse(String text, IBoost boost) {
         text = parse(text);
-        if (boost instanceof SpawnBucketBoost && ((SpawnBucketBoost) boost).bucket != null) {
-            text = text.replaceAll("%bucket%", ((SpawnBucketBoost) boost).getBucketDisplayName());
+        if (boost instanceof SpawnBucketBoost spawnBucketBoost && spawnBucketBoost.bucket != null) {
+            text = text.replaceAll("%bucket%", spawnBucketBoost.getBucketDisplayName());
         }
         return text
                 .replaceAll("%multiplier%", formatMultiplier(boost.getMultiplier()))

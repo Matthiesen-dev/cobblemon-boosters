@@ -2,18 +2,14 @@ package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens;
 
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
-import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
-import dev.matthiesen.cobblemon_boosters.common.boosts.CatchBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ExperienceBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.BoostBuilderGui;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.BucketBoostBuilderGui;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BoostersGuiTemplate;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
@@ -32,118 +28,39 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
         player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(rawMessage, boost)));
     }
 
-    public static void openBucketGui(ServerPlayer player) {
-        String boostType = "Spawn Bucket";
-        var spawnBucketManager = BoostManager.getSpawnBucketBoostManager();
-        var messages = BoostersConfig.getSpawnBucketMessages();
-        var permissions = PermissionRegistry.getPermissions();
-        new BoostersGuiTemplate(
-                "&bSpawn Bucket Boosts&r",
-                boostType,
-                player,
-                spawnBucketManager,
-                messages,
-                permissions.BUCKET_START_PERMISSION,
-                permissions.BUCKET_STOP_PERMISSION,
-                permissions.BUCKET_STATUS_PERMISSION,
-                permissions.CHECK_QUEUE_PERMISSION,
-                () -> new BucketBoostBuilderGui(
-                        player,
-                        boostType,
-                        boost -> {
-                            SpawnBucketBoost newBoost = new SpawnBucketBoost(boost.getMultiplier(), boost.getDuration()).setBucket(boost.getBucket());
-                            spawnBucketManager.appendToQueue(newBoost);
-                            sendServerPlayerMessage(player, messages.boostAddedToQueue(), newBoost);
-                            CacheServerConfig.setGlobalBoostData();
-                        }
-                ).open()
-        ).open();
+    public static void queueBoostAndNotify(ServerPlayer player, BoosterGuiDefinition<?> definition, IBoost boost) {
+        definition.queueBoost(boost);
+        sendServerPlayerMessage(player, definition.getMessages().boostAddedToQueue(), boost);
+        CacheServerConfig.setGlobalBoostData();
     }
 
-    public static void openCatchGUI(ServerPlayer player) {
-        String boostType = "Catch";
-        var catchBoostManager = BoostManager.getCatchBoostManager();
-        var messages = BoostersConfig.getCatchMessages();
-        var permissions = PermissionRegistry.getPermissions();
-        new BoostersGuiTemplate(
-                "&dCatch Boosts&r",
-                boostType,
-                player,
-                catchBoostManager,
-                messages,
-                permissions.CATCH_START_PERMISSION,
-                permissions.CATCH_STOP_PERMISSION,
-                permissions.CATCH_STATUS_PERMISSION,
-                permissions.CHECK_QUEUE_PERMISSION,
-                () -> new BoostBuilderGui(
-                        player,
-                        boostType,
-                        CatchBoost.class,
-                        boost -> {
-                            CatchBoost newBoost = new CatchBoost(boost.getMultiplier(), boost.getDuration());
-                            catchBoostManager.appendToQueue(newBoost);
-                            sendServerPlayerMessage(player, messages.boostAddedToQueue(), newBoost);
-                            CacheServerConfig.setGlobalBoostData();
-                        }
-                ).open()
-        ).open();
+    public static void openStartBuilder(ServerPlayer player, BoosterGuiDefinition<?> definition) {
+        switch (definition.getBuilderType()) {
+            case MULTIPLIER -> new BoostBuilderGui(
+                    player,
+                    definition.getDisplayName(),
+                    definition.getBoostClass(),
+                    boost -> queueBoostAndNotify(player, definition, boost)
+            ).open();
+            case SPAWN_BUCKET -> new BucketBoostBuilderGui(
+                    player,
+                    definition.getDisplayName(),
+                    boost -> queueBoostAndNotify(player, definition, boost)
+            ).open();
+        }
     }
 
-    public static void openExperienceGUI(ServerPlayer player) {
-        String boostType = "Experience";
-        var experienceBoostManager = BoostManager.getExperienceBoostManager();
-        var messages = BoostersConfig.getExperienceMessages();
-        var permissions = PermissionRegistry.getPermissions();
-        new BoostersGuiTemplate(
-                "&aExperience Boosts&r",
-                boostType,
-                player,
-                experienceBoostManager,
-                messages,
-                permissions.EXPERIENCE_START_PERMISSION,
-                permissions.EXPERIENCE_STOP_PERMISSION,
-                permissions.EXPERIENCE_STATUS_PERMISSION,
-                permissions.CHECK_QUEUE_PERMISSION,
-                () -> new BoostBuilderGui(
-                        player,
-                        boostType,
-                        ExperienceBoost.class,
-                        boost -> {
-                            ExperienceBoost newBoost = new ExperienceBoost(boost.getMultiplier(), boost.getDuration());
-                            experienceBoostManager.appendToQueue(newBoost);
-                            sendServerPlayerMessage(player, messages.boostAddedToQueue(), newBoost);
-                            CacheServerConfig.setGlobalBoostData();
-                        }
-                ).open()
-        ).open();
-    }
+    public static void openBoosterGui(ServerPlayer player, String boosterId) {
+        var definition = BoostControllerServiceManager.getGuiDefinition(boosterId);
+        if (definition == null) {
+            player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse("%prefix% &cUnknown booster type: &f" + boosterId + "&c.")));
+            return;
+        }
 
-    public static void openShinyGUI(ServerPlayer player) {
-        String boostType = "Shiny";
-        var shinyBoostManager = BoostManager.getShinyBoostManager();
-        var messages = BoostersConfig.getShinyMessages();
-        var permissions = PermissionRegistry.getPermissions();
         new BoostersGuiTemplate(
-                "&6Shiny Boosts&r",
-                boostType,
                 player,
-                shinyBoostManager,
-                messages,
-                permissions.SHINY_START_PERMISSION,
-                permissions.SHINY_STOP_PERMISSION,
-                permissions.SHINY_STATUS_PERMISSION,
-                permissions.CHECK_QUEUE_PERMISSION,
-                () -> new BoostBuilderGui(
-                        player,
-                        boostType,
-                        ShinyBoost.class,
-                        boost -> {
-                            ShinyBoost newBoost = new ShinyBoost(boost.getMultiplier(), boost.getDuration());
-                            shinyBoostManager.appendToQueue(newBoost);
-                            sendServerPlayerMessage(player, messages.boostAddedToQueue(), newBoost);
-                            CacheServerConfig.setGlobalBoostData();
-                        }
-                ).open()
+                definition,
+                () -> openStartBuilder(player, definition)
         ).open();
     }
 
@@ -152,37 +69,17 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
         List<Button> buttons = new ArrayList<>();
         var permissions = PermissionRegistry.getPermissions();
 
-        // Bucket Booster
-        if (PermissionRegistry.checkPermission(player, permissions.BUCKET_PERMISSION))
-            buttons.add(GooeyButton.builder()
-                    .display(MenuUtils.getBucketItem())
-                    .onClick(() -> openBucketGui(player))
-                    .build()
-            );
+        for (BoosterGuiDefinition<?> definition : BoostControllerServiceManager.getGuiDefinitions()) {
+            if (!PermissionRegistry.checkPermission(player, definition.getRootPermission())) {
+                continue;
+            }
 
-        // Catch Booster
-        if (PermissionRegistry.checkPermission(player, permissions.CATCH_PERMISSION))
             buttons.add(GooeyButton.builder()
-                    .display(MenuUtils.getCatchItem())
-                    .onClick(() -> openCatchGUI(player))
+                    .display(definition.getMenuItem())
+                    .onClick(() -> openBoosterGui(player, definition.getCommandId()))
                     .build()
             );
-
-        // Experience Booster
-        if (PermissionRegistry.checkPermission(player, permissions.EXPERIENCE_PERMISSION))
-            buttons.add(GooeyButton.builder()
-                    .display(MenuUtils.getExperienceItem())
-                    .onClick(() -> openExperienceGUI(player))
-                    .build()
-            );
-
-        // Shiny Booster
-        if (PermissionRegistry.checkPermission(player, permissions.SHINY_PERMISSION))
-            buttons.add(GooeyButton.builder()
-                    .display(MenuUtils.getShinyItem())
-                    .onClick(() -> openShinyGUI(player))
-                    .build()
-            );
+        }
 
         // Check Queues
         if (PermissionRegistry.checkPermission(player, permissions.CHECK_QUEUE_PERMISSION))

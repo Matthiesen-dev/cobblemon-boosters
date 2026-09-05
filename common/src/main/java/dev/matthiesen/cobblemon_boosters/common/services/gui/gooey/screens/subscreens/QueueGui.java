@@ -10,7 +10,7 @@ import ca.landonjw.gooeylibs2.api.page.LinkedPage;
 import ca.landonjw.gooeylibs2.api.page.Page;
 import ca.landonjw.gooeylibs2.api.template.slot.TemplateSlotDelegate;
 import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
-import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGui;

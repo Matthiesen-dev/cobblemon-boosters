@@ -28,22 +28,7 @@ public final class FallbackGUIAdapter implements IGUIAdapter {
     }
 
     @Override
-    public void openBucketBoosterGUI(ServerPlayer player) {
-        player.sendSystemMessage(getDefaultComponent());
-    }
-
-    @Override
-    public void openCatchBoosterGUI(ServerPlayer player) {
-        player.sendSystemMessage(getDefaultComponent());
-    }
-
-    @Override
-    public void openExperienceBoosterGUI(ServerPlayer player) {
-        player.sendSystemMessage(getDefaultComponent());
-    }
-
-    @Override
-    public void openShinyBoosterGUI(ServerPlayer player) {
+    public void openBoosterGUI(ServerPlayer player, String boosterId) {
         player.sendSystemMessage(getDefaultComponent());
     }
 }

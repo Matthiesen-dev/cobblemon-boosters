@@ -1,11 +1,12 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
-import dev.matthiesen.cobblemon_boosters.common.boosts.CatchBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ExperienceBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.QueuePrioritySettings;
 import dev.matthiesen.matthiesen_core.common.api.events.config.ConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
@@ -249,5 +250,14 @@ public final class BoostersConfig {
 
     public static void saveCacheToConfig() {
         CacheServerConfig.saveToConfig();
+    }
+
+    public static QueuePrioritySettings getQueuePrioritySettings() {
+        return new QueuePrioritySettings(
+                BoostersConfig.CORE_SERVER_CONFIG.queuePriorityEnabled.getAsBoolean(),
+                BoostersConfig.CORE_SERVER_CONFIG.queuePriorityMode.get(),
+                BoostersConfig.CORE_SERVER_CONFIG.timePriorityDirection.get(),
+                BoostersConfig.CORE_SERVER_CONFIG.activePreemptionEnabled.getAsBoolean()
+        );
     }
 }

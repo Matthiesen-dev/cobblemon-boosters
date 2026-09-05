@@ -2,10 +2,10 @@ package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens;
 
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.QueueGui;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
 import net.minecraft.network.chat.Component;
@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 public final class CheckQueuesGui extends BaseMenuGuiTemplate {
 
@@ -28,13 +27,13 @@ public final class CheckQueuesGui extends BaseMenuGuiTemplate {
         );
     }
 
-    public Button getQueueButton(String boostType, Queue<? extends IBoost> queuedBoosts) {
+    public Button getQueueButton(BoosterGuiDefinition<?> definition) {
         return GooeyButton.builder()
-                .display(MenuUtils.getQueueItem(boostType))
+                .display(MenuUtils.getQueueItem(definition.getMenuItem().getItem(), definition.getDisplayName(), false))
                 .onClick(() -> new QueueGui(
                         player,
-                        boostType,
-                        queuedBoosts
+                        definition.getDisplayName(),
+                        definition.getBoostQueue()
                 ).open())
                 .build();
     }
@@ -42,10 +41,9 @@ public final class CheckQueuesGui extends BaseMenuGuiTemplate {
     @Override
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
-        buttons.add(getQueueButton("Spawn Bucket", BoostManager.getSpawnBucketBoostManager().getQueue()));
-        buttons.add(getQueueButton("Catch", BoostManager.getCatchBoostManager().getQueue()));
-        buttons.add(getQueueButton("Experience", BoostManager.getExperienceBoostManager().getQueue()));
-        buttons.add(getQueueButton("Shiny", BoostManager.getShinyBoostManager().getQueue()));
+        for (BoosterGuiDefinition<?> definition : BoostControllerServiceManager.getGuiDefinitions()) {
+            buttons.add(getQueueButton(definition));
+        }
         return buttons;
     }
 }

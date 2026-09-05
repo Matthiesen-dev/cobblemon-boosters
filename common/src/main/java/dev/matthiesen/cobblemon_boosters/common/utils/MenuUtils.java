@@ -1,7 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.utils;
 
 import com.cobblemon.mod.common.CobblemonItems;
-import dev.matthiesen.cobblemon_boosters.common.Constants;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -99,7 +98,7 @@ public final class MenuUtils {
         Item item = BUCKET_ITEM;
 
         if (ServiceManager.isCobbreedingAvailable()) {
-            item = BuiltInRegistries.ITEM.getOptional(Constants.COMPAT.COBBREEDING_EGG).orElse(BUCKET_ITEM);
+            item = BuiltInRegistries.ITEM.getOptional(ServiceManager.COMPAT.COBBREEDING_EGG).orElse(BUCKET_ITEM);
         }
 
         return new BoostersItemBuilder(item)
@@ -161,17 +160,8 @@ public final class MenuUtils {
                 .build();
     }
 
-    public static ItemStack getQueueItem(String name, boolean multiple) {
-
-        Item queueItem = QUEUE_ITEM;
-        switch (name) {
-            case "Spawn Bucket" -> queueItem = getBucketItem().getItem();
-            case "Catch" -> queueItem = getCatchItem().getItem();
-            case "Experience" -> queueItem = getExperienceItem().getItem();
-            case "Shiny" -> queueItem = getShinyItem().getItem();
-        }
-
-        return new BoostersItemBuilder(queueItem)
+    public static ItemStack getQueueItem(Item item, String name, boolean multiple) {
+        return new BoostersItemBuilder(item)
                 .hideAdditional()
                 .setCustomName(
                         Component.literal("View " + name + " Queue" + (multiple ? "s" : ""))
@@ -182,8 +172,16 @@ public final class MenuUtils {
                 .build();
     }
 
-    public static ItemStack getQueueItem(String name) {
-        return getQueueItem(name, false);
+    public static ItemStack getQueueItem(String name, boolean multiple) {
+        Item queueItem = QUEUE_ITEM;
+        switch (name) {
+            case "Spawn Bucket" -> queueItem = getBucketItem().getItem();
+            case "Catch" -> queueItem = getCatchItem().getItem();
+            case "Experience" -> queueItem = getExperienceItem().getItem();
+            case "Shiny" -> queueItem = getShinyItem().getItem();
+        }
+
+        return getQueueItem(queueItem, name, multiple);
     }
 
     public static ItemStack getAdminItem() {

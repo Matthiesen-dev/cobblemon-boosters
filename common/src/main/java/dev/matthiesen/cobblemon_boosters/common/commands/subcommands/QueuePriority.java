@@ -1,4 +1,4 @@
-package dev.matthiesen.cobblemon_boosters.common.commands.subcommands.misc;
+package dev.matthiesen.cobblemon_boosters.common.commands.subcommands;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -7,7 +7,8 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.QueuePriorityMode;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.TimePriorityDirection;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -79,10 +80,10 @@ public final class QueuePriority implements ISubCommand {
 
     private int mode(CommandContext<CommandSourceStack> ctx) {
         String value = StringArgumentType.getString(ctx, "mode");
-        BoostManager.QueuePriorityMode normalized = switch (value.toLowerCase()) {
-            case "fifo" -> BoostManager.QueuePriorityMode.FIFO;
-            case "multiplier" -> BoostManager.QueuePriorityMode.MULTIPLIER;
-            case "time" -> BoostManager.QueuePriorityMode.TIME_REMAINING;
+        QueuePriorityMode normalized = switch (value.toLowerCase()) {
+            case "fifo" -> QueuePriorityMode.FIFO;
+            case "multiplier" -> QueuePriorityMode.MULTIPLIER;
+            case "time" -> QueuePriorityMode.TIME_REMAINING;
             default -> null;
         };
 
@@ -112,9 +113,9 @@ public final class QueuePriority implements ISubCommand {
 
     private int timeDirection(CommandContext<CommandSourceStack> ctx) {
         String value = StringArgumentType.getString(ctx, "direction");
-        BoostManager.TimePriorityDirection normalized = switch (value.toLowerCase()) {
-            case "shortest" -> BoostManager.TimePriorityDirection.SHORTEST_FIRST;
-            case "longest" -> BoostManager.TimePriorityDirection.LONGEST_FIRST;
+        TimePriorityDirection normalized = switch (value.toLowerCase()) {
+            case "shortest" -> TimePriorityDirection.SHORTEST_FIRST;
+            case "longest" -> TimePriorityDirection.LONGEST_FIRST;
             default -> null;
         };
 

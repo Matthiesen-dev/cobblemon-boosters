@@ -1,7 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.services;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.cobblemon_boosters.common.Constants;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.BoostDisplayMode;
 import dev.matthiesen.cobblemon_boosters.common.services.display.BossBarDisplay;
@@ -13,9 +12,9 @@ import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostDisplayService;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGUIAdapter;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IWebhookService;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.services.webhook.DiscordWebhookService;
 import dev.matthiesen.cobblemon_boosters.common.services.webhook.NoOpWebhookService;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 
 public final class ServiceManager {
@@ -25,13 +24,19 @@ public final class ServiceManager {
     private static BoostDisplayMode displayMode;
     private static boolean cobbreedingAvailable;
 
+    public static class COMPAT {
+        public static final String GOOEYLIBS = "gooeylibs";
+        public static final String MATTHIESEN_LIB_WEBHOOKS = "matthiesen_lib_webhooks";
+        public static final String COBBREEDING = "cobbreeding";
+        public static final ResourceLocation COBBREEDING_EGG = ResourceLocation.parse("cobbreeding:manaphy_egg");
+    }
+
     public static boolean isInitialized;
 
     public static void init() {
         if (isInitialized) return;
         CobblemonBoostersCommon.INSTANCE.createInfoLog("Initializing ServiceManager");
         loadCompat();
-        BoostManager.init();
         applyDisplayMode();
 
         isInitialized = true;
@@ -54,19 +59,19 @@ public final class ServiceManager {
     }
 
     public static void loadCompat() {
-        if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(Constants.COMPAT.GOOEYLIBS)) {
+        if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(COMPAT.GOOEYLIBS)) {
             guiAdapter = new GooeyGUIAdapter();
         } else {
             guiAdapter = new FallbackGUIAdapter();
         }
 
-        if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(Constants.COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
+        if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
             discordWebhookService = new DiscordWebhookService();
         } else {
             discordWebhookService = new NoOpWebhookService();
         }
 
-        cobbreedingAvailable = CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(Constants.COMPAT.COBBREEDING);
+        cobbreedingAvailable = CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(COMPAT.COBBREEDING);
     }
 
     /**
@@ -94,7 +99,7 @@ public final class ServiceManager {
         displayMode = mode;
 
         if (server != null) {
-            for (IBoost boost : BoostManager.getActiveBoosts()) {
+            for (IBoost boost : BoostControllerServiceManager.getActiveBoosts()) {
                 displayService.onBoostActivated(boost);
             }
         }

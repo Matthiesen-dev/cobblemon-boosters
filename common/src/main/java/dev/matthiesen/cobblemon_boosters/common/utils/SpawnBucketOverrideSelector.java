@@ -4,7 +4,7 @@ import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.events.entity.SpawnBucketChosenEvent;
 import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
-import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 
 import java.util.*;
 

@@ -3,67 +3,44 @@ package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.temp
 import ca.landonjw.gooeylibs2.api.button.Button;
 import ca.landonjw.gooeylibs2.api.button.ButtonAction;
 import ca.landonjw.gooeylibs2.api.button.GooeyButton;
-import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.QueueGui;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
-import dev.matthiesen.matthiesen_core.common.api.permissions.Permission;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.function.Consumer;
 
 public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
-    public final String guiTitle;
-    public final String boostType;
+    public final BoosterGuiDefinition<?> definition;
     public final IBoost activeBoost;
-    public final Queue<? extends IBoost> queuedBoosts;
     public final String noActiveBoost;
     public final String stopBoostMsg;
     public final String boostInfo;
-    public final Permission startPermission;
-    public final Permission stopPermission;
-    public final Permission statusPermission;
-    public final Permission queuePermission;
-    public final Consumer<ButtonAction> startOnClick;
+    public final java.util.function.Consumer<ButtonAction> startOnClick;
 
     public BoostersGuiTemplate(
-            String guiTitle,
-            String boostType,
             ServerPlayer player,
-            BoostManager.IBoostManager<? extends IBoost> boostManager,
-            BoostMessagesConfig messagesConfig,
-            Permission startPermission,
-            Permission stopPermission,
-            Permission statusPermission,
-            Permission queuePermission,
+            BoosterGuiDefinition<?> definition,
             Runnable startOnClick
     ) {
         super(player);
-        this.guiTitle = guiTitle;
-        this.boostType = boostType;
-        this.activeBoost = boostManager.getActive();
-        this.queuedBoosts = boostManager.getQueue();
-        this.noActiveBoost = messagesConfig.noActiveBoosts();
-        this.stopBoostMsg = messagesConfig.boostStopped();
-        this.boostInfo = messagesConfig.boostInfo();
-        this.startPermission = startPermission;
-        this.stopPermission = stopPermission;
-        this.statusPermission = statusPermission;
-        this.queuePermission = queuePermission;
+        this.definition = definition;
+        this.activeBoost = definition.getActiveBoost();
+        this.noActiveBoost = definition.getMessages().noActiveBoosts();
+        this.stopBoostMsg = definition.getMessages().boostStopped();
+        this.boostInfo = definition.getMessages().boostInfo();
         this.startOnClick = (startOnClick != null) ? (action) -> startOnClick.run() : null;
     }
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserialize(TextUtils.parse(guiTitle));
+        return TextUtils.deserialize(TextUtils.parse(definition.getMenuTitle()));
     }
 
     public Button getStopButton() {
@@ -104,18 +81,18 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
 
     public Button getQueueButton() {
         return GooeyButton.builder()
-                .display(MenuUtils.getQueueItemForSubscreen(boostType))
+                .display(MenuUtils.getQueueItemForSubscreen(definition.getDisplayName()))
                 .onClick(() -> new QueueGui(
                         player,
-                        boostType,
-                        queuedBoosts
+                        definition.getDisplayName(),
+                        definition.getBoostQueue()
                 ).open())
                 .build();
     }
 
     public Button getStartButton() {
         return GooeyButton.builder()
-                .display(MenuUtils.getCreateNewBoosterItem(boostType))
+                .display(MenuUtils.getCreateNewBoosterItem(definition.getDisplayName()))
                 .onClick(startOnClick)
                 .build();
     }
@@ -124,16 +101,16 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
 
-        if (PermissionRegistry.checkPermission(player, startPermission))
+        if (PermissionRegistry.checkPermission(player, definition.getStartPermission()))
             buttons.add(getStartButton());
 
-        if (PermissionRegistry.checkPermission(player, stopPermission))
+        if (PermissionRegistry.checkPermission(player, definition.getStopPermission()))
             buttons.add(getStopButton());
 
-        if (PermissionRegistry.checkPermission(player, statusPermission))
+        if (PermissionRegistry.checkPermission(player, definition.getStatusPermission()))
             buttons.add(getStatusButton());
 
-        if (PermissionRegistry.checkPermission(player, queuePermission))
+        if (PermissionRegistry.checkPermission(player, definition.getQueuePermission()))
             buttons.add(getQueueButton());
 
         return buttons;

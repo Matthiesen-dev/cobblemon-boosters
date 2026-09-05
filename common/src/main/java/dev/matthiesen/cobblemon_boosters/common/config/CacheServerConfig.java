@@ -1,10 +1,10 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
-import dev.matthiesen.cobblemon_boosters.common.boosts.CatchBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ExperienceBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.ShinyBoost;
-import dev.matthiesen.cobblemon_boosters.common.boosts.SpawnBucketBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.managers.BoostManager;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Collections;
@@ -87,22 +87,29 @@ public final class CacheServerConfig {
     }
 
     public static void setGlobalBoostData() {
-        var shinyBoostManager = BoostManager.getShinyBoostManager();
-        var catchBoostManager = BoostManager.getCatchBoostManager();
-        var experienceBoostManager = BoostManager.getExperienceBoostManager();
-        var spawnBucketBoostManager = BoostManager.getSpawnBucketBoostManager();
+        var shinyBoostManager = BoostControllerServiceManager.getShinyBoostManager();
+        if (shinyBoostManager != null) {
+            setActiveShinyBoost(shinyBoostManager.getActiveBoost());
+            setQueuedShinyBoosts(shinyBoostManager.getBoostQueueAsList());
+        }
 
-        setActiveShinyBoost(shinyBoostManager.getActive());
-        setQueuedShinyBoosts(shinyBoostManager.getQueueList());
+        var catchBoostManager = BoostControllerServiceManager.getCatchBoostManager();
+        if (catchBoostManager != null) {
+            setActiveCatchBoost(catchBoostManager.getActiveBoost());
+            setQueuedCatchBoosts(catchBoostManager.getBoostQueueAsList());
+        }
 
-        setActiveCatchBoost(catchBoostManager.getActive());
-        setQueuedCatchBoosts(catchBoostManager.getQueueList());
+        var experienceBoostManager = BoostControllerServiceManager.getExperienceBoostManager();
+        if (experienceBoostManager != null) {
+            setActiveExperienceBoost(experienceBoostManager.getActiveBoost());
+            setQueuedExperienceBoosts(experienceBoostManager.getBoostQueueAsList());
+        }
 
-        setActiveExperienceBoost(experienceBoostManager.getActive());
-        setQueuedExperienceBoosts(experienceBoostManager.getQueueList());
-
-        setActiveSpawnBucketBoost(spawnBucketBoostManager.getActive());
-        setQueuedSpawnBucketBoosts(spawnBucketBoostManager.getQueueList());
+        var spawnBucketBoostManager = BoostControllerServiceManager.getSpawnBucketBoostManager();
+        if (spawnBucketBoostManager != null) {
+            setActiveSpawnBucketBoost(spawnBucketBoostManager.getActiveBoost());
+            setQueuedSpawnBucketBoosts(spawnBucketBoostManager.getBoostQueueAsList());
+        }
 
         saveToConfig();
     }
