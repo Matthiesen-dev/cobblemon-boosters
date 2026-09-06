@@ -94,6 +94,8 @@ public final class SpawnBucketBoostController implements IBoostController<SpawnB
             String newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, activeBoost);
             event.setBucket(newBucket);
         });
+
+        // TODO: Add support for PokeSnacks and Fishing
     }
 
     @Override
