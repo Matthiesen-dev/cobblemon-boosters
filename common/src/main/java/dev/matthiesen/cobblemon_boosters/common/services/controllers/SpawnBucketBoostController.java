@@ -3,7 +3,6 @@ package dev.matthiesen.cobblemon_boosters.common.services.controllers;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
 import com.cobblemon.mod.common.api.events.entity.SpawnBucketChosenEvent;
 import com.cobblemon.mod.common.api.reactive.ObservableSubscription;
-import com.cobblemon.mod.common.api.spawning.SpawnBucket;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -92,7 +91,7 @@ public final class SpawnBucketBoostController implements IBoostController<SpawnB
         subscription = CobblemonEvents.SPAWN_BUCKET_CHOSEN.subscribe(event -> {
             SpawnBucketBoost activeBoost = getActiveBoost();
             if (activeBoost == null) return;
-            SpawnBucket newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, activeBoost);
+            String newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, activeBoost);
             event.setBucket(newBucket);
         });
     }
