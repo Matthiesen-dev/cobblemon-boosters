@@ -1,5 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
@@ -7,9 +9,11 @@ import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost
 import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public final class CacheServerConfig {
     private static volatile ShinyBoost activeShinyBoost = null;
@@ -117,31 +121,72 @@ public final class CacheServerConfig {
     public static void loadFromConfig() {
         var cacheConfig = BoostersConfig.CACHE_SERVER_CONFIG;
 
-        setActiveShinyBoost(ShinyBoost.fromString(cacheConfig.raw_activeShinyBoost.get()).orElse(null));
-        setActiveCatchBoost(CatchBoost.fromString(cacheConfig.raw_activeCatchBoost.get()).orElse(null));
-        setActiveExperienceBoost(ExperienceBoost.fromString(cacheConfig.raw_activeExperienceBoost.get()).orElse(null));
-        setActiveSpawnBucketBoost(SpawnBucketBoost.fromString(cacheConfig.raw_activeSpawnBucketBoost.get()).orElse(null));
+        setActiveShinyBoost(parseActiveBoost("shiny", cacheConfig.raw_activeShinyBoost.get(), ShinyBoost::fromString));
+        setActiveCatchBoost(parseActiveBoost("catch", cacheConfig.raw_activeCatchBoost.get(), CatchBoost::fromString));
+        setActiveExperienceBoost(parseActiveBoost("experience", cacheConfig.raw_activeExperienceBoost.get(), ExperienceBoost::fromString));
+        setActiveSpawnBucketBoost(parseActiveBoost("bucket", cacheConfig.raw_activeSpawnBucketBoost.get(), SpawnBucketBoost::fromString));
 
-        setQueuedShinyBoosts(cacheConfig.raw_queuedShinyBoosts.get().stream()
-                .map(ShinyBoost::fromString)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList());
-        setQueuedCatchBoosts(cacheConfig.raw_queuedCatchBoosts.get().stream()
-                .map(CatchBoost::fromString)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList());
-        setQueuedExperienceBoosts(cacheConfig.raw_queuedExperienceBoosts.get().stream()
-                .map(ExperienceBoost::fromString)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList());
-        setQueuedSpawnBucketBoosts(cacheConfig.raw_queuedSpawnBucketBoosts.get().stream()
-                .map(SpawnBucketBoost::fromString)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList());
+        setQueuedShinyBoosts(parseQueuedBoosts("shiny", cacheConfig.raw_queuedShinyBoosts.get(), ShinyBoost::fromString));
+        setQueuedCatchBoosts(parseQueuedBoosts("catch", cacheConfig.raw_queuedCatchBoosts.get(), CatchBoost::fromString));
+        setQueuedExperienceBoosts(parseQueuedBoosts("experience", cacheConfig.raw_queuedExperienceBoosts.get(), ExperienceBoost::fromString));
+        setQueuedSpawnBucketBoosts(parseQueuedBoosts("bucket", cacheConfig.raw_queuedSpawnBucketBoosts.get(), SpawnBucketBoost::fromString));
+    }
+
+    private static <T extends IBoost> T parseActiveBoost(
+            String boosterType,
+            String raw,
+            Function<String, Optional<T>> parser
+    ) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+
+        Optional<T> parsed = parser.apply(raw);
+        if (parsed.isEmpty()) {
+            logCacheWarning(boosterType, "active", "malformed", raw);
+            return null;
+        }
+
+        T boost = parsed.get();
+        if (boost.getTimeRemaining() <= 0) {
+            logCacheWarning(boosterType, "active", "expired", raw);
+            return null;
+        }
+
+        return boost;
+    }
+
+    private static <T extends IBoost> List<T> parseQueuedBoosts(
+            String boosterType,
+            List<? extends String> rawValues,
+            Function<String, Optional<T>> parser
+    ) {
+        List<T> sanitized = new ArrayList<>();
+        for (String raw : rawValues) {
+            Optional<T> parsed = parser.apply(raw);
+            if (parsed.isEmpty()) {
+                logCacheWarning(boosterType, "queue", "malformed", raw);
+                continue;
+            }
+
+            T boost = parsed.get();
+            if (boost.getTimeRemaining() <= 0) {
+                logCacheWarning(boosterType, "queue", "expired", raw);
+                continue;
+            }
+
+            sanitized.add(boost);
+        }
+        return sanitized;
+    }
+
+    private static void logCacheWarning(String boosterType, String section, String reason, String rawValue) {
+        CobblemonBoostersCommon.INSTANCE.createWarnLog(
+                "[WARN] Dropping cached boost entry [type=" + boosterType
+                        + ", section=" + section
+                        + ", reason=" + reason
+                        + ", raw='" + rawValue + "']"
+        );
     }
 
     public static void saveToConfig() {

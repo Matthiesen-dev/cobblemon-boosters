@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.interfaces;
 
 import com.mojang.brigadier.context.CommandContext;
+import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
@@ -12,9 +13,11 @@ import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinitio
 import net.minecraft.commands.CommandSourceStack;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 public interface IBoostController<T extends IBoost> {
     SupportedBoosterTypes getType();
@@ -43,36 +46,51 @@ public interface IBoostController<T extends IBoost> {
         return List.copyOf(getBoostQueue());
     }
 
+    @SuppressWarnings("UnnecessaryLocalVariable")
     default void tickBoosts() {
-        var activeBoost = getActiveBoost();
+        T activeBoost = getActiveBoost();
         var queue = getBoostQueue();
 
         if (activeBoost == null && queue.isEmpty()) return;
+
         if (activeBoost != null) {
             activeBoost.setTimeRemaining(activeBoost.getTimeRemaining() - 1);
 
-            if (activeBoost.getTimeRemaining() > 0) return;
+            if (activeBoost.getTimeRemaining() > 0) {
+                return;
+            }
 
-            ServiceManager.getDisplayService().onBoostDeactivated(activeBoost);
-            ServiceManager.getDiscordWebhookService().sendMessage(
-                    getBoostEndEmbed(),
-                    activeBoost
-            );
-        }
-
-        if (!queue.isEmpty()) {
+            T expiredBoost = activeBoost;
             T nextBoost = queue.poll();
             setActiveBoost(nextBoost);
-            ServiceManager.getDisplayService().onBoostActivated(nextBoost);
-            ServiceManager.getDiscordWebhookService().sendMessage(
-                    getBoostStartEmbed(),
-                    nextBoost
-            );
-        } else {
-            setActiveBoost(null);
+
+            Set<String> loggedFailures = new HashSet<>();
+            runSafely("deactivate", expiredBoost, loggedFailures, () ->
+                    ServiceManager.getDisplayService().onBoostDeactivated(expiredBoost));
+            runSafely("webhook-end", expiredBoost, loggedFailures, () ->
+                    ServiceManager.getDiscordWebhookService().sendMessage(getBoostEndEmbed(), expiredBoost));
+
+            if (nextBoost != null) {
+                runSafely("activate", nextBoost, loggedFailures, () ->
+                        ServiceManager.getDisplayService().onBoostActivated(nextBoost));
+                runSafely("webhook-start", nextBoost, loggedFailures, () ->
+                        ServiceManager.getDiscordWebhookService().sendMessage(getBoostStartEmbed(), nextBoost));
+            }
+
+            CacheServerConfig.setGlobalBoostData();
+            return;
         }
 
-        CacheServerConfig.setGlobalBoostData();
+        T nextBoost = queue.poll();
+        if (nextBoost != null) {
+            setActiveBoost(nextBoost);
+            Set<String> loggedFailures = new HashSet<>();
+            runSafely("activate", nextBoost, loggedFailures, () ->
+                    ServiceManager.getDisplayService().onBoostActivated(nextBoost));
+            runSafely("webhook-start", nextBoost, loggedFailures, () ->
+                    ServiceManager.getDiscordWebhookService().sendMessage(getBoostStartEmbed(), nextBoost));
+            CacheServerConfig.setGlobalBoostData();
+        }
     }
 
     default void refreshQueuePriority() {
@@ -143,8 +161,27 @@ public interface IBoostController<T extends IBoost> {
     }
 
     default void switchActiveBoost(T activeBoost, T candidateBoost) {
-        ServiceManager.getDisplayService().onBoostDeactivated(activeBoost);
         setActiveBoost(candidateBoost);
-        ServiceManager.getDisplayService().onBoostActivated(candidateBoost);
+
+        Set<String> loggedFailures = new HashSet<>();
+        runSafely("deactivate", activeBoost, loggedFailures, () ->
+                ServiceManager.getDisplayService().onBoostDeactivated(activeBoost));
+        runSafely("activate", candidateBoost, loggedFailures, () ->
+                ServiceManager.getDisplayService().onBoostActivated(candidateBoost));
+        CacheServerConfig.setGlobalBoostData();
+    }
+
+    default void runSafely(String action, @SuppressWarnings("unused") T boost, Set<String> loggedFailures, Runnable task) {
+        try {
+            task.run();
+        } catch (RuntimeException e) {
+            String key = getType() + ":" + action;
+            if (loggedFailures.add(key)) {
+                CobblemonBoostersCommon.INSTANCE.createErrorLog(
+                        "Failed boost lifecycle action [type=" + getType() + ", action=" + action + "]",
+                        e
+                );
+            }
+        }
     }
 }

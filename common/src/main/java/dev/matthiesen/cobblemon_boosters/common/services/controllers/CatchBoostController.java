@@ -107,7 +107,7 @@ public final class CatchBoostController implements IBoostController<CatchBoost> 
         if (activeBoost == null) {
             // If there is no current active boost check the config to see if there is a default boost that should be active
             var defaultBoost = BoostersConfig.getActiveCatchBoost();
-            if (defaultBoost != null) {
+            if (defaultBoost != null && defaultBoost.getTimeRemaining() > 0) {
                 setActiveBoost(defaultBoost);
             }
         }
