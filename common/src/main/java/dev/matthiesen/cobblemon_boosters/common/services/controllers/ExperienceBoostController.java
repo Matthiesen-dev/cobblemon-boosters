@@ -107,7 +107,7 @@ public final class ExperienceBoostController implements IBoostController<Experie
         if (activeBoost == null) {
             // If there is no current active boost check the config to see if there is a default boost that should be active
             var defaultBoost = BoostersConfig.getActiveExperienceBoost();
-            if (defaultBoost != null) {
+            if (defaultBoost != null && defaultBoost.getTimeRemaining() > 0) {
                 setActiveBoost(defaultBoost);
             }
         }

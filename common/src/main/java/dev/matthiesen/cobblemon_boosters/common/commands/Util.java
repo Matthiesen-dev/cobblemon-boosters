@@ -7,6 +7,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
@@ -24,7 +25,8 @@ public final class Util {
             sendMessage(ctx, messagesConfig.noActiveBoosts());
             return;
         }
-        active.setTimeRemaining(1);
+        active.setTimeRemaining(0);
+        CacheServerConfig.setGlobalBoostData();
         sendMessage(ctx, messagesConfig.boostStopped(), active);
     }
 

@@ -94,8 +94,6 @@ public final class SpawnBucketBoostController implements IBoostController<SpawnB
             String newBucket = SpawnBucketOverrideSelector.recalculateOverrideBucket(event, activeBoost);
             event.setBucket(newBucket);
         });
-
-        // TODO: Add support for PokeSnacks and Fishing
     }
 
     @Override
@@ -111,7 +109,7 @@ public final class SpawnBucketBoostController implements IBoostController<SpawnB
         if (activeBoost == null) {
             // If there is no current active boost check the config to see if there is a default boost that should be active
             var defaultBoost = BoostersConfig.getActiveSpawnBucketBoost();
-            if (defaultBoost != null) {
+            if (defaultBoost != null && defaultBoost.getTimeRemaining() > 0) {
                 setActiveBoost(defaultBoost);
             }
         }
