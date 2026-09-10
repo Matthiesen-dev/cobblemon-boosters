@@ -3,6 +3,7 @@ package dev.matthiesen.cobblemon_boosters.common.config;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.BoostDisplayMode;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.QueuePriorityMode;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.TimePriorityDirection;
+import dev.matthiesen.matthiesen_core.common.api.text_parsers.BuiltInTextParsers;
 import net.minecraft.world.BossEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -19,6 +20,7 @@ public final class CoreServerConfig {
     public ModConfigSpec.BooleanValue activePreemptionEnabled;
 
     // Messages Configuration
+    public ModConfigSpec.EnumValue<BuiltInTextParsers> messages_textParser;
     public ModConfigSpec.ConfigValue<String> messages_prefix;
     public ModConfigSpec.ConfigValue<String> messages_sidebarTitle;
     public ModConfigSpec.ConfigValue<String> messages_commandReload;
@@ -94,6 +96,13 @@ public final class CoreServerConfig {
         builder.pop(); // Closes "general" block
 
         builder.comment("Messages Configuration").push("messages");
+        messages_textParser = builder.comment(
+                    "The text parser to use for messages.",
+                    "Note: Switching to another parser may break existing messages if they rely on specific formatting.",
+                    "For example, if you switch from Vanilla, to Adventure MiniMessage, the Adventure parser does not support",
+                    "legacy color codes, so any messages using them will appear broken, or return errors."
+                )
+                .defineEnum("textParser", BuiltInTextParsers.VANILLA);
         messages_prefix = builder.comment("The prefix for all messages.")
                 .define("prefix", "&7[&6Boosters&7]");
         messages_sidebarTitle = builder.comment("The title for the sidebar display.")
