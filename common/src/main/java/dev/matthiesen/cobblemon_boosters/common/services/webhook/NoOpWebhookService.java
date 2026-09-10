@@ -7,7 +7,7 @@ import dev.matthiesen.cobblemon_boosters.common.interfaces.IWebhookService;
 
 public final class NoOpWebhookService implements IWebhookService {
     public NoOpWebhookService() {
-        CobblemonBoostersCommon.INSTANCE.createInfoLog("Matthiesen Lib Webhooks not detected, using no-op implementation for Discord Webhook integration");
+        CobblemonBoostersCommon.INSTANCE.createInfoLog("Matthiesen Core Webhooks not detected, using no-op implementation for Discord Webhook integration");
     }
 
     @Override
