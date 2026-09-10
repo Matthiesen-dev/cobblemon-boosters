@@ -115,6 +115,7 @@ public final class CacheServerConfig {
             setQueuedSpawnBucketBoosts(spawnBucketBoostManager.getBoostQueueAsList());
         }
 
+        logLifecycleDebug("Snapshot global state to cache memory");
         saveToConfig();
     }
 
@@ -130,6 +131,15 @@ public final class CacheServerConfig {
         setQueuedCatchBoosts(parseQueuedBoosts("catch", cacheConfig.raw_queuedCatchBoosts.get(), CatchBoost::fromString));
         setQueuedExperienceBoosts(parseQueuedBoosts("experience", cacheConfig.raw_queuedExperienceBoosts.get(), ExperienceBoost::fromString));
         setQueuedSpawnBucketBoosts(parseQueuedBoosts("bucket", cacheConfig.raw_queuedSpawnBucketBoosts.get(), SpawnBucketBoost::fromString));
+
+        logLifecycleDebug("Loaded cache config -> active[shiny=" + describeBoost(activeShinyBoost)
+                + ", catch=" + describeBoost(activeCatchBoost)
+                + ", exp=" + describeBoost(activeExperienceBoost)
+                + ", bucket=" + describeBoost(activeSpawnBucketBoost)
+                + "] queueSizes[shiny=" + queuedShinyBoosts.size()
+                + ", catch=" + queuedCatchBoosts.size()
+                + ", exp=" + queuedExperienceBoosts.size()
+                + ", bucket=" + queuedSpawnBucketBoosts.size() + "]");
     }
 
     private static <T extends IBoost> T parseActiveBoost(
@@ -217,6 +227,21 @@ public final class CacheServerConfig {
                 .map(SpawnBucketBoost::serialize)
                 .toList());
         cacheConfig.raw_queuedSpawnBucketBoosts.save();
+
+        logLifecycleDebug("Persisted cache config");
+    }
+
+    private static void logLifecycleDebug(String message) {
+        if (BoostersConfig.CORE_SERVER_CONFIG.boosterLifecycleDebug.get()) {
+            CobblemonBoostersCommon.INSTANCE.createInfoLog("[Lifecycle] [cache] " + message);
+        }
+    }
+
+    private static String describeBoost(IBoost boost) {
+        if (boost == null) {
+            return "none";
+        }
+        return "mult=" + boost.getMultiplier() + ", rem=" + boost.getTimeRemaining();
     }
 
     public ModConfigSpec.ConfigValue<String> raw_activeShinyBoost;

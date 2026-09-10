@@ -76,15 +76,18 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
     public void onServerStarted(ServerEvent.Started event) {
         createInfoLog("Server starting, initializing Cobblemon Boosters");
         isServerRunning = true;
-        reloadTask();
+        CacheServerConfig.loadFromConfig();
+        BoostControllerServiceManager.hydrateFromCache();
+        BoostControllerServiceManager.refreshQueuePriorities();
         BoostControllerServiceManager.setupSubscribers();
         ServiceManager.init();
+        reloadTask();
     }
 
     public void onServerReload(ServerEvent.Reload event) {
         if (!isServerRunning) return;
-        CacheServerConfig.setGlobalBoostData();
         CacheServerConfig.loadFromConfig();
+        BoostControllerServiceManager.hydrateFromCache();
         BoostControllerServiceManager.refreshQueuePriorities();
         CacheServerConfig.setGlobalBoostData();
         reloadTask();

@@ -104,13 +104,6 @@ public final class CatchBoostController implements IBoostController<CatchBoost> 
 
     @Override
     public CatchBoost getActiveBoost() {
-        if (activeBoost == null) {
-            // If there is no current active boost check the config to see if there is a default boost that should be active
-            var defaultBoost = BoostersConfig.getActiveCatchBoost();
-            if (defaultBoost != null && defaultBoost.getTimeRemaining() > 0) {
-                setActiveBoost(defaultBoost);
-            }
-        }
         return activeBoost;
     }
 
@@ -120,14 +113,22 @@ public final class CatchBoostController implements IBoostController<CatchBoost> 
     }
 
     @Override
-    public Queue<CatchBoost> getBoostQueue() {
-        if (queue.isEmpty()) {
-            // If the queue is empty check the config to see if there is a default boost that should be queued
-            var defaultBoost = BoostersConfig.getQueuedCatchBoosts();
-            if (defaultBoost != null) {
-                setBoostQueue(new LinkedList<>(defaultBoost));
-            }
+    public void hydrateFromCache() {
+        CatchBoost cachedActive = BoostersConfig.getActiveCatchBoost();
+        setActiveBoost(cachedActive != null && cachedActive.getTimeRemaining() > 0 ? cachedActive : null);
+
+        this.queue.clear();
+        var cachedQueue = BoostersConfig.getQueuedCatchBoosts();
+        if (cachedQueue != null) {
+            this.queue.addAll(cachedQueue);
         }
+
+        logLifecycleDebug("Hydrated cache -> active: " + formatBoost(this.activeBoost)
+                + ", queueSize=" + this.queue.size());
+    }
+
+    @Override
+    public Queue<CatchBoost> getBoostQueue() {
         return queue;
     }
 

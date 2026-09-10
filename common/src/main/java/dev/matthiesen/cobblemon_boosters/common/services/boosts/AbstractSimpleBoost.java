@@ -15,7 +15,7 @@ public abstract class AbstractSimpleBoost implements IBoost {
     public AbstractSimpleBoost(float multiplier, int duration, long timeRemaining) {
         this.multiplier = multiplier;
         this.duration = duration;
-        this.timeRemaining = timeRemaining;
+        this.timeRemaining = Math.max(timeRemaining, 0);
     }
 
     public AbstractSimpleBoost(float multiplier, int duration) {
@@ -36,7 +36,7 @@ public abstract class AbstractSimpleBoost implements IBoost {
     }
 
     public String serialize() {
-        return multiplier + ";" + duration + ";" + timeRemaining;
+        return multiplier + ";" + duration + ";" + Math.max(timeRemaining, 0);
     }
 
     @Override
@@ -67,7 +67,7 @@ public abstract class AbstractSimpleBoost implements IBoost {
 
     @Override
     public void setTimeRemaining(long timeRemaining) {
-        this.timeRemaining = timeRemaining;
+        this.timeRemaining = Math.max(timeRemaining, 0);
     }
 
     @Override
