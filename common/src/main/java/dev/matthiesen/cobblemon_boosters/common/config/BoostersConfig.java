@@ -125,72 +125,106 @@ public final class BoostersConfig {
     );
 
     public static DiscordEmbed getCatchEventStartEmbed() {
+        DiscordEmbed.DiscordRolePing rolePing = new DiscordEmbed.DiscordRolePing(
+                WEBHOOKS_SERVER_CONFIG.catch_embed_ping_role.get(),
+                WEBHOOKS_SERVER_CONFIG.catch_embed_ping_start_enabled.getAsBoolean()
+        );
         return new DiscordEmbed(
                 WEBHOOKS_SERVER_CONFIG.catch_start_title.get(),
                 WEBHOOKS_SERVER_CONFIG.catch_start_description.get(),
                 WEBHOOKS_SERVER_CONFIG.catch_start_embedColor.get().getValue(),
                 DefaultAuthor,
                 MultiplierFields,
+                rolePing,
                 "%timestamp%"
         );
     }
 
     public static DiscordEmbed getCatchEventEndEmbed() {
+        DiscordEmbed.DiscordRolePing rolePing = new DiscordEmbed.DiscordRolePing(
+                WEBHOOKS_SERVER_CONFIG.catch_embed_ping_role.get(),
+                WEBHOOKS_SERVER_CONFIG.catch_embed_ping_end_enabled.getAsBoolean()
+        );
         return new DiscordEmbed(
                 WEBHOOKS_SERVER_CONFIG.catch_end_title.get(),
                 WEBHOOKS_SERVER_CONFIG.catch_end_description.get(),
                 WEBHOOKS_SERVER_CONFIG.catch_end_embedColor.get().getValue(),
                 DefaultAuthor,
                 null,
+                rolePing,
                 "%timestamp%"
         );
     }
 
     public static DiscordEmbed getExperienceEventStartEmbed() {
+        DiscordEmbed.DiscordRolePing rolePing = new DiscordEmbed.DiscordRolePing(
+                WEBHOOKS_SERVER_CONFIG.experience_embed_ping_role.get(),
+                WEBHOOKS_SERVER_CONFIG.experience_embed_ping_start_enabled.getAsBoolean()
+        );
         return new DiscordEmbed(
                 WEBHOOKS_SERVER_CONFIG.experience_start_title.get(),
                 WEBHOOKS_SERVER_CONFIG.experience_start_description.get(),
                 WEBHOOKS_SERVER_CONFIG.experience_start_embedColor.get().getValue(),
                 DefaultAuthor,
                 MultiplierFields,
+                rolePing,
                 "%timestamp%"
         );
     }
 
     public static DiscordEmbed getExperienceEventEndEmbed() {
+        DiscordEmbed.DiscordRolePing rolePing = new DiscordEmbed.DiscordRolePing(
+                WEBHOOKS_SERVER_CONFIG.experience_embed_ping_role.get(),
+                WEBHOOKS_SERVER_CONFIG.experience_embed_ping_end_enabled.getAsBoolean()
+        );
         return new DiscordEmbed(
                 WEBHOOKS_SERVER_CONFIG.experience_end_title.get(),
                 WEBHOOKS_SERVER_CONFIG.experience_end_description.get(),
                 WEBHOOKS_SERVER_CONFIG.experience_end_embedColor.get().getValue(),
                 DefaultAuthor,
                 null,
+                rolePing,
                 "%timestamp%"
         );
     }
 
     public static DiscordEmbed getShinyEventStartEmbed() {
+        DiscordEmbed.DiscordRolePing rolePing = new DiscordEmbed.DiscordRolePing(
+                WEBHOOKS_SERVER_CONFIG.shiny_embed_ping_role.get(),
+                WEBHOOKS_SERVER_CONFIG.shiny_embed_ping_start_enabled.getAsBoolean()
+        );
         return new DiscordEmbed(
                 WEBHOOKS_SERVER_CONFIG.shiny_start_title.get(),
                 WEBHOOKS_SERVER_CONFIG.shiny_start_description.get(),
                 WEBHOOKS_SERVER_CONFIG.shiny_start_embedColor.get().getValue(),
                 DefaultAuthor,
                 MultiplierFields,
+                rolePing,
                 "%timestamp%"
         );
     }
 
     public static DiscordEmbed getShinyEventEndEmbed() {
+        DiscordEmbed.DiscordRolePing rolePing = new DiscordEmbed.DiscordRolePing(
+                WEBHOOKS_SERVER_CONFIG.shiny_embed_ping_role.get(),
+                WEBHOOKS_SERVER_CONFIG.shiny_embed_ping_end_enabled.getAsBoolean()
+        );
         return new DiscordEmbed(
                 WEBHOOKS_SERVER_CONFIG.shiny_end_title.get(),
                 WEBHOOKS_SERVER_CONFIG.shiny_end_description.get(),
                 WEBHOOKS_SERVER_CONFIG.shiny_end_embedColor.get().getValue(),
                 DefaultAuthor,
                 null,
+                rolePing,
                 "%timestamp%"
         );
     }
 
     public static DiscordEmbed getSpawnBucketEventStartEmbed() {
+        DiscordEmbed.DiscordRolePing rolePing = new DiscordEmbed.DiscordRolePing(
+                WEBHOOKS_SERVER_CONFIG.bucket_embed_ping_role.get(),
+                WEBHOOKS_SERVER_CONFIG.bucket_embed_ping_start_enabled.getAsBoolean()
+        );
         List<DiscordEmbed.DiscordEmbedField> fields = List.of(
                 new DiscordEmbed.DiscordEmbedField("Bucket", "%bucket%", true),
                 new DiscordEmbed.DiscordEmbedField("Duration", "%duration%", true)
@@ -201,17 +235,23 @@ public final class BoostersConfig {
                 WEBHOOKS_SERVER_CONFIG.bucket_start_embedColor.get().getValue(),
                 DefaultAuthor,
                 fields,
+                rolePing,
                 "%timestamp%"
         );
     }
 
     public static DiscordEmbed getSpawnBucketEventEndEmbed() {
+        DiscordEmbed.DiscordRolePing rolePing = new DiscordEmbed.DiscordRolePing(
+                WEBHOOKS_SERVER_CONFIG.bucket_embed_ping_role.get(),
+                WEBHOOKS_SERVER_CONFIG.bucket_embed_ping_end_enabled.getAsBoolean()
+        );
         return new DiscordEmbed(
                 WEBHOOKS_SERVER_CONFIG.bucket_end_title.get(),
                 WEBHOOKS_SERVER_CONFIG.bucket_end_description.get(),
                 WEBHOOKS_SERVER_CONFIG.bucket_end_embedColor.get().getValue(),
                 DefaultAuthor,
                 null,
+                rolePing,
                 "%timestamp%"
         );
     }

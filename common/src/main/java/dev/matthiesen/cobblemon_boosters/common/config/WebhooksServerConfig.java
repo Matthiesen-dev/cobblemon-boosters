@@ -18,6 +18,9 @@ public final class WebhooksServerConfig {
     public ModConfigSpec.ConfigValue<String> bucket_end_title;
     public ModConfigSpec.ConfigValue<String> bucket_end_description;
     public ModConfigSpec.EnumValue<DiscordColor> bucket_end_embedColor;
+    public ModConfigSpec.ConfigValue<String> bucket_embed_ping_role;
+    public ModConfigSpec.BooleanValue bucket_embed_ping_start_enabled;
+    public ModConfigSpec.BooleanValue bucket_embed_ping_end_enabled;
 
     // Catch Events
     public ModConfigSpec.ConfigValue<String> catch_start_title;
@@ -26,6 +29,9 @@ public final class WebhooksServerConfig {
     public ModConfigSpec.ConfigValue<String> catch_end_title;
     public ModConfigSpec.ConfigValue<String> catch_end_description;
     public ModConfigSpec.EnumValue<DiscordColor> catch_end_embedColor;
+    public ModConfigSpec.ConfigValue<String> catch_embed_ping_role;
+    public ModConfigSpec.BooleanValue catch_embed_ping_start_enabled;
+    public ModConfigSpec.BooleanValue catch_embed_ping_end_enabled;
 
     // Experience Events
     public ModConfigSpec.ConfigValue<String> experience_start_title;
@@ -34,6 +40,9 @@ public final class WebhooksServerConfig {
     public ModConfigSpec.ConfigValue<String> experience_end_title;
     public ModConfigSpec.ConfigValue<String> experience_end_description;
     public ModConfigSpec.EnumValue<DiscordColor> experience_end_embedColor;
+    public ModConfigSpec.ConfigValue<String> experience_embed_ping_role;
+    public ModConfigSpec.BooleanValue experience_embed_ping_start_enabled;
+    public ModConfigSpec.BooleanValue experience_embed_ping_end_enabled;
 
     // Shiny Events
     public ModConfigSpec.ConfigValue<String> shiny_start_title;
@@ -42,6 +51,9 @@ public final class WebhooksServerConfig {
     public ModConfigSpec.ConfigValue<String> shiny_end_title;
     public ModConfigSpec.ConfigValue<String> shiny_end_description;
     public ModConfigSpec.EnumValue<DiscordColor> shiny_end_embedColor;
+    public ModConfigSpec.ConfigValue<String> shiny_embed_ping_role;
+    public ModConfigSpec.BooleanValue shiny_embed_ping_start_enabled;
+    public ModConfigSpec.BooleanValue shiny_embed_ping_end_enabled;
 
     public WebhooksServerConfig(ModConfigSpec.Builder builder) {
         builder.comment("Discord Webhooks Configuration").push("discordWebhooks");
@@ -74,6 +86,14 @@ public final class WebhooksServerConfig {
         bucket_end_embedColor = builder.comment("The color of the Discord webhook embed for the end of a Spawn Bucket Boost event")
                 .defineEnum("embedColor", DiscordColor.BLUE);
         builder.pop();
+
+        bucket_embed_ping_role = builder.comment("The Discord Role ID to ping for Spawn Bucket Boost events (leave empty to disable pinging)")
+                .define("embedPingRole", "");
+        bucket_embed_ping_start_enabled = builder.comment("Enable or disable pinging the specified Discord Role for the start of a Spawn Bucket Boost event")
+                .define("embedPingStartEnabled", false);
+        bucket_embed_ping_end_enabled = builder.comment("Enable or disable pinging the specified Discord Role for the end of a Spawn Bucket Boost event")
+                .define("embedPingEndEnabled", false);
+
         builder.pop();
 
         builder.comment("Catch Event Webhook Configuration").push("catchEvent");
@@ -95,6 +115,14 @@ public final class WebhooksServerConfig {
         catch_end_embedColor = builder.comment("The color of the Discord webhook embed for the end of a Catch Boost event")
                 .defineEnum("embedColor", DiscordColor.PURPLE);
         builder.pop();
+
+        catch_embed_ping_role = builder.comment("The Discord Role ID to ping for Catch Boost events (leave empty to disable pinging)")
+                .define("embedPingRole", "");
+        catch_embed_ping_start_enabled = builder.comment("Enable or disable pinging the specified Discord Role for the start of a Catch Boost event")
+                .define("embedPingStartEnabled", false);
+        catch_embed_ping_end_enabled = builder.comment("Enable or disable pinging the specified Discord Role for the end of a Catch Boost event")
+                .define("embedPingEndEnabled", false);
+
         builder.pop();
 
         builder.comment("Experience Event Webhook Configuration").push("experienceEvent");
@@ -116,6 +144,14 @@ public final class WebhooksServerConfig {
         experience_end_embedColor = builder.comment("The color of the Discord webhook embed for the end of an Experience Boost event")
                 .defineEnum("embedColor", DiscordColor.GREEN);
         builder.pop();
+
+        experience_embed_ping_role = builder.comment("The Discord Role ID to ping for Experience Boost events (leave empty to disable pinging)")
+                .define("embedPingRole", "");
+        experience_embed_ping_start_enabled = builder.comment("Enable or disable pinging the specified Discord Role for the start of an Experience Boost event")
+                .define("embedPingStartEnabled", false);
+        experience_embed_ping_end_enabled = builder.comment("Enable or disable pinging the specified Discord Role for the end of an Experience Boost event")
+                .define("embedPingEndEnabled", false);
+
         builder.pop();
 
         builder.comment("Shiny Event Webhook Configuration").push("shinyEvent");
@@ -137,6 +173,14 @@ public final class WebhooksServerConfig {
         shiny_end_embedColor = builder.comment("The color of the Discord webhook embed for the end of a Shiny Boost event")
                 .defineEnum("embedColor", DiscordColor.GOLD);
         builder.pop();
+
+        shiny_embed_ping_role = builder.comment("The Discord Role ID to ping for Shiny Boost events (leave empty to disable pinging)")
+                .define("embedPingRole", "");
+        shiny_embed_ping_start_enabled = builder.comment("Enable or disable pinging the specified Discord Role for the start of a Shiny Boost event")
+                .define("embedPingStartEnabled", false);
+        shiny_embed_ping_end_enabled = builder.comment("Enable or disable pinging the specified Discord Role for the end of a Shiny Boost event")
+                .define("embedPingEndEnabled", false);
+
         builder.pop();
     }
 }

@@ -8,9 +8,9 @@ public record DiscordEmbed(
         Integer color,
         DiscordAuthor author,
         List<DiscordEmbedField> fields,
+        DiscordRolePing rolePing,
         String timestamp
 ) {
-
     public record DiscordAuthor(
             String name,
             String icon_url
@@ -20,5 +20,10 @@ public record DiscordEmbed(
             String name,
             String value,
             boolean inline
+    ) {}
+
+    public record DiscordRolePing(
+            String roleId,
+            boolean pingEnabled
     ) {}
 }

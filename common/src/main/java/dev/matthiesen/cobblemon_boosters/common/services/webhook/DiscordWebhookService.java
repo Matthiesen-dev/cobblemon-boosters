@@ -68,6 +68,11 @@ public final class DiscordWebhookService implements IWebhookService {
         return embedBuilder.build();
     }
 
+    private static String buildRolePing(String roleId) {
+        if (roleId == null || roleId.isEmpty()) return null;
+        return "<@&" + roleId + ">";
+    }
+
     @Override
     public void sendMessage(DiscordEmbed embed, IBoost boost) {
         if (WEBHOOK_INSTANCE == null) return;
@@ -79,11 +84,22 @@ public final class DiscordWebhookService implements IWebhookService {
                     ? embed.author().icon_url()
                     : "https://raw.githubusercontent.com/Matthiesen-dev/cobblemon-boosters/refs/heads/main/assets/logo.png";
 
-            WEBHOOK_INSTANCE.sendMessage(message -> message
-                    .withUsername(TextUtils.parse(userName, boost))
-                    .withAvatarUrl(TextUtils.parse(avatarUrl, boost))
-                    .withEmbeds(List.of(parseEventEmbed(embed, boost)))
-            );
+            String rolePing;
+            if (embed.rolePing().pingEnabled()) {
+                rolePing = buildRolePing(embed.rolePing().roleId());
+            } else {
+                rolePing = null;
+            }
+
+            WEBHOOK_INSTANCE.sendMessage(message -> {
+                if (rolePing != null) {
+                    message.withContent(rolePing);
+                }
+                message
+                        .withUsername(TextUtils.parse(userName, boost))
+                        .withAvatarUrl(TextUtils.parse(avatarUrl, boost))
+                        .withEmbeds(List.of(parseEventEmbed(embed, boost)));
+            });
         } catch (RuntimeException e) {
             CobblemonBoostersCommon.INSTANCE.createErrorLog("Failed to send Discord webhook message! Check your webhook URL and ensure that your server can connect to Discord's servers.", e);
         } catch (DiscordWebhookException e) {
