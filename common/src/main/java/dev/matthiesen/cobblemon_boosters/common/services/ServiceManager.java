@@ -26,7 +26,7 @@ public final class ServiceManager {
 
     public static class COMPAT {
         public static final String GOOEYLIBS = "gooeylibs";
-        public static final String MATTHIESEN_LIB_WEBHOOKS = "matthiesen_lib_webhooks";
+        public static final String MATTHIESEN_CORE_WEBHOOKS = "matthiesen_core_webhooks";
         public static final String COBBREEDING = "cobbreeding";
         public static final ResourceLocation COBBREEDING_EGG = ResourceLocation.parse("cobbreeding:manaphy_egg");
     }
@@ -65,7 +65,7 @@ public final class ServiceManager {
             guiAdapter = new FallbackGUIAdapter();
         }
 
-        if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(COMPAT.MATTHIESEN_LIB_WEBHOOKS)) {
+        if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(COMPAT.MATTHIESEN_CORE_WEBHOOKS)) {
             discordWebhookService = new DiscordWebhookService();
         } else {
             discordWebhookService = new NoOpWebhookService();

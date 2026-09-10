@@ -22,7 +22,7 @@ public final class DiscordWebhookService implements IWebhookService {
         WebhookNotifierService WEBHOOK_SERVICE = getService();
         if (WEBHOOK_SERVICE != null) {
             WEBHOOK_INSTANCE = WEBHOOK_SERVICE.makeInstance(BoostersConfig.WEBHOOKS_SERVER_CONFIG.webhookUrl.get());
-            CobblemonBoostersCommon.INSTANCE.createInfoLog("Matthiesen Lib Webhooks detected, using it for Discord Webhook integration");
+            CobblemonBoostersCommon.INSTANCE.createInfoLog("Matthiesen Core Webhooks detected, using it for Discord Webhook integration");
         }
     }
 
