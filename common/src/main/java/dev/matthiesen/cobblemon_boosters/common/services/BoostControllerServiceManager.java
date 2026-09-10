@@ -56,6 +56,12 @@ public final class BoostControllerServiceManager {
         }
     }
 
+    public static void hydrateFromCache() {
+        for (IBoostController<?> booster : REGISTERED_BOOSTERS) {
+            booster.hydrateFromCache();
+        }
+    }
+
     public static void tickBoosts() {
         for (IBoostController<?> booster : REGISTERED_BOOSTERS) {
             booster.tickBoosts();

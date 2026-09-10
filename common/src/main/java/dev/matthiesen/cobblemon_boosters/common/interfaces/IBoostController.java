@@ -35,6 +35,8 @@ public interface IBoostController<T extends IBoost> {
     T getActiveBoost();
     void setActiveBoost(T boost);
 
+    void hydrateFromCache();
+
     Queue<T> getBoostQueue();
     void setBoostQueue(Queue<T> boostQueue);
     void internal_addToQueue(T boost);
@@ -54,7 +56,12 @@ public interface IBoostController<T extends IBoost> {
         if (activeBoost == null && queue.isEmpty()) return;
 
         if (activeBoost != null) {
-            activeBoost.setTimeRemaining(activeBoost.getTimeRemaining() - 1);
+            long clampedRemaining = Math.max(activeBoost.getTimeRemaining(), 0);
+            if (clampedRemaining > 0) {
+                activeBoost.setTimeRemaining(clampedRemaining - 1);
+            } else {
+                activeBoost.setTimeRemaining(0);
+            }
 
             if (activeBoost.getTimeRemaining() > 0) {
                 return;
@@ -63,6 +70,9 @@ public interface IBoostController<T extends IBoost> {
             T expiredBoost = activeBoost;
             T nextBoost = queue.poll();
             setActiveBoost(nextBoost);
+
+            logLifecycleDebug("Expired active boost: " + formatBoost(expiredBoost)
+                    + " -> next: " + formatBoost(nextBoost));
 
             Set<String> loggedFailures = new HashSet<>();
             runSafely("deactivate", expiredBoost, loggedFailures, () ->
@@ -84,6 +94,7 @@ public interface IBoostController<T extends IBoost> {
         T nextBoost = queue.poll();
         if (nextBoost != null) {
             setActiveBoost(nextBoost);
+            logLifecycleDebug("Activated boost from queue: " + formatBoost(nextBoost));
             Set<String> loggedFailures = new HashSet<>();
             runSafely("activate", nextBoost, loggedFailures, () ->
                     ServiceManager.getDisplayService().onBoostActivated(nextBoost));
@@ -162,6 +173,8 @@ public interface IBoostController<T extends IBoost> {
 
     default void switchActiveBoost(T activeBoost, T candidateBoost) {
         setActiveBoost(candidateBoost);
+        logLifecycleDebug("Preempted active boost: " + formatBoost(activeBoost)
+                + " -> " + formatBoost(candidateBoost));
 
         Set<String> loggedFailures = new HashSet<>();
         runSafely("deactivate", activeBoost, loggedFailures, () ->
@@ -183,5 +196,20 @@ public interface IBoostController<T extends IBoost> {
                 );
             }
         }
+    }
+
+    default void logLifecycleDebug(String message) {
+        if (BoostersConfig.CORE_SERVER_CONFIG.boosterLifecycleDebug.get()) {
+            CobblemonBoostersCommon.INSTANCE.createInfoLog("[Lifecycle] [" + getType() + "] " + message);
+        }
+    }
+
+    default String formatBoost(T boost) {
+        if (boost == null) {
+            return "none";
+        }
+        return "mult=" + boost.getMultiplier()
+                + ", duration=" + boost.getDuration()
+                + ", remaining=" + boost.getTimeRemaining();
     }
 }

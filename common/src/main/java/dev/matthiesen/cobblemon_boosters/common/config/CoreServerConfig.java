@@ -11,6 +11,7 @@ public final class CoreServerConfig {
     // General Configuration
     public ModConfigSpec.IntValue saveIntervalTicks;
     public ModConfigSpec.BooleanValue verboseCacheLogging;
+    public ModConfigSpec.BooleanValue boosterLifecycleDebug;
     public ModConfigSpec.EnumValue<BoostDisplayMode> displayMode;
     public ModConfigSpec.BooleanValue queuePriorityEnabled;
     public ModConfigSpec.EnumValue<QueuePriorityMode> queuePriorityMode;
@@ -78,6 +79,8 @@ public final class CoreServerConfig {
                 .defineInRange("saveIntervalTicks", 600, 1, Integer.MAX_VALUE);
         verboseCacheLogging = builder.comment("Enable verbose logging for cache operations.")
                 .define("verboseCacheLogging", false);
+        boosterLifecycleDebug = builder.comment("Temporary debug logging for boost lifecycle transitions.")
+                .define("boosterLifecycleDebug", false);
         displayMode = builder.comment("The display mode for the booster UI.")
                 .defineEnum("displayMode", BoostDisplayMode.BOSSBAR);
         queuePriorityEnabled = builder.comment("Enable queue priority system.")

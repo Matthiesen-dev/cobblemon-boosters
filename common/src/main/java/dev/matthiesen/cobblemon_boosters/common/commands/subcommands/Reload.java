@@ -5,8 +5,10 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
+import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
+import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
@@ -25,6 +27,10 @@ public final class Reload implements ISubCommand {
     }
 
     public int cmd(CommandContext<CommandSourceStack> ctx) {
+        CacheServerConfig.loadFromConfig();
+        BoostControllerServiceManager.hydrateFromCache();
+        BoostControllerServiceManager.refreshQueuePriorities();
+        CacheServerConfig.setGlobalBoostData();
         CobblemonBoostersCommon.INSTANCE.reloadTask();
         Util.sendMessage(ctx, BoostersConfig.CORE_SERVER_CONFIG.messages_commandReload.get());
         return 1;
