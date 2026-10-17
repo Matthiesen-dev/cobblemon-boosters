@@ -6,8 +6,7 @@ import dev.matthiesen.cobblemon_boosters.common.interfaces.BoostDisplayMode;
 import dev.matthiesen.cobblemon_boosters.common.services.display.BossBarDisplay;
 import dev.matthiesen.cobblemon_boosters.common.services.display.NoOpDisplay;
 import dev.matthiesen.cobblemon_boosters.common.services.display.SidebarDisplay;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.FallbackGUIAdapter;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.GooeyGUIAdapter;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.CoreUIAdapter;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostDisplayService;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGUIAdapter;
@@ -25,7 +24,6 @@ public final class ServiceManager {
     private static boolean cobbreedingAvailable;
 
     public static class COMPAT {
-        public static final String GOOEYLIBS = "gooeylibs";
         public static final String MATTHIESEN_CORE_WEBHOOKS = "matthiesen_core_webhooks";
         public static final String COBBREEDING = "cobbreeding";
         public static final ResourceLocation COBBREEDING_EGG = ResourceLocation.parse("cobbreeding:manaphy_egg");
@@ -59,11 +57,7 @@ public final class ServiceManager {
     }
 
     public static void loadCompat() {
-        if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(COMPAT.GOOEYLIBS)) {
-            guiAdapter = new GooeyGUIAdapter();
-        } else {
-            guiAdapter = new FallbackGUIAdapter();
-        }
+        guiAdapter = new CoreUIAdapter();
 
         if (CobblemonBoostersCommon.INSTANCE.getCommonUtils().isModLoaded(COMPAT.MATTHIESEN_CORE_WEBHOOKS)) {
             discordWebhookService = new DiscordWebhookService();

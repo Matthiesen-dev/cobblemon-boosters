@@ -1,15 +1,15 @@
-package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates;
+package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.templates;
 
-import ca.landonjw.gooeylibs2.api.button.Button;
-import ca.landonjw.gooeylibs2.api.button.ButtonAction;
-import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.QueueGui;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens.CancelConfirmGuiBuilder;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens.QueueGui;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.Button;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ButtonAction;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ServerButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -44,7 +44,7 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     }
 
     public Button getStopButton() {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getStopButton(activeBoost != null))
                 .onClick(() -> new CancelConfirmGuiBuilder(
                         player,
@@ -65,7 +65,7 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     }
 
     public Button getStatusButton() {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getStatusItem(activeBoost != null))
                 .onClick(() -> {
                     if (activeBoost != null) {
@@ -80,7 +80,7 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     }
 
     public Button getQueueButton() {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getQueueItemForSubscreen(definition.getDisplayName()))
                 .onClick(() -> new QueueGui(
                         player,
@@ -91,7 +91,7 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     }
 
     public Button getStartButton() {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getCreateNewBoosterItem(definition.getDisplayName()))
                 .onClick(startOnClick)
                 .build();

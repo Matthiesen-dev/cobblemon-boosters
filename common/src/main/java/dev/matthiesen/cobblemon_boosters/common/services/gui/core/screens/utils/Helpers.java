@@ -1,13 +1,13 @@
-package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils;
+package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils;
 
-import ca.landonjw.gooeylibs2.api.button.Button;
-import ca.landonjw.gooeylibs2.api.button.GooeyButton;
-import ca.landonjw.gooeylibs2.api.button.PlaceholderButton;
-import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGui;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.Button;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.PlaceholderButton;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ServerButton;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.template.types.ChestTemplate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -136,7 +136,7 @@ public final class Helpers {
     }
 
     public static Button getFrame() {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getFrameItem())
                 .build();
     }
@@ -182,7 +182,7 @@ public final class Helpers {
 
         boolean isActive = currentMode != null && currentMode.equals(label.toLowerCase());
 
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getQueueEntryBuilder()
                         .setCustomName(TextUtils.deserialize(TextUtils.parse(labelToColor.get(label) + label)))
                         .addLore(loreArray)
@@ -221,7 +221,7 @@ public final class Helpers {
 
         Component[] loreArray = toComponentArray(lore);
 
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getDetailsItemBuilder()
                         .setCustomName(TextUtils.deserialize(TextUtils.parse("&6Details")))
                         .addLore(loreArray)

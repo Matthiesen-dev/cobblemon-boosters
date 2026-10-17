@@ -1,18 +1,18 @@
-package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens;
+package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens;
 
-import ca.landonjw.gooeylibs2.api.button.Button;
-import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.BoostBuilderGui;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.BucketBoostBuilderGui;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BoostersGuiTemplate;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens.BoostBuilderGui;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens.BucketBoostBuilderGui;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.templates.BaseMenuGuiTemplate;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.templates.BoostersGuiTemplate;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.Button;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ServerButton;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
@@ -74,7 +74,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
                 continue;
             }
 
-            buttons.add(GooeyButton.builder()
+            buttons.add(ServerButton.builder()
                     .display(definition.getMenuItem())
                     .onClick(() -> openBoosterGui(player, definition.getCommandId()))
                     .build()
@@ -83,7 +83,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
         // Check Queues
         if (PermissionRegistry.checkPermission(player, permissions.CHECK_QUEUE_PERMISSION))
-            buttons.add(GooeyButton.builder()
+            buttons.add(ServerButton.builder()
                     .display(MenuUtils.getQueueItem("All", true))
                     .onClick(() -> new CheckQueuesGui(player).open())
                     .build()
@@ -92,7 +92,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
         // Admin Options
         if (PermissionRegistry.checkPermission(player, permissions.RELOAD_PERMISSION) ||
                 PermissionRegistry.checkPermission(player, permissions.CLEAR_QUEUES_PERMISSION))
-            buttons.add(GooeyButton.builder()
+            buttons.add(ServerButton.builder()
                     .display(MenuUtils.getAdminItem())
                     .onClick(() -> new AdminGui(player).open())
                     .build()

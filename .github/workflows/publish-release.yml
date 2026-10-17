@@ -12,7 +12,6 @@ on:
 # - Cobblemon (MdwFAVRL)
 # - Matthiesen Core (sqEZOmQo)
 # - Matthiesen Core Webhooks (XP5CfD30)
-# - GooeyLibs (KzjvlKEN)
 # - Cobbreeding (ItmVb4zY)
 ## Fabric Only:
 # - Fabric API (P7dR8mSH) - Required
@@ -37,7 +36,6 @@ jobs:
           {"project_id":"MdwFAVRL","dependency_type":"required"},
           {"project_id":"sqEZOmQo","dependency_type":"required"},
           {"project_id":"XP5CfD30","dependency_type":"optional"},
-          {"project_id":"KzjvlKEN","dependency_type":"optional"},
           {"project_id":"ItmVb4zY","dependency_type":"optional"}
         ]
       modrinth_fabric_dependencies: |-

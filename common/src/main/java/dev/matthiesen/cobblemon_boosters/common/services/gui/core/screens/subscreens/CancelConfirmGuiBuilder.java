@@ -1,15 +1,15 @@
-package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens;
+package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens;
 
-import ca.landonjw.gooeylibs2.api.UIManager;
-import ca.landonjw.gooeylibs2.api.button.Button;
-import ca.landonjw.gooeylibs2.api.button.ButtonAction;
-import ca.landonjw.gooeylibs2.api.button.GooeyButton;
-import ca.landonjw.gooeylibs2.api.page.GooeyPage;
-import ca.landonjw.gooeylibs2.api.page.Page;
-import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils.Helpers;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGui;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.ServerUIManager;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.Button;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ButtonAction;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ServerButton;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.page.Page;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.page.ServerPage;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.template.types.ChestTemplate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -59,12 +59,12 @@ public record CancelConfirmGuiBuilder(
     }
 
     public Page getPage() {
-        Button cancelButton = GooeyButton.builder()
+        Button cancelButton = ServerButton.builder()
                 .display(MenuUtils.getNoItem())
                 .onClick(noButtonAction)
                 .build();
 
-        Button confirmButton = GooeyButton.builder()
+        Button confirmButton = ServerButton.builder()
                 .display(MenuUtils.getYesItem())
                 .onClick(yesButtonAction)
                 .build();
@@ -81,19 +81,19 @@ public record CancelConfirmGuiBuilder(
         }
 
         ChestTemplate template = builder.build();
-        GooeyPage page = GooeyPage.builder().template(template).build();
+        ServerPage page = ServerPage.builder().template(template).build();
         page.setTitle(getTitle());
         return page;
     }
 
     @Override
     public void open() {
-        UIManager.openUIForcefully(player, getPage());
+        ServerUIManager.openUIForcefully(player, getPage());
     }
 
     @Override
     public void close() {
-        UIManager.closeUI(player);
+        ServerUIManager.closeUI(player);
     }
 
     @Override

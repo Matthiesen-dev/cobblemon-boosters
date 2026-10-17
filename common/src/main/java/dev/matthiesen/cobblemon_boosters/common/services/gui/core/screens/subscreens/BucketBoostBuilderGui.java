@@ -1,18 +1,18 @@
-package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens;
+package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens;
 
-import ca.landonjw.gooeylibs2.api.UIManager;
-import ca.landonjw.gooeylibs2.api.button.Button;
-import ca.landonjw.gooeylibs2.api.button.GooeyButton;
-import ca.landonjw.gooeylibs2.api.page.GooeyPage;
-import ca.landonjw.gooeylibs2.api.page.Page;
-import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils.BaseBoostBuilder;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils.Helpers;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.BaseBoostBuilder;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGui;
 import dev.matthiesen.cobblemon_boosters.common.utils.GuiCmdHelpers;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.ServerUIManager;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.Button;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ServerButton;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.page.Page;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.page.ServerPage;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.template.types.ChestTemplate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -157,7 +157,7 @@ public final class BucketBoostBuilderGui implements IGui {
     }
 
     public Button getAddButton() {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getPlusItem())
                 .onClick(() -> {
                     if (!Helpers.ensureModeSelected(getCurrentMode(), this::sendPlayerMessage)) {
@@ -180,7 +180,7 @@ public final class BucketBoostBuilderGui implements IGui {
     }
 
     public Button getSubtractButton() {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getMinusItem())
                 .onClick(() -> {
                     if (!Helpers.ensureModeSelected(getCurrentMode(), this::sendPlayerMessage)) {
@@ -215,7 +215,7 @@ public final class BucketBoostBuilderGui implements IGui {
     }
 
     public Button getConfirmButton() {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getConfirmItem())
                 .onClick(() -> new CancelConfirmGuiBuilder(
                         player,
@@ -255,17 +255,17 @@ public final class BucketBoostBuilderGui implements IGui {
     }
 
     public Page getPage() {
-        GooeyPage page = GooeyPage.builder().template(getTemplate()).build();
+        ServerPage page = ServerPage.builder().template(getTemplate()).build();
         page.setTitle(getTitle());
         return page;
     }
 
     public void open() {
-        UIManager.openUIForcefully(player, getPage());
+        ServerUIManager.openUIForcefully(player, getPage());
     }
 
     public void close() {
-        UIManager.closeUI(player);
+        ServerUIManager.closeUI(player);
     }
 
     public void sendPlayerMessage(String rawMessage) {

@@ -1,20 +1,20 @@
-package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens;
+package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens;
 
-import ca.landonjw.gooeylibs2.api.UIManager;
-import ca.landonjw.gooeylibs2.api.button.Button;
-import ca.landonjw.gooeylibs2.api.button.GooeyButton;
-import ca.landonjw.gooeylibs2.api.button.linked.LinkType;
-import ca.landonjw.gooeylibs2.api.button.linked.LinkedPageButton;
-import ca.landonjw.gooeylibs2.api.helpers.PaginationHelper;
-import ca.landonjw.gooeylibs2.api.page.LinkedPage;
-import ca.landonjw.gooeylibs2.api.page.Page;
-import ca.landonjw.gooeylibs2.api.template.slot.TemplateSlotDelegate;
-import ca.landonjw.gooeylibs2.api.template.types.ChestTemplate;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils.Helpers;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGui;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.ServerUIManager;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.Button;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ServerButton;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.linked.LinkType;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.linked.LinkedPageButton;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.helpers.PaginationHelper;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.page.LinkedPage;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.page.Page;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.template.slot.TemplateSlotDelegate;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.template.types.ChestTemplate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -29,7 +29,7 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
     }
 
     private Button getInfoButton(int currentPage, int pageLength) {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getPageItem(currentPage, pageLength))
                 .build();
     }
@@ -71,7 +71,7 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
 
                 Component[] lore = Helpers.toComponentArray(loreComponents);
 
-                Button boostButton = GooeyButton.builder()
+                Button boostButton = ServerButton.builder()
                         .display(boost.getGUIItem(lore))
                         .build();
 
@@ -102,12 +102,12 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
 
     @Override
     public void open() {
-        UIManager.openUIForcefully(player, getPage());
+        ServerUIManager.openUIForcefully(player, getPage());
     }
 
     @Override
     public void close() {
-        UIManager.closeUI(player);
+        ServerUIManager.closeUI(player);
     }
 
     @Override

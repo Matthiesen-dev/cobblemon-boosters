@@ -1,4 +1,4 @@
-package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.utils;
+package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;

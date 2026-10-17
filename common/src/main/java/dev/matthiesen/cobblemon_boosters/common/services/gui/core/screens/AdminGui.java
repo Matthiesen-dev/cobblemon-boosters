@@ -1,17 +1,17 @@
-package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens;
+package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens;
 
-import ca.landonjw.gooeylibs2.api.button.Button;
-import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.CancelConfirmGuiBuilder;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens.CancelConfirmGuiBuilder;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.Button;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ServerButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -47,7 +47,7 @@ public final class AdminGui extends BaseMenuGuiTemplate {
 
         // Reload
         if (PermissionRegistry.checkPermission(player, permissions.RELOAD_PERMISSION))
-            buttons.add(GooeyButton.builder()
+            buttons.add(ServerButton.builder()
                     .display(MenuUtils.getReloadItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
                             player,
@@ -64,7 +64,7 @@ public final class AdminGui extends BaseMenuGuiTemplate {
 
         // Clear Queues
         if (PermissionRegistry.checkPermission(player, permissions.CLEAR_QUEUES_PERMISSION))
-            buttons.add(GooeyButton.builder()
+            buttons.add(ServerButton.builder()
                     .display(MenuUtils.getClearQueueItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
                             player,

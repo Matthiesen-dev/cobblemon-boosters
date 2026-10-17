@@ -1,13 +1,13 @@
-package dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens;
+package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens;
 
-import ca.landonjw.gooeylibs2.api.button.Button;
-import ca.landonjw.gooeylibs2.api.button.GooeyButton;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.subscreens.QueueGui;
-import dev.matthiesen.cobblemon_boosters.common.services.gui.gooey.screens.templates.BaseMenuGuiTemplate;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens.QueueGui;
+import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.templates.BaseMenuGuiTemplate;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.Button;
+import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ServerButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -28,7 +28,7 @@ public final class CheckQueuesGui extends BaseMenuGuiTemplate {
     }
 
     public Button getQueueButton(BoosterGuiDefinition<?> definition) {
-        return GooeyButton.builder()
+        return ServerButton.builder()
                 .display(MenuUtils.getQueueItem(definition.getMenuItem().getItem(), definition.getDisplayName(), false))
                 .onClick(() -> new QueueGui(
                         player,
