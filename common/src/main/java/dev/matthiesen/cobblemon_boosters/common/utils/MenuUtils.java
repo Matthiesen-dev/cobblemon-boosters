@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.utils;
 
 import com.cobblemon.mod.common.CobblemonItems;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,9 +36,11 @@ public final class MenuUtils {
         return new BoostersItemBuilder(BOOST_CONFIRM_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Confirm Boost")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_confirmBoost.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.GREEN)
+                                        style -> style.withColor(
+                                                BoostersConfig.TEXT_CONFIG.gui_buttons_confirmBoost_color.get().getFormat()
+                                        )
                                 )
                 )
                 .build();
@@ -47,9 +50,11 @@ public final class MenuUtils {
         return new BoostersItemBuilder(QUEUE_ENTRY_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Boost Queue Entry")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_boostQueueEntry.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.AQUA)
+                                        style -> style.withColor(
+                                                BoostersConfig.TEXT_CONFIG.gui_buttons_boostQueueEntry_color.get().getFormat()
+                                        )
                                 )
                 );
     }
@@ -58,9 +63,11 @@ public final class MenuUtils {
         return new BoostersItemBuilder(STATUS_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("View Boost Details")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_viewBoostDetails.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.AQUA)
+                                        style -> style.withColor(
+                                                BoostersConfig.TEXT_CONFIG.gui_buttons_viewBoostDetails_color.get().getFormat()
+                                        )
                                 )
                 );
     }
@@ -68,9 +75,11 @@ public final class MenuUtils {
     public static ItemStack getPlusItem() {
         return new BoostersItemBuilder(PLUS_ITEM)
                 .hideAdditional()
-                .setCustomName(Component.literal("Increment")
+                .setCustomName(Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_increment.get())
                         .withStyle(
-                                style -> style.withColor(ChatFormatting.GREEN)
+                                style -> style.withColor(
+                                        BoostersConfig.TEXT_CONFIG.gui_buttons_increment_color.get().getFormat()
+                                )
                         )
                 )
                 .build();
@@ -79,9 +88,11 @@ public final class MenuUtils {
     public static ItemStack getMinusItem() {
         return new BoostersItemBuilder(MINUS_ITEM)
                 .hideAdditional()
-                .setCustomName(Component.literal("Decrement")
+                .setCustomName(Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_decrement.get())
                         .withStyle(
-                                style -> style.withColor(ChatFormatting.RED)
+                                style -> style.withColor(
+                                        BoostersConfig.TEXT_CONFIG.gui_buttons_decrement_color.get().getFormat()
+                                )
                         )
                 )
                 .build();
@@ -104,9 +115,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(item)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Spawn Bucket Boosters")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_spawnBucketBoosters.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.AQUA)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_spawnBucketBoosters_color.get().getFormat())
                                 )
                 )
                 .build();
@@ -116,9 +127,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(CATCH_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Catch Rate Boosters")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_catchBoosters.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.AQUA)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_catchBoosters_color.get().getFormat())
                                 )
                 )
                 .build();
@@ -128,9 +139,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(EXPERIENCE_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Experience Rate Boosters")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_experienceBoosters.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.AQUA)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_experienceBoosters_color.get().getFormat())
                                 )
                 )
                 .build();
@@ -140,45 +151,58 @@ public final class MenuUtils {
         return new BoostersItemBuilder(SHINY_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Shiny Rate Boosters")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_shinyBoosters.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.AQUA)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_shinyBoosters_color.get().getFormat())
                                 )
                 )
                 .build();
     }
 
     public static ItemStack getQueueItemForSubscreen(String name) {
+        String text = String.format(BoostersConfig.TEXT_CONFIG.gui_buttons_viewQueue.get(), name);
         return new BoostersItemBuilder(QUEUE_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("View " + name + " Queue")
+                        Component.literal(text)
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.AQUA)
+                                        style -> style.withColor(
+                                                BoostersConfig.TEXT_CONFIG.gui_buttons_viewQueue_color.get().getFormat()
+                                        )
                                 )
                 )
                 .build();
     }
 
     public static ItemStack getQueueItem(Item item, String name, boolean multiple) {
+        String text = String.format(
+                multiple ? BoostersConfig.TEXT_CONFIG.gui_buttons_viewQueue_multiple.get() : BoostersConfig.TEXT_CONFIG.gui_buttons_viewQueue.get(),
+                name
+        );
         return new BoostersItemBuilder(item)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("View " + name + " Queue" + (multiple ? "s" : ""))
-                                .withStyle(
-                                        style -> style.withColor(ChatFormatting.AQUA)
-                                )
+                        Component.literal(text)
+                                .withStyle(style -> style.withColor(multiple
+                                        ? BoostersConfig.TEXT_CONFIG.gui_buttons_viewQueue_multiple_color.get().getFormat()
+                                        : BoostersConfig.TEXT_CONFIG.gui_buttons_viewQueue_color.get().getFormat()
+                                ))
                 )
                 .build();
     }
 
     public static ItemStack getQueueItem(String name, boolean multiple) {
         Item queueItem = QUEUE_ITEM;
-        switch (name) {
-            case "Spawn Bucket" -> queueItem = getBucketItem().getItem();
-            case "Catch" -> queueItem = getCatchItem().getItem();
-            case "Experience" -> queueItem = getExperienceItem().getItem();
-            case "Shiny" -> queueItem = getShinyItem().getItem();
+        var config = BoostersConfig.TEXT_CONFIG;
+
+        if (name.equals(config.gui_boosterTitles_spawnBucket_displayName.get())) {
+            queueItem = getBucketItem().getItem();
+        } else if (name.equals(config.gui_boosterTitles_catch_displayName.get())) {
+            queueItem = getCatchItem().getItem();
+        } else if (name.equals(config.gui_boosterTitles_experience_displayName.get())) {
+            queueItem = getExperienceItem().getItem();
+        } else if (name.equals(config.gui_boosterTitles_shiny_displayName.get())) {
+            queueItem = getShinyItem().getItem();
         }
 
         return getQueueItem(queueItem, name, multiple);
@@ -188,9 +212,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(ADMIN_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Admin Menu")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_adminMenu.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.RED)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_adminMenu_color.get().getFormat())
                                 )
                 )
                 .build();
@@ -200,9 +224,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(RELOAD_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Reload Config")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_reloadConfig.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.RED)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_reloadConfig_color.get().getFormat())
                                 )
                 )
                 .build();
@@ -212,9 +236,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(CLEAR_QUEUE_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Clear All Queues")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_clearAllQueues.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.RED)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_clearAllQueues_color.get().getFormat())
                                 )
                 )
                 .build();
@@ -224,9 +248,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(NO_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Cancel")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_cancel.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.RED)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_cancel_color.get().getFormat())
                                 )
                 )
                 .build();
@@ -236,9 +260,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(YES_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Confirm")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_confirm.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.GREEN)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_confirm_color.get().getFormat())
                                 )
                 )
                 .build();
@@ -248,9 +272,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(STOP_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Stop Active Boost")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_stopActiveBoost.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.RED)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_stopActiveBoost_color.get().getFormat())
                                 )
                 )
                 .setEnchanted(active)
@@ -258,10 +282,12 @@ public final class MenuUtils {
     }
 
     public static ItemStack getPageItem(int currentPage, int pageLength) {
+        String text = String.format(BoostersConfig.TEXT_CONFIG.gui_buttons_pageText.get(), currentPage, pageLength);
         return new BoostersItemBuilder(PAGE_PLACEHOLDER)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Page " + currentPage + "/" + pageLength).withStyle(style -> style.withColor(ChatFormatting.GOLD))
+                        Component.literal(text)
+                                .withStyle(style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_pageText_color.get().getFormat()))
                 )
                 .build();
     }
@@ -282,9 +308,9 @@ public final class MenuUtils {
         return new BoostersItemBuilder(STATUS_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("View Active Boost")
+                        Component.literal(BoostersConfig.TEXT_CONFIG.gui_buttons_viewActiveBoost.get())
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.AQUA)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_viewActiveBoost_color.get().getFormat())
                                 )
                 )
                 .setEnchanted(active)
@@ -292,12 +318,13 @@ public final class MenuUtils {
     }
 
     public static ItemStack getCreateNewBoosterItem(String label) {
+        String text = String.format(BoostersConfig.TEXT_CONFIG.gui_buttons_startBoost.get(), label);
         return new BoostersItemBuilder(CREATE_NEW_BOOSTER_ITEM)
                 .hideAdditional()
                 .setCustomName(
-                        Component.literal("Start New " + label)
+                        Component.literal(text)
                                 .withStyle(
-                                        style -> style.withColor(ChatFormatting.GREEN)
+                                        style -> style.withColor(BoostersConfig.TEXT_CONFIG.gui_buttons_startBoost_color.get().getFormat())
                                 )
                 )
                 .build();

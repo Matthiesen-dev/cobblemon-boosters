@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
 import dev.matthiesen.matthiesen_core.common.api.text_parsers.BuiltInTextParsers;
+import dev.matthiesen.matthiesen_core.common.utility.chat.ChatColors;
 import net.minecraft.world.BossEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -56,6 +57,47 @@ public final class TextConfig {
     public ModConfigSpec.ConfigValue<String> gui_boosterTitles_spawnBucket;
     public ModConfigSpec.ConfigValue<String> gui_boosterTitles_spawnBucket_displayName;
     public ModConfigSpec.ConfigValue<String> gui_boosterTitles_spawnBucket_menuTitle;
+
+    public ModConfigSpec.ConfigValue<String> gui_buttons_confirmBoost;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_confirmBoost_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_boostQueueEntry;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_boostQueueEntry_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_viewBoostDetails;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_viewBoostDetails_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_increment;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_increment_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_decrement;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_decrement_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_spawnBucketBoosters;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_spawnBucketBoosters_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_shinyBoosters;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_shinyBoosters_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_catchBoosters;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_catchBoosters_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_experienceBoosters;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_experienceBoosters_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_viewQueue;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_viewQueue_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_viewQueue_multiple;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_viewQueue_multiple_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_adminMenu;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_adminMenu_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_reloadConfig;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_reloadConfig_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_clearAllQueues;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_clearAllQueues_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_cancel;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_cancel_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_confirm;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_confirm_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_stopActiveBoost;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_stopActiveBoost_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_viewActiveBoost;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_viewActiveBoost_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_startBoost;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_startBoost_color;
+    public ModConfigSpec.ConfigValue<String> gui_buttons_pageText;
+    public ModConfigSpec.EnumValue<ChatColors> gui_buttons_pageText_color;
 
     // Messages Configuration
     public ModConfigSpec.EnumValue<BuiltInTextParsers> messages_textParser;
@@ -223,6 +265,90 @@ public final class TextConfig {
         gui_boosterTitles_spawnBucket_menuTitle = builder.comment("The menu title for Spawn Bucket Boosters.")
                 .define("spawnBucket_menuTitle", "&aSpawn Bucket Boosters&r");
         builder.pop(); // Closes "boosterTitles" block
+
+        builder.comment("Buttons Configuration").push("buttons");
+        gui_buttons_confirmBoost = builder.comment("The text displayed for the confirm boost button.")
+                .define("confirmBoost", "Confirm Boost");
+        gui_buttons_confirmBoost_color = builder.comment("The color of the confirm boost button.")
+                .defineEnum("confirmBoost_color", ChatColors.GREEN);
+        gui_buttons_boostQueueEntry = builder.comment("The text displayed for the boost queue entry button.")
+                .define("boostQueueEntry", "Boost Queue Entry");
+        gui_buttons_boostQueueEntry_color = builder.comment("The color of the boost queue entry button.")
+                .defineEnum("boostQueueEntry_color", ChatColors.AQUA);
+        gui_buttons_viewBoostDetails = builder.comment("The text displayed for the view boost details button.")
+                .define("viewBoostDetails", "View Boost Details");
+        gui_buttons_viewBoostDetails_color = builder.comment("The color of the view boost details button.")
+                .defineEnum("viewBoostDetails_color", ChatColors.AQUA);
+        gui_buttons_increment = builder.comment("The text displayed for the increment button.")
+                .define("increment", "Increment");
+        gui_buttons_increment_color = builder.comment("The color of the increment button.")
+                .defineEnum("increment_color", ChatColors.GREEN);
+        gui_buttons_decrement = builder.comment("The text displayed for the decrement button.")
+                .define("decrement", "Decrement");
+        gui_buttons_decrement_color = builder.comment("The color of the decrement button.")
+                .defineEnum("decrement_color", ChatColors.RED);
+        gui_buttons_spawnBucketBoosters = builder.comment("The text displayed for the spawn bucket boosters button.")
+                .define("spawnBucketBoosters", "Spawn Bucket Boosters");
+        gui_buttons_spawnBucketBoosters_color = builder.comment("The color of the spawn bucket boosters button.")
+                .defineEnum("spawnBucketBoosters_color", ChatColors.AQUA);
+        gui_buttons_shinyBoosters = builder.comment("The text displayed for the shiny boosters button.")
+                .define("shinyBoosters", "Shiny Boosters");
+        gui_buttons_shinyBoosters_color = builder.comment("The color of the shiny boosters button.")
+                .defineEnum("shinyBoosters_color", ChatColors.AQUA);
+        gui_buttons_catchBoosters = builder.comment("The text displayed for the catch boosters button.")
+                .define("catchBoosters", "Catch Boosters");
+        gui_buttons_catchBoosters_color = builder.comment("The color of the catch boosters button.")
+                .defineEnum("catchBoosters_color", ChatColors.AQUA);
+        gui_buttons_experienceBoosters = builder.comment("The text displayed for the experience boosters button.")
+                .define("experienceBoosters", "Experience Boosters");
+        gui_buttons_experienceBoosters_color = builder.comment("The color of the experience boosters button.")
+                .defineEnum("experienceBoosters_color", ChatColors.AQUA);
+        gui_buttons_viewQueue = builder.comment("The text displayed for the view queue button.")
+                .define("viewQueue", "View %s Queue");
+        gui_buttons_viewQueue_color = builder.comment("The color of the view queue button.")
+                .defineEnum("viewQueue_color", ChatColors.AQUA);
+        gui_buttons_viewQueue_multiple = builder.comment("The text displayed for the view queue button when there are multiple queues.")
+                .define("viewQueue_multiple", "View %s Queues");
+        gui_buttons_viewQueue_multiple_color = builder.comment("The color of the view queue button when there are multiple queues.")
+                .defineEnum("viewQueue_multiple_color", ChatColors.AQUA);
+        gui_buttons_adminMenu = builder.comment("The text displayed for the admin menu button.")
+                .define("adminMenu", "Admin Menu");
+        gui_buttons_adminMenu_color = builder.comment("The color of the admin menu button.")
+                .defineEnum("adminMenu_color", ChatColors.RED);
+        gui_buttons_reloadConfig = builder.comment("The text displayed for the reload config button.")
+                .define("reloadConfig", "Reload Config");
+        gui_buttons_reloadConfig_color = builder.comment("The color of the reload config button.")
+                .defineEnum("reloadConfig_color", ChatColors.RED);
+        gui_buttons_clearAllQueues = builder.comment("The text displayed for the clear all queues button.")
+                .define("clearAllQueues", "Clear All Queues");
+        gui_buttons_clearAllQueues_color = builder.comment("The color of the clear all queues button.")
+                .defineEnum("clearAllQueues_color", ChatColors.RED);
+        gui_buttons_cancel = builder.comment("The text displayed for the cancel button.")
+                .define("cancel", "Cancel");
+        gui_buttons_cancel_color = builder.comment("The color of the cancel button.")
+                .defineEnum("cancel_color", ChatColors.RED);
+        gui_buttons_confirm = builder.comment("The text displayed for the confirm button.")
+                .define("confirm", "Confirm");
+        gui_buttons_confirm_color = builder.comment("The color of the confirm button.")
+                .defineEnum("confirm_color", ChatColors.GREEN);
+        gui_buttons_stopActiveBoost = builder.comment("The text displayed for the stop active boost button.")
+                .define("stopActiveBoost", "Stop Active Boost");
+        gui_buttons_stopActiveBoost_color = builder.comment("The color of the stop active boost button.")
+                .defineEnum("stopActiveBoost_color", ChatColors.RED);
+
+        gui_buttons_viewActiveBoost = builder.comment("The text displayed for the view active boost button.")
+                .define("viewActiveBoost", "View Active Boost");
+        gui_buttons_viewActiveBoost_color = builder.comment("The color of the view active boost button.")
+                .defineEnum("viewActiveBoost_color", ChatColors.AQUA);
+        gui_buttons_startBoost = builder.comment("The text displayed for the start boost button.")
+                .define("startBoost", "Start New %s");
+        gui_buttons_startBoost_color = builder.comment("The color of the start boost button.")
+                .defineEnum("startBoost_color", ChatColors.GREEN);
+        gui_buttons_pageText = builder.comment("The text displayed for the page text in GUIs.")
+                .define("pageText", "Page %s of %s");
+        gui_buttons_pageText_color = builder.comment("The color of the page text in GUIs.")
+                .defineEnum("pageText_color", ChatColors.GRAY);
+        builder.pop(); // Closes "buttons" block
 
         builder.pop(); // Closes "gui" block
 
