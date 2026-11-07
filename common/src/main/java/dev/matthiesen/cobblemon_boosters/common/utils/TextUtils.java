@@ -5,7 +5,7 @@ import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import net.minecraft.network.chat.Component;
+import dev.matthiesen.matthiesen_core.common.api.text_parsers.TextParser;
 import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
@@ -14,10 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class TextUtils {
-    public static Component deserialize(String text, Map<String, String> placeholders) {
+    public static TextParser getTextParser() {
         return CobblemonBoostersCommon.INSTANCE.getTextParserManager()
-                .getTextParser(BoostersConfig.CORE_SERVER_CONFIG.messages_textParser.get())
-                .parse(text, placeholders);
+                .getTextParser(BoostersConfig.TEXT_CONFIG.messages_textParser.get());
+    }
+
+    public static String parse(String text, Map<String, String> placeholders) {
+        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+            text = text.replaceAll(entry.getKey(), entry.getValue());
+        }
+        return text;
     }
 
     public static String getCurrentTimestampForDiscordEmbed() {
@@ -31,7 +37,7 @@ public final class TextUtils {
     public static Map<String, String> getPlaceholders(@Nullable IBoost boost) {
         Map<String, String> map = new HashMap<>();
 
-        map.put("%prefix%", BoostersConfig.CORE_SERVER_CONFIG.messages_prefix.get());
+        map.put("%prefix%", BoostersConfig.TEXT_CONFIG.messages_prefix.get());
         map.put("%base_shiny_rate%", String.valueOf(Cobblemon.config.getShinyRate()));
         map.put("%discord_webhook_author_name%", BoostersConfig.WEBHOOKS_SERVER_CONFIG.discordAuthorName.get());
         map.put("%discord_webhook_author_icon_url%", BoostersConfig.WEBHOOKS_SERVER_CONFIG.discordAuthorIconUrl.get());
@@ -50,13 +56,6 @@ public final class TextUtils {
         }
 
         return map;
-    }
-
-    public static String parse(String text, Map<String, String> placeholders) {
-        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            text = text.replaceAll(entry.getKey(), entry.getValue());
-        }
-        return text;
     }
 
     /** Compact time: only the largest non-zero unit (e.g. {@code 2h}, {@code 59m}, {@code 30s}). */

@@ -32,7 +32,7 @@ public final class Reload implements ISubCommand {
         BoostControllerServiceManager.refreshQueuePriorities();
         CacheServerConfig.setGlobalBoostData();
         CobblemonBoostersCommon.INSTANCE.reloadTask();
-        Util.sendMessage(ctx, BoostersConfig.CORE_SERVER_CONFIG.messages_commandReload.get());
+        Util.sendMessage(ctx, BoostersConfig.TEXT_CONFIG.messages_commandReload.get());
         return 1;
     }
 }

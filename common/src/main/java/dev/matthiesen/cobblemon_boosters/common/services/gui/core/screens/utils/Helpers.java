@@ -1,5 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils;
 
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGui;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.utils.MenuUtils;
@@ -8,6 +9,7 @@ import dev.matthiesen.matthiesen_core.common.api.server_menu.button.Button;
 import dev.matthiesen.matthiesen_core.common.api.server_menu.button.PlaceholderButton;
 import dev.matthiesen.matthiesen_core.common.api.server_menu.button.ServerButton;
 import dev.matthiesen.matthiesen_core.common.api.server_menu.template.types.ChestTemplate;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -27,7 +29,7 @@ public final class Helpers {
         if (currentMode != null) {
             return true;
         }
-        sendMessage.accept("&cPlease select a field to modify first by clicking on its button!");
+        sendMessage.accept(BoostersConfig.TEXT_CONFIG.messages_error_selectModeFirst.get());
         return false;
     }
 
@@ -115,12 +117,12 @@ public final class Helpers {
 
     public static Component text(String rawText) {
         var placeholders = TextUtils.getPlaceholders();
-        return TextUtils.deserialize(rawText, placeholders);
+        return TextUtils.getTextParser().parse(rawText, placeholders);
     }
 
     public static Component text(String rawText, IBoost boost) {
         var placeholders = TextUtils.getPlaceholders(boost);
-        return TextUtils.deserialize(rawText, placeholders);
+        return TextUtils.getTextParser().parse(rawText, placeholders);
     }
 
     public static void sendPlayerMessage(ServerPlayer player, String rawMessage) {
@@ -128,7 +130,7 @@ public final class Helpers {
     }
 
     public static Component getBoostBuilderTitle() {
-        return text("Boost Builder");
+        return text(BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_title.get());
     }
 
     public static ChestTemplate.Builder addModifierButtons(ChestTemplate.Builder builder, Button subtractButton, Button addButton) {
@@ -164,7 +166,7 @@ public final class Helpers {
     public static <T extends IGui> Button buildModeButton(
             String label,
             Object value,
-            Map<String, String> labelToColor,
+            Map<String, ChatFormatting> labelToColor,
             Supplier<String> getCurrentMode,
             Function<String, T> setCurrentMode,
             Function<T, Void> openUpdatedPage,
@@ -173,11 +175,13 @@ public final class Helpers {
         List<Component> lore = new ArrayList<>();
 
         var placeholders = TextUtils.getPlaceholders();
+        var config = BoostersConfig.TEXT_CONFIG;
 
         if (value != null) {
-            lore.add(TextUtils.deserialize("&7Current: &f" + value, placeholders));
+            String message = String.format(config.gui_boosterBuilder_mode_current.get(), value);
+            lore.add(TextUtils.getTextParser().parse(message, placeholders));
         } else {
-            lore.add(TextUtils.deserialize("&7Current: &cNot set", placeholders));
+            lore.add(TextUtils.getTextParser().parse(config.gui_boosterBuilder_mode_notSet.get(), placeholders));
         }
 
         Component[] loreArray = toComponentArray(lore);
@@ -188,7 +192,12 @@ public final class Helpers {
 
         return ServerButton.builder()
                 .display(MenuUtils.getQueueEntryBuilder()
-                        .setCustomName(TextUtils.deserialize(labelToColor.get(label) + label, placeholders))
+                        .setCustomName(
+                                TextUtils.getTextParser()
+                                        .parse(label, placeholders)
+                                        .copy()
+                                        .withStyle(labelToColor.get(label))
+                        )
                         .addLore(loreArray)
                         .setEnchanted(isActive)
                         .build()
@@ -206,29 +215,34 @@ public final class Helpers {
 
     public static Button getDetailsButton(List<Component> lore, BaseBoostBuilder boostBuilder) {
         var placeholders = TextUtils.getPlaceholders();
+        var config = BoostersConfig.TEXT_CONFIG;
+
+        String multiplierText = config.gui_boosterBuilder_multiplier.get();
         if (boostBuilder.multiplier != null) {
-            lore.add(TextUtils.deserialize("&7Multiplier: &f" + boostBuilder.multiplier, placeholders));
+            lore.add(TextUtils.getTextParser().parse(String.format(multiplierText, boostBuilder.multiplier), placeholders));
         } else {
-            lore.add(TextUtils.deserialize("&7Multiplier: &cNot set", placeholders));
+            lore.add(TextUtils.getTextParser().parse(String.format(multiplierText, config.gui_boosterBuilder_noValue.get()), placeholders));
         }
 
+        String durationText = config.gui_boosterBuilder_duration.get();
         if (boostBuilder.duration != null) {
-            lore.add(TextUtils.deserialize("&7Duration: &f" + boostBuilder.duration, placeholders));
+            lore.add(TextUtils.getTextParser().parse(String.format(durationText, boostBuilder.duration), placeholders));
         } else {
-            lore.add(TextUtils.deserialize("&7Duration: &cNot set", placeholders));
+            lore.add(TextUtils.getTextParser().parse(String.format(durationText, config.gui_boosterBuilder_noValue.get()), placeholders));
         }
 
+        String unitText = config.gui_boosterBuilder_unit.get();
         if (boostBuilder.unit != null) {
-            lore.add(TextUtils.deserialize("&7Unit: &f" + boostBuilder.unit, placeholders));
+            lore.add(TextUtils.getTextParser().parse(String.format(unitText, boostBuilder.unit), placeholders));
         } else {
-            lore.add(TextUtils.deserialize("&7Unit: &cNot set", placeholders));
+            lore.add(TextUtils.getTextParser().parse(String.format(unitText, config.gui_boosterBuilder_noValue.get()), placeholders));
         }
 
         Component[] loreArray = toComponentArray(lore);
 
         return ServerButton.builder()
                 .display(MenuUtils.getDetailsItemBuilder()
-                        .setCustomName(TextUtils.deserialize("&6Details", placeholders))
+                        .setCustomName(TextUtils.getTextParser().parse(config.gui_boosterBuilder_details.get(), placeholders))
                         .addLore(loreArray)
                         .build()
                 )

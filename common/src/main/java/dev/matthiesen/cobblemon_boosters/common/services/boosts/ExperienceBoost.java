@@ -37,7 +37,7 @@ public final class ExperienceBoost extends AbstractSimpleBoost {
         var placeholders = TextUtils.getPlaceholders(this);
         return new BoostersItemBuilder(MenuUtils.EXPERIENCE_ITEM)
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize("&a%multiplier%x Experience Boost&r", placeholders))
+                .setCustomName(TextUtils.getTextParser().parse(BoostersConfig.TEXT_CONFIG.gui_boosterTitles_experience.get(), placeholders))
                 .addLore(lore)
                 .build();
     }

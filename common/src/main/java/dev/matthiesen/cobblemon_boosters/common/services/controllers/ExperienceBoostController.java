@@ -53,8 +53,8 @@ public final class ExperienceBoostController implements IBoostController<Experie
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
-                "Experience",
-                "&aExperience Boosts&r",
+                BoostersConfig.TEXT_CONFIG.gui_boosterTitles_experience_displayName.get(),
+                BoostersConfig.TEXT_CONFIG.gui_boosterTitles_experience_menuTitle.get(),
                 MenuUtils::getExperienceItem,
                 () -> INSTANCE,
                 BoostersConfig::getExperienceMessages,

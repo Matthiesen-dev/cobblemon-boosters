@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.templates;
 
 import com.google.common.collect.Lists;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IGui;
 import dev.matthiesen.matthiesen_core.common.api.server_menu.ServerUIManager;
@@ -22,7 +23,7 @@ public class BaseMenuGuiTemplate implements IGui {
     }
 
     public Component getTitle() {
-        return Helpers.text("&6Cobblemon Boosters&r");
+        return Helpers.text(BoostersConfig.TEXT_CONFIG.gui_baseTitle.get());
     }
 
     public List<Button> getButtons() {

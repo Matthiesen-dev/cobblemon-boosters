@@ -1,5 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens;
 
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens.QueueGui;
@@ -22,7 +23,7 @@ public final class CheckQueuesGui extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserialize("&aAll Boost Queues&r", TextUtils.getPlaceholders());
+        return TextUtils.getTextParser().parse(BoostersConfig.TEXT_CONFIG.gui_CheckQueues_title.get(), TextUtils.getPlaceholders());
     }
 
     public Button getQueueButton(BoosterGuiDefinition<?> definition) {

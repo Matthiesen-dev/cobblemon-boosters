@@ -54,8 +54,8 @@ public final class ShinyBoostController implements IBoostController<ShinyBoost> 
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
-                "Shiny",
-                "&6Shiny Boosts&r",
+                BoostersConfig.TEXT_CONFIG.gui_boosterTitles_shiny_displayName.get(),
+                BoostersConfig.TEXT_CONFIG.gui_boosterTitles_shiny_menuTitle.get(),
                 MenuUtils::getShinyItem,
                 () -> INSTANCE,
                 BoostersConfig::getShinyMessages,

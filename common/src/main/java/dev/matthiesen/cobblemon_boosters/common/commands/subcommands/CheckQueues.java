@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.commands.Util;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.ISubCommand;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
@@ -56,7 +57,8 @@ public final class CheckQueues implements ISubCommand {
         if (handler != null) {
             handler.accept(ctx);
         } else {
-            Util.sendMessage(ctx, "%prefix% &cUnknown booster type. Valid types are: " + String.join(", ", getRegisteredBoosterIds()) + ".");
+            String message = String.format(BoostersConfig.TEXT_CONFIG.messages_error_unknownBoostType.get(), String.join(", ", getRegisteredBoosterIds()));
+            Util.sendMessage(ctx, message);
         }
         return 1;
     }

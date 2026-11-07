@@ -28,13 +28,13 @@ public interface IBoost {
 
 	default Component getBossBarText() {
 		var placeholders = TextUtils.getPlaceholders(this);
-		return TextUtils.deserialize(getMessages().barText(), placeholders);
+		return TextUtils.getTextParser().parse(getMessages().barText(), placeholders);
 	}
 
 	default Component getSidebarText() {
 		var cfg = getMessages();
 		String format = (cfg.sidebarLine() == null || cfg.sidebarLine().isBlank()) ? cfg.barText() : cfg.sidebarLine();
 		var placeholders = TextUtils.getPlaceholders(this);
-		return TextUtils.deserialize(format, placeholders);
+		return TextUtils.getTextParser().parse(format, placeholders);
 	}
 }

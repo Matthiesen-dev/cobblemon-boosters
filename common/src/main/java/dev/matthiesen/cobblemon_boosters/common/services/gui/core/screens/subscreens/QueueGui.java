@@ -1,5 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens;
 
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
@@ -25,7 +26,8 @@ import java.util.Queue;
 public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IBoost> queuedBoosts) implements IGui {
 
     public Component getTitle() {
-        return Helpers.text("&b" + queueName + " Queue");
+        String title = String.format(BoostersConfig.TEXT_CONFIG.gui_queue_title.get(), queueName);
+        return Helpers.text(title);
     }
 
     private Button getInfoButton(int currentPage, int pageLength) {
@@ -57,16 +59,17 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
 
     public Page getPage() {
         List<Button> buttons = new ArrayList<>();
+        var config = BoostersConfig.TEXT_CONFIG;
 
         if (!queuedBoosts.isEmpty()) {
             List<IBoost> boosts = new ArrayList<>(queuedBoosts);
             for (IBoost boost : boosts) {
                 List<Component> loreComponents = new ArrayList<>();
 
-                loreComponents.add(Helpers.text("&fDuration: &a%duration%", boost));
+                loreComponents.add(Helpers.text(config.gui_queue_duration.get(), boost));
 
                 if (boost instanceof SpawnBucketBoost && ((SpawnBucketBoost) boost).bucket != null) {
-                    loreComponents.add(Helpers.text("&aBucket: &c%bucket%", boost));
+                    loreComponents.add(Helpers.text(config.gui_queue_bucket.get(), boost));
                 }
 
                 Component[] lore = Helpers.toComponentArray(loreComponents);
@@ -80,12 +83,12 @@ public record QueueGui(ServerPlayer player, String queueName, Queue<? extends IB
         }
 
         LinkedPageButton previous = LinkedPageButton.builder()
-                .display(MenuUtils.getNavItem("Previous"))
+                .display(MenuUtils.getNavItem(BoostersConfig.TEXT_CONFIG.gui_text_previousPage.get()))
                 .linkType(LinkType.Previous)
                 .build();
 
         LinkedPageButton next = LinkedPageButton.builder()
-                .display(MenuUtils.getNavItem("Next"))
+                .display(MenuUtils.getNavItem(BoostersConfig.TEXT_CONFIG.gui_text_nextPage.get()))
                 .linkType(LinkType.Next)
                 .build();
 

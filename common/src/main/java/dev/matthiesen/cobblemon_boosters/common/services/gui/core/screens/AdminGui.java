@@ -26,7 +26,7 @@ public final class AdminGui extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserialize("&cAdmin Menu&r", TextUtils.getPlaceholders());
+        return TextUtils.getTextParser().parse(BoostersConfig.TEXT_CONFIG.gui_adminGui_title.get(), TextUtils.getPlaceholders());
     }
 
     private void getQueuesAndClear() {
@@ -42,6 +42,7 @@ public final class AdminGui extends BaseMenuGuiTemplate {
     public List<Button> getButtons() {
         List<Button> buttons = new ArrayList<>();
         var permissions = PermissionRegistry.getPermissions();
+        var config = BoostersConfig.TEXT_CONFIG;
 
         // Reload
         if (PermissionRegistry.checkPermission(player, permissions.RELOAD_PERMISSION))
@@ -49,10 +50,10 @@ public final class AdminGui extends BaseMenuGuiTemplate {
                     .display(MenuUtils.getReloadItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
                             player,
-                            "&cConfirm to reload",
+                            config.gui_adminGui_button_reloadTitle.get(),
                             () -> {
                                 CobblemonBoostersCommon.INSTANCE.reloadTask();
-                                sendPlayerMessage(BoostersConfig.CORE_SERVER_CONFIG.messages_commandReload.get());
+                                sendPlayerMessage(BoostersConfig.TEXT_CONFIG.messages_commandReload.get());
                                 close();
                             },
                             this::open
@@ -66,7 +67,7 @@ public final class AdminGui extends BaseMenuGuiTemplate {
                     .display(MenuUtils.getClearQueueItem())
                     .onClick(() -> new CancelConfirmGuiBuilder(
                             player,
-                            "&cConfirm to clear all Queues",
+                            config.gui_adminGui_button_clearQueuesTitle.get(),
                             () -> {
                                 getQueuesAndClear();
                                 close();
