@@ -107,8 +107,8 @@ public final class SidebarDisplay implements IBoostDisplayService {
 
     private Objective ensureObjective(ServerScoreboard scoreboard) {
         Objective objective = scoreboard.getObjective(OBJECTIVE_NAME);
-        var title = TextUtils.deserialize(TextUtils.parse(
-                BoostersConfig.CORE_SERVER_CONFIG.messages_sidebarTitle.get()));
+        var placeholders = TextUtils.getPlaceholders();
+        var title = TextUtils.deserialize(BoostersConfig.CORE_SERVER_CONFIG.messages_sidebarTitle.get(), placeholders);
 
         if (objective == null) {
             objective = scoreboard.addObjective(

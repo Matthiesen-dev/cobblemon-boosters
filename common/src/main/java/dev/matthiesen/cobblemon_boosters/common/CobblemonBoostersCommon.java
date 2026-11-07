@@ -5,15 +5,11 @@ import dev.matthiesen.cobblemon_boosters.common.config.*;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
 import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
-import dev.matthiesen.cobblemon_boosters.common.services.controllers.CatchBoostController;
-import dev.matthiesen.cobblemon_boosters.common.services.controllers.ExperienceBoostController;
-import dev.matthiesen.cobblemon_boosters.common.services.controllers.ShinyBoostController;
-import dev.matthiesen.cobblemon_boosters.common.services.controllers.SpawnBucketBoostController;
-import dev.matthiesen.libs.faststats.Token;
+import dev.matthiesen.cobblemon_boosters.common.services.controllers.*;
+import dev.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
-import dev.matthiesen.matthiesen_core.common.api.events.server.PlayerEvent;
-import dev.matthiesen.matthiesen_core.common.api.events.server.ServerEvent;
+import dev.matthiesen.matthiesen_core.common.api.events.server.*;
 import dev.matthiesen.matthiesen_core.common.api.platform.loader.ModConfigType;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,20 +24,16 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         super(MOD_ID, MOD_NAME);
     }
 
-    public static String modConfig(String key) {
-        return MOD_ID + "/" + key + ".toml";
-    }
-
     @Override
     public void initialize() {
         super.initialize();
 
         createInfoLog("Registering Cobblemon Boosters Mod Configs");
 
-        registerModConfig(MOD_ID, ModConfigType.STARTUP, BoostersConfig.PERMISSIONS_STARTUP_SPEC, modConfig("permissions"));
-        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CORE_SERVER_SPEC, modConfig("core"));
-        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CACHE_SERVER_SPEC, modConfig("cache"));
-        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.WEBHOOKS_SERVER_SPEC, modConfig("webhooks"));
+        registerModConfig(MOD_ID, ModConfigType.STARTUP, BoostersConfig.PERMISSIONS_STARTUP_SPEC, modConfigPath("permissions"));
+        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CORE_SERVER_SPEC, modConfigPath("core"));
+        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CACHE_SERVER_SPEC, modConfigPath("cache"));
+        registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.WEBHOOKS_SERVER_SPEC, modConfigPath("webhooks"));
 
         createInfoLog("Registering Cobblemon Boosters Permissions");
 

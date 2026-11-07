@@ -1,13 +1,9 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
-import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
-import dev.matthiesen.cobblemon_boosters.common.config.def.BoostMessagesConfig;
-import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.*;
+import dev.matthiesen.cobblemon_boosters.common.config.def.*;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.queue.QueuePrioritySettings;
-import dev.matthiesen.matthiesen_core.common.api.events.config.ConfigEvent;
+import dev.matthiesen.matthiesen_core.common.api.events.server.ConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 

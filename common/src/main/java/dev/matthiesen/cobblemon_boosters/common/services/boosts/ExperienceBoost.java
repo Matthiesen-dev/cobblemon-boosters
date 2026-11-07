@@ -34,9 +34,10 @@ public final class ExperienceBoost extends AbstractSimpleBoost {
 
     @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
+        var placeholders = TextUtils.getPlaceholders(this);
         return new BoostersItemBuilder(MenuUtils.EXPERIENCE_ITEM)
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize(TextUtils.parse("&a%multiplier%x Experience Boost&r", this)))
+                .setCustomName(TextUtils.deserialize("&a%multiplier%x Experience Boost&r", placeholders))
                 .addLore(lore)
                 .build();
     }

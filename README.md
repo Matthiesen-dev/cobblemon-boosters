@@ -21,9 +21,6 @@ chances of finding Shiny Pokemon, or increases the catch rate!
 - [Fabric API](https://modrinth.com/mod/fabric-api) (Fabric only)
 - [Forge Config API Port](https://modrinth.com/mod/forge-config-api-port) (Fabric only)
 
-### Optional Dependencies
-- [Matthiesen Core Webhooks](https://modrinth.com/project/XP5CfD30) - Used for sending Discord webhooks when boosters are started or stopped.
-
 ## Docs
 
 Documentation for this mod can be found at [mods.matthiesen.dev](https://mods.matthiesen.dev/cobblemon-boosters/)
@@ -37,6 +34,7 @@ Documentation for this mod can be found at [mods.matthiesen.dev](https://mods.ma
 | 1.21.1            | 1.2.7+                  | 1.7.3             | 1.9.0+      |
 | 1.21.1            | 1.2.7+                  | 1.8.x+            | 1.10.0+     |
 | 1.21.1            | 1.3.0+                  | 1.8.x+            | 1.11.0+     |
+| 1.21.1            | 2.0.0+                  | 1.8.x+            | 1.12.0+     |
 
 > Before `v1.8.0` This mod relied on [Matthiesen Lib API](https://modrinth.com/mod/matthiesen-lib-api) for its APIs, which has since been replaced by [Matthiesen Core](https://modrinth.com/mod/matthiesen-core).
 
@@ -48,7 +46,7 @@ how this mod is being used and improve it over time. You can learn more about th
 
 You can also view the data collected by this mod on the [FastStats: Cobblemon Boosters](https://faststats.dev/project/cobblemon-boosters) page.
 
-To opt out of this data collection, set the `enabled` property to `false` in the `<game_directory>/config/matthiesen_core/metrics.properties` file.
+To opt out of this data collection, set the `enabled` property to `false` in the `<game_directory>/config/faststats/config.properties` file.
 
 ## License
 

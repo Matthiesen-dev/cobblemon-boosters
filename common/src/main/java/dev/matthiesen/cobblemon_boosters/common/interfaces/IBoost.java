@@ -27,17 +27,14 @@ public interface IBoost {
 	}
 
 	default Component getBossBarText() {
-		return TextUtils.deserialize(
-				TextUtils.parse(
-						getMessages().barText(),
-						this
-				)
-		);
+		var placeholders = TextUtils.getPlaceholders(this);
+		return TextUtils.deserialize(getMessages().barText(), placeholders);
 	}
 
 	default Component getSidebarText() {
 		var cfg = getMessages();
 		String format = (cfg.sidebarLine() == null || cfg.sidebarLine().isBlank()) ? cfg.barText() : cfg.sidebarLine();
-		return TextUtils.deserialize(TextUtils.parse(format, this));
+		var placeholders = TextUtils.getPlaceholders(this);
+		return TextUtils.deserialize(format, placeholders);
 	}
 }

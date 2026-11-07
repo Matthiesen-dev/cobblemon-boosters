@@ -67,9 +67,10 @@ public final class SpawnBucketBoost extends AbstractSimpleBoost {
 
     @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
+        var placeholders = TextUtils.getPlaceholders(this);
         return new BoostersItemBuilder(MenuUtils.getBucketItem())
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize(TextUtils.parse("&a%bucket% Spawn Bucket Boost&r", this)))
+                .setCustomName(TextUtils.deserialize("&a%bucket% Spawn Bucket Boost&r", placeholders))
                 .addLore(lore)
                 .build();
     }

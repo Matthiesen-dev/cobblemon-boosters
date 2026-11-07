@@ -40,7 +40,8 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserialize(TextUtils.parse(definition.getMenuTitle()));
+        var placeholders = TextUtils.getPlaceholders(activeBoost);
+        return TextUtils.deserialize(definition.getMenuTitle(), placeholders);
     }
 
     public Button getStopButton() {
@@ -50,12 +51,13 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
                         player,
                         "&cConfirm to stop active boost!",
                         () -> {
+                            var placeholders = TextUtils.getPlaceholders(activeBoost);
                             if (activeBoost != null) {
                                 activeBoost.setTimeRemaining(1);
-                                player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(stopBoostMsg)));
+                                player.sendSystemMessage(TextUtils.deserialize(stopBoostMsg, placeholders));
                                 close();
                             } else {
-                                player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(noActiveBoost)));
+                                player.sendSystemMessage(TextUtils.deserialize(noActiveBoost, placeholders));
                                 close();
                             }
                         },
@@ -68,11 +70,12 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
         return ServerButton.builder()
                 .display(MenuUtils.getStatusItem(activeBoost != null))
                 .onClick(() -> {
+                    var placeholders = TextUtils.getPlaceholders(activeBoost);
                     if (activeBoost != null) {
-                        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(boostInfo, activeBoost)));
+                        player.sendSystemMessage(TextUtils.deserialize(boostInfo, placeholders));
                         close();
                     } else {
-                        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(noActiveBoost)));
+                        player.sendSystemMessage(TextUtils.deserialize(noActiveBoost, placeholders));
                         close();
                     }
                 })

@@ -3,14 +3,11 @@ package dev.matthiesen.cobblemon_boosters.common.services.webhook;
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.def.DiscordEmbed;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.IWebhookService;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.*;
 import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
-import dev.matthiesen.matthiesen_core.common.api.discord.WebhookNotifierInstance;
-import dev.matthiesen.matthiesen_core.common.api.discord.WebhookNotifierService;
-import dev.matthiesen.matthiesen_core.common.api.exceptions.DiscordWebhookException;
+import dev.matthiesen.matthiesen_core.common.api.discord.*;
+import dev.matthiesen.matthiesen_core.common.api.discord.exceptions.DiscordWebhookException;
 import dev.matthiesen.matthiesen_core.common.core.discord.model.Embed;
-import dev.matthiesen.matthiesen_core.common.core.discord.model.EmbedBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,23 +34,24 @@ public final class DiscordWebhookService implements IWebhookService {
     }
 
     public static Embed parseEventEmbed(DiscordEmbed embed, IBoost boost) {
-        EmbedBuilder embedBuilder = new EmbedBuilder();
+        Embed.Builder embedBuilder = new Embed.Builder();
+        var placeholders = TextUtils.getPlaceholders(boost);
         if (embed.title() != null)
-            embedBuilder.withTitle(TextUtils.parse(embed.title(), boost));
+            embedBuilder.withTitle(TextUtils.parse(embed.title(), placeholders));
         if (embed.description() != null)
-            embedBuilder.withDescription(TextUtils.parse(embed.description(), boost));
+            embedBuilder.withDescription(TextUtils.parse(embed.description(), placeholders));
         if (embed.color() != null)
             embedBuilder.withColor(embed.color());
         if (embed.timestamp() != null)
-            embedBuilder.withTimestamp(TextUtils.parse(embed.timestamp(), boost));
-        List<Embed.EmbedField> fields = new ArrayList<>();
+            embedBuilder.withTimestamp(TextUtils.parse(embed.timestamp(), placeholders));
+        List<Embed.Field> fields = new ArrayList<>();
         if (embed.fields() != null) {
             for (DiscordEmbed.DiscordEmbedField field : embed.fields()) {
-                Embed.EmbedField embedField = new Embed.EmbedField();
+                Embed.Field embedField = new Embed.Field();
                 if (field.name() != null)
-                    embedField.setName(TextUtils.parse(field.name(), boost));
+                    embedField.setName(TextUtils.parse(field.name(), placeholders));
                 if (field.value() != null)
-                    embedField.setValue(TextUtils.parse(field.value(), boost));
+                    embedField.setValue(TextUtils.parse(field.value(), placeholders));
                 embedField.setInline(field.inline());
                 fields.add(embedField);
             }
@@ -61,8 +59,8 @@ public final class DiscordWebhookService implements IWebhookService {
         }
         if (embed.author() != null) {
             Embed.Author author = new Embed.Author();
-            if (embed.author().name() != null) author.setName(TextUtils.parse(embed.author().name(), boost));
-            if (embed.author().icon_url() != null) author.setIconUrl(TextUtils.parse(embed.author().icon_url(), boost));
+            if (embed.author().name() != null) author.setName(TextUtils.parse(embed.author().name(), placeholders));
+            if (embed.author().icon_url() != null) author.setIconUrl(TextUtils.parse(embed.author().icon_url(), placeholders));
             embedBuilder.withAuthor(author);
         }
         return embedBuilder.build();
@@ -91,13 +89,14 @@ public final class DiscordWebhookService implements IWebhookService {
                 rolePing = null;
             }
 
+            var placeholders = TextUtils.getPlaceholders(boost);
             WEBHOOK_INSTANCE.sendMessage(message -> {
                 if (rolePing != null) {
                     message.withContent(rolePing);
                 }
                 message
-                        .withUsername(TextUtils.parse(userName, boost))
-                        .withAvatarUrl(TextUtils.parse(avatarUrl, boost))
+                        .withUsername(TextUtils.parse(userName, placeholders))
+                        .withAvatarUrl(TextUtils.parse(avatarUrl, placeholders))
                         .withEmbeds(List.of(parseEventEmbed(embed, boost)));
             });
         } catch (RuntimeException e) {
