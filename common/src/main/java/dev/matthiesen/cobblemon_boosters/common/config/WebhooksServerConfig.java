@@ -1,6 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.config;
 
-import dev.matthiesen.matthiesen_core.common.core.discord.DiscordColor;
+import dev.matthiesen.matthiesen_core.common.api.discord.DiscordColor;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class WebhooksServerConfig {

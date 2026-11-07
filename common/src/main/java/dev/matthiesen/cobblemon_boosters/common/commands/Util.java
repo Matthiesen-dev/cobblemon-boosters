@@ -15,6 +15,7 @@ import dev.matthiesen.cobblemon_boosters.common.utils.TextUtils;
 import dev.matthiesen.matthiesen_core.common.api.permissions.Permission;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Queue;
@@ -53,17 +54,19 @@ public final class Util {
         }
     }
 
-    public static void handleSendMessage(CommandContext<CommandSourceStack> ctx, String parsedMessage) {
-        ctx.getSource().sendSystemMessage(TextUtils.deserialize(parsedMessage));
+    public static void handleSendMessage(CommandContext<CommandSourceStack> ctx, Component parsedMessage) {
+        ctx.getSource().sendSystemMessage(parsedMessage);
     }
 
     public static void sendMessage(CommandContext<CommandSourceStack> ctx, String rawMessage) {
-        String parsedMessage = TextUtils.parse(rawMessage);
+        var placeholders = TextUtils.getPlaceholders();
+        Component parsedMessage = TextUtils.deserialize(rawMessage, placeholders);
         handleSendMessage(ctx, parsedMessage);
     }
 
     public static void sendMessage(CommandContext<CommandSourceStack> ctx, String rawMessage, @NotNull IBoost boost) {
-        String parsedMessage = TextUtils.parse(rawMessage, boost);
+        var placeholders = TextUtils.getPlaceholders(boost);
+        Component parsedMessage = TextUtils.deserialize(rawMessage, placeholders);
         handleSendMessage(ctx, parsedMessage);
     }
 

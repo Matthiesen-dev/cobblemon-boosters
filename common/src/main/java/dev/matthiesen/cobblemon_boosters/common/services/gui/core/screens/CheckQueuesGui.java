@@ -22,9 +22,7 @@ public final class CheckQueuesGui extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserialize(
-                TextUtils.parse("&aAll Boost Queues&r")
-        );
+        return TextUtils.deserialize("&aAll Boost Queues&r", TextUtils.getPlaceholders());
     }
 
     public Button getQueueButton(BoosterGuiDefinition<?> definition) {

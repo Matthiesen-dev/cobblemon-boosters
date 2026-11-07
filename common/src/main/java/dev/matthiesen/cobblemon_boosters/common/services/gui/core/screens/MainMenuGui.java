@@ -25,7 +25,8 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
     }
 
     public static void sendServerPlayerMessage(ServerPlayer player, String rawMessage, IBoost boost) {
-        player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse(rawMessage, boost)));
+        var placeholders = TextUtils.getPlaceholders(boost);
+        player.sendSystemMessage(TextUtils.deserialize(rawMessage, placeholders));
     }
 
     public static void queueBoostAndNotify(ServerPlayer player, BoosterGuiDefinition<?> definition, IBoost boost) {
@@ -53,7 +54,8 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
     public static void openBoosterGui(ServerPlayer player, String boosterId) {
         var definition = BoostControllerServiceManager.getGuiDefinition(boosterId);
         if (definition == null) {
-            player.sendSystemMessage(TextUtils.deserialize(TextUtils.parse("%prefix% &cUnknown booster type: &f" + boosterId + "&c.")));
+            var placeholders = TextUtils.getPlaceholders();
+            player.sendSystemMessage(TextUtils.deserialize("%prefix% &cUnknown booster type: &f" + boosterId + "&c.", placeholders));
             return;
         }
 

@@ -114,11 +114,13 @@ public final class Helpers {
     }
 
     public static Component text(String rawText) {
-        return TextUtils.deserialize(TextUtils.parse(rawText));
+        var placeholders = TextUtils.getPlaceholders();
+        return TextUtils.deserialize(rawText, placeholders);
     }
 
     public static Component text(String rawText, IBoost boost) {
-        return TextUtils.deserialize(TextUtils.parse(rawText, boost));
+        var placeholders = TextUtils.getPlaceholders(boost);
+        return TextUtils.deserialize(rawText, placeholders);
     }
 
     public static void sendPlayerMessage(ServerPlayer player, String rawMessage) {
@@ -170,10 +172,12 @@ public final class Helpers {
     ) {
         List<Component> lore = new ArrayList<>();
 
+        var placeholders = TextUtils.getPlaceholders();
+
         if (value != null) {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Current: &f" + value)));
+            lore.add(TextUtils.deserialize("&7Current: &f" + value, placeholders));
         } else {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Current: &cNot set")));
+            lore.add(TextUtils.deserialize("&7Current: &cNot set", placeholders));
         }
 
         Component[] loreArray = toComponentArray(lore);
@@ -184,7 +188,7 @@ public final class Helpers {
 
         return ServerButton.builder()
                 .display(MenuUtils.getQueueEntryBuilder()
-                        .setCustomName(TextUtils.deserialize(TextUtils.parse(labelToColor.get(label) + label)))
+                        .setCustomName(TextUtils.deserialize(labelToColor.get(label) + label, placeholders))
                         .addLore(loreArray)
                         .setEnchanted(isActive)
                         .build()
@@ -201,29 +205,30 @@ public final class Helpers {
     }
 
     public static Button getDetailsButton(List<Component> lore, BaseBoostBuilder boostBuilder) {
+        var placeholders = TextUtils.getPlaceholders();
         if (boostBuilder.multiplier != null) {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Multiplier: &f" + boostBuilder.multiplier)));
+            lore.add(TextUtils.deserialize("&7Multiplier: &f" + boostBuilder.multiplier, placeholders));
         } else {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Multiplier: &cNot set")));
+            lore.add(TextUtils.deserialize("&7Multiplier: &cNot set", placeholders));
         }
 
         if (boostBuilder.duration != null) {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Duration: &f" + boostBuilder.duration)));
+            lore.add(TextUtils.deserialize("&7Duration: &f" + boostBuilder.duration, placeholders));
         } else {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Duration: &cNot set")));
+            lore.add(TextUtils.deserialize("&7Duration: &cNot set", placeholders));
         }
 
         if (boostBuilder.unit != null) {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Unit: &f" + boostBuilder.unit)));
+            lore.add(TextUtils.deserialize("&7Unit: &f" + boostBuilder.unit, placeholders));
         } else {
-            lore.add(TextUtils.deserialize(TextUtils.parse("&7Unit: &cNot set")));
+            lore.add(TextUtils.deserialize("&7Unit: &cNot set", placeholders));
         }
 
         Component[] loreArray = toComponentArray(lore);
 
         return ServerButton.builder()
                 .display(MenuUtils.getDetailsItemBuilder()
-                        .setCustomName(TextUtils.deserialize(TextUtils.parse("&6Details")))
+                        .setCustomName(TextUtils.deserialize("&6Details", placeholders))
                         .addLore(loreArray)
                         .build()
                 )

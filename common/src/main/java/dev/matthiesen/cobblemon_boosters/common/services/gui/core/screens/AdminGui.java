@@ -26,9 +26,7 @@ public final class AdminGui extends BaseMenuGuiTemplate {
 
     @Override
     public Component getTitle() {
-        return TextUtils.deserialize(
-                TextUtils.parse("&cAdmin Menu&r")
-        );
+        return TextUtils.deserialize("&cAdmin Menu&r", TextUtils.getPlaceholders());
     }
 
     private void getQueuesAndClear() {

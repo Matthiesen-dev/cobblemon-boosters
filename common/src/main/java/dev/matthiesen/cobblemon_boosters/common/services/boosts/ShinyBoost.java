@@ -34,9 +34,10 @@ public final class ShinyBoost extends AbstractSimpleBoost {
 
     @Override
     public ItemStack getGUIItem(net.minecraft.network.chat.Component[] lore) {
+        var placeholders = TextUtils.getPlaceholders(this);
         return new BoostersItemBuilder(MenuUtils.SHINY_ITEM)
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize(TextUtils.parse("&a%multiplier%x Shiny Boost&r", this)))
+                .setCustomName(TextUtils.deserialize("&a%multiplier%x Shiny Boost&r", placeholders))
                 .addLore(lore)
                 .build();
     }

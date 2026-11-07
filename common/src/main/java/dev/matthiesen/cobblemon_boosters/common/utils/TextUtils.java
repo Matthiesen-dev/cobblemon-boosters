@@ -6,41 +6,57 @@ import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost
 import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class TextUtils {
-    public static Component deserialize(String text) {
+    public static Component deserialize(String text, Map<String, String> placeholders) {
         return CobblemonBoostersCommon.INSTANCE.getTextParserManager()
                 .getTextParser(BoostersConfig.CORE_SERVER_CONFIG.messages_textParser.get())
-                .parse(text);
+                .parse(text, placeholders);
     }
 
     public static String getCurrentTimestampForDiscordEmbed() {
         return Instant.now().toString();
     }
 
-    public static String parse(String text) {
-        return text
-                .replaceAll("%prefix%", BoostersConfig.CORE_SERVER_CONFIG.messages_prefix.get())
-                .replaceAll("%base_shiny_rate%", String.valueOf(Cobblemon.config.getShinyRate()));
+    public static Map<String, String> getPlaceholders() {
+        return getPlaceholders(null);
     }
 
-    public static String parse(String text, IBoost boost) {
-        text = parse(text);
-        if (boost instanceof SpawnBucketBoost spawnBucketBoost && spawnBucketBoost.bucket != null) {
-            text = text.replaceAll("%bucket%", spawnBucketBoost.getBucketDisplayName());
+    public static Map<String, String> getPlaceholders(@Nullable IBoost boost) {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("%prefix%", BoostersConfig.CORE_SERVER_CONFIG.messages_prefix.get());
+        map.put("%base_shiny_rate%", String.valueOf(Cobblemon.config.getShinyRate()));
+        map.put("%discord_webhook_author_name%", BoostersConfig.WEBHOOKS_SERVER_CONFIG.discordAuthorName.get());
+        map.put("%discord_webhook_author_icon_url%", BoostersConfig.WEBHOOKS_SERVER_CONFIG.discordAuthorIconUrl.get());
+        map.put("%timestamp%", getCurrentTimestampForDiscordEmbed());
+
+        if (boost != null) {
+            map.put("%multiplier%", formatMultiplier(boost.getMultiplier()));
+            map.put("%duration%", hms(boost.getDuration()));
+            map.put("%time_remaining_short2%", hmsShort2(boost.getTimeRemaining() / 20L));
+            map.put("%time_remaining_short%", hmsShort(boost.getTimeRemaining() / 20L));
+            map.put("%time_remaining%", hms(boost.getTimeRemaining() / 20L));
+
+            if (boost instanceof SpawnBucketBoost spawnBucketBoost && spawnBucketBoost.bucket != null) {
+                map.put("%bucket%", spawnBucketBoost.getBucketDisplayName());
+            }
         }
-        return text
-                .replaceAll("%multiplier%", formatMultiplier(boost.getMultiplier()))
-                .replaceAll("%duration%", hms(boost.getDuration()))
-                .replaceAll("%time_remaining_short2%", hmsShort2(boost.getTimeRemaining() / 20L))
-                .replaceAll("%time_remaining_short%", hmsShort(boost.getTimeRemaining() / 20L))
-                .replaceAll("%time_remaining%", hms(boost.getTimeRemaining() / 20L))
-                .replaceAll("%discord_webhook_author_name%", BoostersConfig.WEBHOOKS_SERVER_CONFIG.discordAuthorName.get())
-                .replaceAll("%discord_webhook_author_icon_url%", BoostersConfig.WEBHOOKS_SERVER_CONFIG.discordAuthorIconUrl.get())
-                .replaceAll("%timestamp%", getCurrentTimestampForDiscordEmbed());
+
+        return map;
+    }
+
+    public static String parse(String text, Map<String, String> placeholders) {
+        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+            text = text.replaceAll(entry.getKey(), entry.getValue());
+        }
+        return text;
     }
 
     /** Compact time: only the largest non-zero unit (e.g. {@code 2h}, {@code 59m}, {@code 30s}). */

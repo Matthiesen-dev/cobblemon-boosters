@@ -1,12 +1,8 @@
 package dev.matthiesen.cobblemon_boosters.common.services;
 
 import dev.matthiesen.cobblemon_boosters.common.interfaces.SupportedBoosterTypes;
-import dev.matthiesen.cobblemon_boosters.common.services.boosts.CatchBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.boosts.ExperienceBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.boosts.ShinyBoost;
-import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoostController;
-import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
+import dev.matthiesen.cobblemon_boosters.common.services.boosts.*;
+import dev.matthiesen.cobblemon_boosters.common.interfaces.*;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 
 import java.util.ArrayList;
