@@ -19,13 +19,6 @@ public final class TextUtils {
                 .getTextParser(BoostersConfig.TEXT_CONFIG.messages_textParser.get());
     }
 
-    public static String parse(String text, Map<String, String> placeholders) {
-        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            text = text.replaceAll(entry.getKey(), entry.getValue());
-        }
-        return text;
-    }
-
     public static String getCurrentTimestampForDiscordEmbed() {
         return Instant.now().toString();
     }
