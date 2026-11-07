@@ -6,6 +6,7 @@ import net.minecraft.world.BossEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class TextConfig {
+    public ModConfigSpec.EnumValue<BuiltInTextParsers> textParser;
 
     // Spawn Buckets
     public ModConfigSpec.ConfigValue<String> spawnBucket_common;
@@ -100,7 +101,6 @@ public final class TextConfig {
     public ModConfigSpec.EnumValue<ChatColors> gui_buttons_pageText_color;
 
     // Messages Configuration
-    public ModConfigSpec.EnumValue<BuiltInTextParsers> messages_textParser;
     public ModConfigSpec.ConfigValue<String> messages_prefix;
     public ModConfigSpec.ConfigValue<String> messages_sidebarTitle;
     public ModConfigSpec.ConfigValue<String> messages_commandReload;
@@ -162,6 +162,14 @@ public final class TextConfig {
     public ModConfigSpec.ConfigValue<String> messages_error_missingFields;
 
     public TextConfig(ModConfigSpec.Builder builder) {
+
+        textParser = builder.comment(
+                        "The text parser to use for messages.",
+                        "Note: Switching to another parser may break existing messages if they rely on specific formatting.",
+                        "For example, if you switch from Vanilla, to Adventure MiniMessage, the Adventure parser does not support",
+                        "legacy color codes, so any messages using them will appear broken, or return errors."
+                )
+                .defineEnum("textParser", BuiltInTextParsers.VANILLA);
 
         builder.comment("Spawn Bucket Configuration").push("spawnBuckets");
         spawnBucket_common = builder.comment("The display name for the common spawn bucket.")
@@ -353,13 +361,6 @@ public final class TextConfig {
         builder.pop(); // Closes "gui" block
 
         builder.comment("Messages Configuration").push("messages");
-        messages_textParser = builder.comment(
-                        "The text parser to use for messages.",
-                        "Note: Switching to another parser may break existing messages if they rely on specific formatting.",
-                        "For example, if you switch from Vanilla, to Adventure MiniMessage, the Adventure parser does not support",
-                        "legacy color codes, so any messages using them will appear broken, or return errors."
-                )
-                .defineEnum("textParser", BuiltInTextParsers.VANILLA);
         messages_prefix = builder.comment("The prefix for all messages.")
                 .define("prefix", "&7[&6Boosters&7]");
         messages_sidebarTitle = builder.comment("The title for the sidebar display.")

@@ -16,7 +16,7 @@ import java.util.Map;
 public final class TextUtils {
     public static TextParser getTextParser() {
         return CobblemonBoostersCommon.INSTANCE.getTextParserManager()
-                .getTextParser(BoostersConfig.TEXT_CONFIG.messages_textParser.get());
+                .getTextParser(BoostersConfig.TEXT_CONFIG.textParser.get());
     }
 
     public static String getCurrentTimestampForDiscordEmbed() {
