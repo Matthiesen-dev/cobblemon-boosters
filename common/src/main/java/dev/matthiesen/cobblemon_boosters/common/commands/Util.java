@@ -138,6 +138,7 @@ public final class Util {
                                     builder.suggest("uncommon");
                                     builder.suggest("rare");
                                     builder.suggest("ultra-rare");
+                                    builder.suggest("boss");
                                     return builder.buildFuture();
                                 })
                                 .then(Commands.argument("multiplier", FloatArgumentType.floatArg(1, (float) 100.0))

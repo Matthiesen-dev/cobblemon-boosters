@@ -13,6 +13,7 @@ public final class TextConfig {
     public ModConfigSpec.ConfigValue<String> spawnBucket_uncommon;
     public ModConfigSpec.ConfigValue<String> spawnBucket_rare;
     public ModConfigSpec.ConfigValue<String> spawnBucket_ultraRare;
+    public ModConfigSpec.ConfigValue<String> spawnBucket_boss;
 
     // GUI Configuration
     public ModConfigSpec.ConfigValue<String> gui_mainMenu_unknownBoosterType;
@@ -180,6 +181,8 @@ public final class TextConfig {
                 .define("rare", "Rare");
         spawnBucket_ultraRare = builder.comment("The display name for the ultra-rare spawn bucket.")
                 .define("ultraRare", "Ultra Rare");
+        spawnBucket_boss = builder.comment("The display name for the boss spawn bucket.")
+                .define("boss", "Alpha");
         builder.pop(); // Closes "spawnBuckets" block
 
         builder.comment("GUI Configuration").push("gui");
