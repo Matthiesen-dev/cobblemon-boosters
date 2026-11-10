@@ -1,6 +1,7 @@
 package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens;
 
 import dev.matthiesen.cobblemon_boosters.common.CobblemonBoostersCommon;
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.boosts.SpawnBucketBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.BaseBoostBuilder;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.Helpers;
@@ -18,7 +19,6 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public final class BucketBoostBuilderGui implements IGui {
@@ -30,12 +30,6 @@ public final class BucketBoostBuilderGui implements IGui {
 
     public final List<String> allowedBuckets = Helpers.allowedBuckets;
     public final List<String> allowedUnits = Helpers.allowedUnits;
-    public final Map<String, String> labelToColor = Map.of(
-            "Multiplier", "&a",
-            "Duration", "&b",
-            "Unit", "&e",
-            "Bucket", "&6"
-    );
 
     public String getCurrentMode() {
         return currentMode;
@@ -106,7 +100,7 @@ public final class BucketBoostBuilderGui implements IGui {
         return Helpers.buildModeButton(
                 label,
                 value,
-                labelToColor,
+                getLabelToColor(),
                 this::getCurrentMode,
                 this::setCurrentMode,
                 this::openUpdatedPage,
@@ -116,28 +110,28 @@ public final class BucketBoostBuilderGui implements IGui {
 
     public Button getMultiplierButton() {
         return buildModeButton(
-                "Multiplier",
+                BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_label_multiplier.get(),
                 boostBuilder.multiplier
         );
     }
 
     public Button getDurationButton() {
         return buildModeButton(
-                "Duration",
+                BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_label_duration.get(),
                 boostBuilder.duration
         );
     }
 
     public Button getUnitButton() {
         return buildModeButton(
-                "Unit",
+                BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_label_unit.get(),
                 boostBuilder.unit
         );
     }
 
     public Button getBucketButton() {
         return buildModeButton(
-                "Bucket",
+                BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_label_bucket.get(),
                 boostBuilder.bucket
         );
     }
@@ -145,12 +139,16 @@ public final class BucketBoostBuilderGui implements IGui {
     public Button getDetailsButton() {
         List<Component> lore = new ArrayList<>();
 
-        lore.add(Helpers.text("&7Boost Type: &f" + boostType));
+        String boostTypeText = String.format(BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_boostType.get(), boostType);
+        lore.add(Helpers.text(boostTypeText));
 
         if (boostBuilder.bucket != null) {
-            lore.add(Helpers.text("&7Bucket: &f" + boostBuilder.bucket));
+            lore.add(Helpers.text(String.format(BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_bucket.get(), boostBuilder.bucket)));
         } else {
-            lore.add(Helpers.text("&7Bucket: &cNot set"));
+            lore.add(Helpers.text(String.format(
+                    BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_bucket.get(),
+                    BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_noValue.get()
+            )));
         }
 
         return Helpers.getDetailsButton(lore, boostBuilder);
@@ -171,7 +169,7 @@ public final class BucketBoostBuilderGui implements IGui {
                     if (getCurrentMode().equals("bucket")) {
                         boostBuilder.setBucket(Helpers.nextCyclicValue(boostBuilder.bucket, allowedBuckets, "common"));
                     } else {
-                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                        sendPlayerMessage(BoostersConfig.TEXT_CONFIG.messages_error_selectModeFirst.get());
                     }
 
                     openUpdatedPage(this);
@@ -194,7 +192,7 @@ public final class BucketBoostBuilderGui implements IGui {
                     if (getCurrentMode().equals("bucket")) {
                         boostBuilder.setBucket(Helpers.previousCyclicValue(boostBuilder.bucket, allowedBuckets, "common"));
                     } else {
-                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                        sendPlayerMessage(BoostersConfig.TEXT_CONFIG.messages_error_selectModeFirst.get());
                     }
 
                     openUpdatedPage(this);
@@ -219,14 +217,14 @@ public final class BucketBoostBuilderGui implements IGui {
                 .display(MenuUtils.getConfirmItem())
                 .onClick(() -> new CancelConfirmGuiBuilder(
                         player,
-                        "&aConfirm to start/queue boost!",
+                        BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_confirm_title.get(),
                         () -> {
                             if (isReadyToConfirm()) {
                                 SpawnBucketBoost boost = boostBuilder.build();
                                 setActiveBoost.accept(boost);
                                 close();
                             } else {
-                                sendPlayerMessage("&cYou must fill out all fields before confirming!");
+                                sendPlayerMessage(BoostersConfig.TEXT_CONFIG.messages_error_missingFields.get());
                                 openUpdatedPage(this);
                             }
                         },

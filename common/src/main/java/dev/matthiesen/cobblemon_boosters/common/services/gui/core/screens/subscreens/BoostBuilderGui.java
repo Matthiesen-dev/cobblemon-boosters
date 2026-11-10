@@ -1,5 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens;
 
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.BaseBoostBuilder;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.utils.Helpers;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
@@ -16,7 +17,6 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public final class BoostBuilderGui implements IGui {
@@ -28,11 +28,6 @@ public final class BoostBuilderGui implements IGui {
     public final Consumer<IBoost> setActiveBoost;
 
     public final List<String> allowedUnits = Helpers.allowedUnits;
-    public final Map<String, String> labelToColor = Map.of(
-            "Multiplier", "&a",
-            "Duration", "&b",
-            "Unit", "&e"
-    );
 
     public String getCurrentMode() {
         return currentMode;
@@ -90,7 +85,7 @@ public final class BoostBuilderGui implements IGui {
         return Helpers.buildModeButton(
                 label,
                 value,
-                labelToColor,
+                getLabelToColor(),
                 this::getCurrentMode,
                 this::setCurrentMode,
                 this::openUpdatedPage,
@@ -100,21 +95,21 @@ public final class BoostBuilderGui implements IGui {
 
     public Button getMultiplierButton() {
         return buildModeButton(
-                "Multiplier",
+                BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_label_multiplier.get(),
                 boostBuilder.multiplier
         );
     }
 
     public Button getDurationButton() {
         return buildModeButton(
-                "Duration",
+                BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_label_duration.get(),
                 boostBuilder.duration
         );
     }
 
     public Button getUnitButton() {
         return buildModeButton(
-                "Unit",
+                BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_label_unit.get(),
                 boostBuilder.unit
         );
     }
@@ -122,7 +117,8 @@ public final class BoostBuilderGui implements IGui {
     public Button getDetailsButton() {
         List<Component> lore = new ArrayList<>();
 
-        lore.add(Helpers.text("&7Boost Type: &f" + boostType));
+        String boostTypeText = String.format(BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_boostType.get(), boostType);
+        lore.add(Helpers.text(boostTypeText));
 
         return Helpers.getDetailsButton(lore, boostBuilder);
     }
@@ -135,7 +131,7 @@ public final class BoostBuilderGui implements IGui {
                         return;
                     }
                     if (!Helpers.applyBaseAddForMode(getCurrentMode(), boostBuilder, allowedUnits)) {
-                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                        sendPlayerMessage(BoostersConfig.TEXT_CONFIG.messages_error_selectModeFirst.get());
                     }
                     openUpdatedPage(this);
                 })
@@ -150,7 +146,7 @@ public final class BoostBuilderGui implements IGui {
                         return;
                     }
                     if (!Helpers.applyBaseSubtractForMode(getCurrentMode(), boostBuilder, allowedUnits)) {
-                        sendPlayerMessage("&cPlease select a field to modify first by clicking on its button!");
+                        sendPlayerMessage(BoostersConfig.TEXT_CONFIG.messages_error_selectModeFirst.get());
                     }
                     openUpdatedPage(this);
                 })
@@ -173,14 +169,14 @@ public final class BoostBuilderGui implements IGui {
                 .display(MenuUtils.getConfirmItem())
                 .onClick(() -> new CancelConfirmGuiBuilder(
                         player,
-                        "&aConfirm to start/queue boost!",
+                        BoostersConfig.TEXT_CONFIG.gui_boosterBuilder_confirm_title.get(),
                         () -> {
                             if (isReadyToConfirm()) {
                                 IBoost boost = boostBuilder.build(boostClass);
                                 setActiveBoost.accept(boost);
                                 close();
                             } else {
-                                sendPlayerMessage("&cYou must fill out all fields before confirming!");
+                                sendPlayerMessage(BoostersConfig.TEXT_CONFIG.messages_error_missingFields.get());
                                 openUpdatedPage(this);
                             }
                         },

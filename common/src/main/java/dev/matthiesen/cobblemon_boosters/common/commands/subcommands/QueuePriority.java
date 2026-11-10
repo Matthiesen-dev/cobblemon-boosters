@@ -58,7 +58,7 @@ public final class QueuePriority implements ISubCommand {
     private int status(CommandContext<CommandSourceStack> ctx) {
         var config = BoostersConfig.CORE_SERVER_CONFIG;
         Util.sendMessage(ctx, String.format(
-                config.messages_queuePriorityStatus.get(),
+                BoostersConfig.TEXT_CONFIG.messages_queuePriorityStatus.get(),
                 config.queuePriorityEnabled.getAsBoolean(),
                 config.queuePriorityMode.get(),
                 config.timePriorityDirection.get(),
@@ -73,7 +73,7 @@ public final class QueuePriority implements ISubCommand {
         BoostersConfig.CORE_SERVER_CONFIG.queuePriorityEnabled.set(enabled);
         BoostersConfig.CORE_SERVER_CONFIG.queuePriorityEnabled.save();
 
-        var message = BoostersConfig.CORE_SERVER_CONFIG.messages_queuePriorityUpdated.get();
+        var message = BoostersConfig.TEXT_CONFIG.messages_queuePriorityUpdated.get();
         Util.sendMessage(ctx, String.format(message, "enabled=" + enabled));
         return status(ctx);
     }
@@ -88,14 +88,14 @@ public final class QueuePriority implements ISubCommand {
         };
 
         if (normalized == null) {
-            Util.sendMessage(ctx, "%prefix% &cInvalid mode. Valid values: fifo, multiplier, time");
+            Util.sendMessage(ctx, BoostersConfig.TEXT_CONFIG.messages_error_invalidMode.get());
             return 0;
         }
 
         BoostersConfig.CORE_SERVER_CONFIG.queuePriorityMode.set(normalized);
         BoostersConfig.CORE_SERVER_CONFIG.queuePriorityMode.save();
 
-        var message = BoostersConfig.CORE_SERVER_CONFIG.messages_queuePriorityUpdated.get();
+        var message = BoostersConfig.TEXT_CONFIG.messages_queuePriorityUpdated.get();
         Util.sendMessage(ctx, String.format(message, "mode=" + normalized));
         return status(ctx);
     }
@@ -106,7 +106,7 @@ public final class QueuePriority implements ISubCommand {
         BoostersConfig.CORE_SERVER_CONFIG.activePreemptionEnabled.set(enabled);
         BoostersConfig.CORE_SERVER_CONFIG.activePreemptionEnabled.save();
 
-        var message = BoostersConfig.CORE_SERVER_CONFIG.messages_queuePriorityUpdated.get();
+        var message = BoostersConfig.TEXT_CONFIG.messages_queuePriorityUpdated.get();
         Util.sendMessage(ctx, String.format(message, "activePreemptionEnabled=" + enabled));
         return status(ctx);
     }
@@ -120,14 +120,14 @@ public final class QueuePriority implements ISubCommand {
         };
 
         if (normalized == null) {
-            Util.sendMessage(ctx, "%prefix% &cInvalid direction. Valid values: shortest, longest");
+            Util.sendMessage(ctx, BoostersConfig.TEXT_CONFIG.messages_error_invalidDirection.get());
             return 0;
         }
 
         BoostersConfig.CORE_SERVER_CONFIG.timePriorityDirection.set(normalized);
         BoostersConfig.CORE_SERVER_CONFIG.timePriorityDirection.save();
 
-        var message = BoostersConfig.CORE_SERVER_CONFIG.messages_queuePriorityUpdated.get();
+        var message = BoostersConfig.TEXT_CONFIG.messages_queuePriorityUpdated.get();
         Util.sendMessage(ctx, String.format(message, "timePriorityDirection=" + normalized));
         return status(ctx);
     }

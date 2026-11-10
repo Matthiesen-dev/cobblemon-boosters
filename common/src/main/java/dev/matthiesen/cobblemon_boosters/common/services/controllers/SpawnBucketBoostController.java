@@ -55,8 +55,8 @@ public final class SpawnBucketBoostController implements IBoostController<SpawnB
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
-                "Spawn Bucket",
-                "&bSpawn Bucket Boosts&r",
+                BoostersConfig.TEXT_CONFIG.gui_boosterTitles_spawnBucket_displayName.get(),
+                BoostersConfig.TEXT_CONFIG.gui_boosterTitles_spawnBucket_menuTitle.get(),
                 MenuUtils::getBucketItem,
                 () -> INSTANCE,
                 BoostersConfig::getSpawnBucketMessages,

@@ -47,11 +47,12 @@ public final class SpawnBucketBoost extends AbstractSimpleBoost {
     }
 
     public String getBucketDisplayName() {
+        var config = BoostersConfig.TEXT_CONFIG;
         Map<String, String> bucketDisplayNames = Map.of(
-                "common", "Common",
-                "uncommon", "Uncommon",
-                "rare", "Rare",
-                "ultra-rare", "Ultra Rare"
+                "common", config.spawnBucket_common.get(),
+                "uncommon", config.spawnBucket_uncommon.get(),
+                "rare", config.spawnBucket_rare.get(),
+                "ultra-rare", config.spawnBucket_ultraRare.get()
         );
         return bucketDisplayNames.getOrDefault(this.bucket.toLowerCase(), this.bucket);
     }
@@ -70,7 +71,7 @@ public final class SpawnBucketBoost extends AbstractSimpleBoost {
         var placeholders = TextUtils.getPlaceholders(this);
         return new BoostersItemBuilder(MenuUtils.getBucketItem())
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize("&a%bucket% Spawn Bucket Boost&r", placeholders))
+                .setCustomName(TextUtils.getTextParser().parse(BoostersConfig.TEXT_CONFIG.gui_boosterTitles_spawnBucket.get(), placeholders))
                 .addLore(lore)
                 .build();
     }

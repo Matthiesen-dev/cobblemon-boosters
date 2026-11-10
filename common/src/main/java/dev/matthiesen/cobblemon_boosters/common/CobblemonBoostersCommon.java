@@ -1,12 +1,11 @@
 package dev.matthiesen.cobblemon_boosters.common;
 
+import dev.faststats.Token;
 import dev.matthiesen.cobblemon_boosters.common.commands.BoostersCommand;
 import dev.matthiesen.cobblemon_boosters.common.config.*;
-import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
 import dev.matthiesen.cobblemon_boosters.common.registry.PermissionRegistry;
-import dev.matthiesen.cobblemon_boosters.common.services.ServiceManager;
+import dev.matthiesen.cobblemon_boosters.common.services.*;
 import dev.matthiesen.cobblemon_boosters.common.services.controllers.*;
-import dev.faststats.Token;
 import dev.matthiesen.matthiesen_core.common.AbstractCommonMod;
 import dev.matthiesen.matthiesen_core.common.api.events.PlatformEvents;
 import dev.matthiesen.matthiesen_core.common.api.events.server.*;
@@ -34,6 +33,7 @@ public final class CobblemonBoostersCommon extends AbstractCommonMod {
         registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CORE_SERVER_SPEC, modConfigPath("core"));
         registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.CACHE_SERVER_SPEC, modConfigPath("cache"));
         registerModConfig(MOD_ID, ModConfigType.SERVER, BoostersConfig.WEBHOOKS_SERVER_SPEC, modConfigPath("webhooks"));
+        registerModConfig(MOD_ID, ModConfigType.STARTUP, BoostersConfig.TEXT_SPEC, modConfigPath("text"));
 
         createInfoLog("Registering Cobblemon Boosters Permissions");
 

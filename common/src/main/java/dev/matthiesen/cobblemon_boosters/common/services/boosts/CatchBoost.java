@@ -37,7 +37,7 @@ public final class CatchBoost extends AbstractSimpleBoost {
         var placeholders = TextUtils.getPlaceholders(this);
         return new BoostersItemBuilder(MenuUtils.CATCH_ITEM)
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize("&a%multiplier%x Catch Boost&r", placeholders))
+                .setCustomName(TextUtils.getTextParser().parse(BoostersConfig.TEXT_CONFIG.gui_boosterTitles_catch.get(), placeholders))
                 .addLore(lore)
                 .build();
     }

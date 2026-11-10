@@ -37,21 +37,21 @@ public final class DiscordWebhookService implements IWebhookService {
         Embed.Builder embedBuilder = new Embed.Builder();
         var placeholders = TextUtils.getPlaceholders(boost);
         if (embed.title() != null)
-            embedBuilder.withTitle(TextUtils.parse(embed.title(), placeholders));
+            embedBuilder.withTitle(TextUtils.getTextParser().parsePlaceholders(embed.title(), placeholders));
         if (embed.description() != null)
-            embedBuilder.withDescription(TextUtils.parse(embed.description(), placeholders));
+            embedBuilder.withDescription(TextUtils.getTextParser().parsePlaceholders(embed.description(), placeholders));
         if (embed.color() != null)
             embedBuilder.withColor(embed.color());
         if (embed.timestamp() != null)
-            embedBuilder.withTimestamp(TextUtils.parse(embed.timestamp(), placeholders));
+            embedBuilder.withTimestamp(TextUtils.getTextParser().parsePlaceholders(embed.timestamp(), placeholders));
         List<Embed.Field> fields = new ArrayList<>();
         if (embed.fields() != null) {
             for (DiscordEmbed.DiscordEmbedField field : embed.fields()) {
                 Embed.Field embedField = new Embed.Field();
                 if (field.name() != null)
-                    embedField.setName(TextUtils.parse(field.name(), placeholders));
+                    embedField.setName(TextUtils.getTextParser().parsePlaceholders(field.name(), placeholders));
                 if (field.value() != null)
-                    embedField.setValue(TextUtils.parse(field.value(), placeholders));
+                    embedField.setValue(TextUtils.getTextParser().parsePlaceholders(field.value(), placeholders));
                 embedField.setInline(field.inline());
                 fields.add(embedField);
             }
@@ -59,8 +59,8 @@ public final class DiscordWebhookService implements IWebhookService {
         }
         if (embed.author() != null) {
             Embed.Author author = new Embed.Author();
-            if (embed.author().name() != null) author.setName(TextUtils.parse(embed.author().name(), placeholders));
-            if (embed.author().icon_url() != null) author.setIconUrl(TextUtils.parse(embed.author().icon_url(), placeholders));
+            if (embed.author().name() != null) author.setName(TextUtils.getTextParser().parsePlaceholders(embed.author().name(), placeholders));
+            if (embed.author().icon_url() != null) author.setIconUrl(TextUtils.getTextParser().parsePlaceholders(embed.author().icon_url(), placeholders));
             embedBuilder.withAuthor(author);
         }
         return embedBuilder.build();
@@ -95,8 +95,8 @@ public final class DiscordWebhookService implements IWebhookService {
                     message.withContent(rolePing);
                 }
                 message
-                        .withUsername(TextUtils.parse(userName, placeholders))
-                        .withAvatarUrl(TextUtils.parse(avatarUrl, placeholders))
+                        .withUsername(TextUtils.getTextParser().parsePlaceholders(userName, placeholders))
+                        .withAvatarUrl(TextUtils.getTextParser().parsePlaceholders(avatarUrl, placeholders))
                         .withEmbeds(List.of(parseEventEmbed(embed, boost)));
             });
         } catch (RuntimeException e) {

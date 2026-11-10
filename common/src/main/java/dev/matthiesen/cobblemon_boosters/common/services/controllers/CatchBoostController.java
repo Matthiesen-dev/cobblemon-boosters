@@ -53,8 +53,8 @@ public final class CatchBoostController implements IBoostController<CatchBoost> 
         var permissions = PermissionRegistry.getPermissions();
         return new BoosterGuiDefinition<>(
                 BOOSTER_ID,
-                "Catch",
-                "&dCatch Boosts&r",
+                BoostersConfig.TEXT_CONFIG.gui_boosterTitles_catch_displayName.get(),
+                BoostersConfig.TEXT_CONFIG.gui_boosterTitles_catch_menuTitle.get(),
                 MenuUtils::getCatchItem,
                 () -> INSTANCE,
                 BoostersConfig::getCatchMessages,

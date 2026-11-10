@@ -1,5 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.templates;
 
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.BoosterGuiDefinition;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens.CancelConfirmGuiBuilder;
 import dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens.subscreens.QueueGui;
@@ -41,7 +42,7 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
     @Override
     public Component getTitle() {
         var placeholders = TextUtils.getPlaceholders(activeBoost);
-        return TextUtils.deserialize(definition.getMenuTitle(), placeholders);
+        return TextUtils.getTextParser().parse(definition.getMenuTitle(), placeholders);
     }
 
     public Button getStopButton() {
@@ -49,15 +50,15 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
                 .display(MenuUtils.getStopButton(activeBoost != null))
                 .onClick(() -> new CancelConfirmGuiBuilder(
                         player,
-                        "&cConfirm to stop active boost!",
+                        BoostersConfig.TEXT_CONFIG.gui_stopActiveBoost_title.get(),
                         () -> {
                             var placeholders = TextUtils.getPlaceholders(activeBoost);
                             if (activeBoost != null) {
                                 activeBoost.setTimeRemaining(1);
-                                player.sendSystemMessage(TextUtils.deserialize(stopBoostMsg, placeholders));
+                                player.sendSystemMessage(TextUtils.getTextParser().parse(stopBoostMsg, placeholders));
                                 close();
                             } else {
-                                player.sendSystemMessage(TextUtils.deserialize(noActiveBoost, placeholders));
+                                player.sendSystemMessage(TextUtils.getTextParser().parse(noActiveBoost, placeholders));
                                 close();
                             }
                         },
@@ -72,10 +73,10 @@ public final class BoostersGuiTemplate extends BaseMenuGuiTemplate {
                 .onClick(() -> {
                     var placeholders = TextUtils.getPlaceholders(activeBoost);
                     if (activeBoost != null) {
-                        player.sendSystemMessage(TextUtils.deserialize(boostInfo, placeholders));
+                        player.sendSystemMessage(TextUtils.getTextParser().parse(boostInfo, placeholders));
                         close();
                     } else {
-                        player.sendSystemMessage(TextUtils.deserialize(noActiveBoost, placeholders));
+                        player.sendSystemMessage(TextUtils.getTextParser().parse(noActiveBoost, placeholders));
                         close();
                     }
                 })

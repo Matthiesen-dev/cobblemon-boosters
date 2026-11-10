@@ -37,7 +37,7 @@ public final class ShinyBoost extends AbstractSimpleBoost {
         var placeholders = TextUtils.getPlaceholders(this);
         return new BoostersItemBuilder(MenuUtils.SHINY_ITEM)
                 .hideAdditional()
-                .setCustomName(TextUtils.deserialize("&a%multiplier%x Shiny Boost&r", placeholders))
+                .setCustomName(TextUtils.getTextParser().parse(BoostersConfig.TEXT_CONFIG.gui_boosterTitles_shiny.get(), placeholders))
                 .addLore(lore)
                 .build();
     }

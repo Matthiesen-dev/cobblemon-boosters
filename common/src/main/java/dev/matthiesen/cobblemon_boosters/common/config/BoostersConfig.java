@@ -22,6 +22,9 @@ public final class BoostersConfig {
     public static final PermissionsStartupConfig PERMISSIONS_STARTUP_CONFIG;
     public static final ModConfigSpec PERMISSIONS_STARTUP_SPEC;
 
+    public static final TextConfig TEXT_CONFIG;
+    public static final ModConfigSpec TEXT_SPEC;
+
     static {
         Pair<CoreServerConfig, ModConfigSpec> serverPair = new ModConfigSpec.Builder().configure(CoreServerConfig::new);
         CORE_SERVER_CONFIG = serverPair.getLeft();
@@ -38,6 +41,10 @@ public final class BoostersConfig {
         Pair<PermissionsStartupConfig, ModConfigSpec> permissionsPair = new ModConfigSpec.Builder().configure(PermissionsStartupConfig::new);
         PERMISSIONS_STARTUP_CONFIG = permissionsPair.getLeft();
         PERMISSIONS_STARTUP_SPEC = permissionsPair.getRight();
+
+        Pair<TextConfig, ModConfigSpec> messagesPair = new ModConfigSpec.Builder().configure(TextConfig::new);
+        TEXT_CONFIG = messagesPair.getLeft();
+        TEXT_SPEC = messagesPair.getRight();
     }
 
     public static void onConfigLoad(ConfigEvent.Loading event) {
@@ -48,65 +55,65 @@ public final class BoostersConfig {
 
     public static BoostMessagesConfig getShinyMessages() {
         return new BoostMessagesConfig(
-                CORE_SERVER_CONFIG.messages_shiny_barColor.get(),
-                CORE_SERVER_CONFIG.messages_shiny_barOverlay.get(),
-                CORE_SERVER_CONFIG.messages_shiny_barText.get(),
-                CORE_SERVER_CONFIG.messages_shiny_noActiveBoosts.get(),
-                CORE_SERVER_CONFIG.messages_shiny_boostStarted.get(),
-                CORE_SERVER_CONFIG.messages_shiny_boostAddedToQueue.get(),
-                CORE_SERVER_CONFIG.messages_shiny_boostStopped.get(),
-                CORE_SERVER_CONFIG.messages_shiny_boostQueueCleared.get(),
-                CORE_SERVER_CONFIG.messages_shiny_boostInfo.get(),
-                CORE_SERVER_CONFIG.messages_shiny_noQueuedBoosts.get(),
-                CORE_SERVER_CONFIG.messages_shiny_sidebarLine.get()
+                TEXT_CONFIG.messages_shiny_barColor.get(),
+                TEXT_CONFIG.messages_shiny_barOverlay.get(),
+                TEXT_CONFIG.messages_shiny_barText.get(),
+                TEXT_CONFIG.messages_shiny_noActiveBoosts.get(),
+                TEXT_CONFIG.messages_shiny_boostStarted.get(),
+                TEXT_CONFIG.messages_shiny_boostAddedToQueue.get(),
+                TEXT_CONFIG.messages_shiny_boostStopped.get(),
+                TEXT_CONFIG.messages_shiny_boostQueueCleared.get(),
+                TEXT_CONFIG.messages_shiny_boostInfo.get(),
+                TEXT_CONFIG.messages_shiny_noQueuedBoosts.get(),
+                TEXT_CONFIG.messages_shiny_sidebarLine.get()
         );
     }
 
     public static BoostMessagesConfig getCatchMessages() {
         return new BoostMessagesConfig(
-                CORE_SERVER_CONFIG.messages_catch_barColor.get(),
-                CORE_SERVER_CONFIG.messages_catch_barOverlay.get(),
-                CORE_SERVER_CONFIG.messages_catch_barText.get(),
-                CORE_SERVER_CONFIG.messages_catch_noActiveBoosts.get(),
-                CORE_SERVER_CONFIG.messages_catch_boostStarted.get(),
-                CORE_SERVER_CONFIG.messages_catch_boostAddedToQueue.get(),
-                CORE_SERVER_CONFIG.messages_catch_boostStopped.get(),
-                CORE_SERVER_CONFIG.messages_catch_boostQueueCleared.get(),
-                CORE_SERVER_CONFIG.messages_catch_boostInfo.get(),
-                CORE_SERVER_CONFIG.messages_catch_noQueuedBoosts.get(),
-                CORE_SERVER_CONFIG.messages_catch_sidebarLine.get()
+                TEXT_CONFIG.messages_catch_barColor.get(),
+                TEXT_CONFIG.messages_catch_barOverlay.get(),
+                TEXT_CONFIG.messages_catch_barText.get(),
+                TEXT_CONFIG.messages_catch_noActiveBoosts.get(),
+                TEXT_CONFIG.messages_catch_boostStarted.get(),
+                TEXT_CONFIG.messages_catch_boostAddedToQueue.get(),
+                TEXT_CONFIG.messages_catch_boostStopped.get(),
+                TEXT_CONFIG.messages_catch_boostQueueCleared.get(),
+                TEXT_CONFIG.messages_catch_boostInfo.get(),
+                TEXT_CONFIG.messages_catch_noQueuedBoosts.get(),
+                TEXT_CONFIG.messages_catch_sidebarLine.get()
         );
     }
 
     public static BoostMessagesConfig getExperienceMessages() {
         return new BoostMessagesConfig(
-                CORE_SERVER_CONFIG.messages_experience_barColor.get(),
-                CORE_SERVER_CONFIG.messages_experience_barOverlay.get(),
-                CORE_SERVER_CONFIG.messages_experience_barText.get(),
-                CORE_SERVER_CONFIG.messages_experience_noActiveBoosts.get(),
-                CORE_SERVER_CONFIG.messages_experience_boostStarted.get(),
-                CORE_SERVER_CONFIG.messages_experience_boostAddedToQueue.get(),
-                CORE_SERVER_CONFIG.messages_experience_boostStopped.get(),
-                CORE_SERVER_CONFIG.messages_experience_boostQueueCleared.get(),
-                CORE_SERVER_CONFIG.messages_experience_boostInfo.get(),
-                CORE_SERVER_CONFIG.messages_experience_noQueuedBoosts.get(),
-                CORE_SERVER_CONFIG.messages_experience_sidebarLine.get()
+                TEXT_CONFIG.messages_experience_barColor.get(),
+                TEXT_CONFIG.messages_experience_barOverlay.get(),
+                TEXT_CONFIG.messages_experience_barText.get(),
+                TEXT_CONFIG.messages_experience_noActiveBoosts.get(),
+                TEXT_CONFIG.messages_experience_boostStarted.get(),
+                TEXT_CONFIG.messages_experience_boostAddedToQueue.get(),
+                TEXT_CONFIG.messages_experience_boostStopped.get(),
+                TEXT_CONFIG.messages_experience_boostQueueCleared.get(),
+                TEXT_CONFIG.messages_experience_boostInfo.get(),
+                TEXT_CONFIG.messages_experience_noQueuedBoosts.get(),
+                TEXT_CONFIG.messages_experience_sidebarLine.get()
         );
     }
 
     public static BoostMessagesConfig getSpawnBucketMessages() {
         return new BoostMessagesConfig(
-                CORE_SERVER_CONFIG.messages_spawnBucket_barColor.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_barOverlay.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_barText.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_noActiveBoosts.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_boostStarted.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_boostAddedToQueue.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_boostStopped.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_boostQueueCleared.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_boostInfo.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_noQueuedBoosts.get(),
-                CORE_SERVER_CONFIG.messages_spawnBucket_sidebarLine.get()
+                TEXT_CONFIG.messages_spawnBucket_barColor.get(),
+                TEXT_CONFIG.messages_spawnBucket_barOverlay.get(),
+                TEXT_CONFIG.messages_spawnBucket_barText.get(),
+                TEXT_CONFIG.messages_spawnBucket_noActiveBoosts.get(),
+                TEXT_CONFIG.messages_spawnBucket_boostStarted.get(),
+                TEXT_CONFIG.messages_spawnBucket_boostAddedToQueue.get(),
+                TEXT_CONFIG.messages_spawnBucket_boostStopped.get(),
+                TEXT_CONFIG.messages_spawnBucket_boostQueueCleared.get(),
+                TEXT_CONFIG.messages_spawnBucket_boostInfo.get(),
+                TEXT_CONFIG.messages_spawnBucket_noQueuedBoosts.get(),
+                TEXT_CONFIG.messages_spawnBucket_sidebarLine.get()
         );
     }
 

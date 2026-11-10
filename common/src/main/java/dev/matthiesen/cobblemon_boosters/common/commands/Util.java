@@ -60,13 +60,13 @@ public final class Util {
 
     public static void sendMessage(CommandContext<CommandSourceStack> ctx, String rawMessage) {
         var placeholders = TextUtils.getPlaceholders();
-        Component parsedMessage = TextUtils.deserialize(rawMessage, placeholders);
+        Component parsedMessage = TextUtils.getTextParser().parse(rawMessage, placeholders);
         handleSendMessage(ctx, parsedMessage);
     }
 
     public static void sendMessage(CommandContext<CommandSourceStack> ctx, String rawMessage, @NotNull IBoost boost) {
         var placeholders = TextUtils.getPlaceholders(boost);
-        Component parsedMessage = TextUtils.deserialize(rawMessage, placeholders);
+        Component parsedMessage = TextUtils.getTextParser().parse(rawMessage, placeholders);
         handleSendMessage(ctx, parsedMessage);
     }
 

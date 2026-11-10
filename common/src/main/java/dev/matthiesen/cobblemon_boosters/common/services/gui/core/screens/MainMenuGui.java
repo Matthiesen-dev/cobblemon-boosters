@@ -1,5 +1,6 @@
 package dev.matthiesen.cobblemon_boosters.common.services.gui.core.screens;
 
+import dev.matthiesen.cobblemon_boosters.common.config.BoostersConfig;
 import dev.matthiesen.cobblemon_boosters.common.config.CacheServerConfig;
 import dev.matthiesen.cobblemon_boosters.common.interfaces.IBoost;
 import dev.matthiesen.cobblemon_boosters.common.services.BoostControllerServiceManager;
@@ -26,7 +27,7 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
 
     public static void sendServerPlayerMessage(ServerPlayer player, String rawMessage, IBoost boost) {
         var placeholders = TextUtils.getPlaceholders(boost);
-        player.sendSystemMessage(TextUtils.deserialize(rawMessage, placeholders));
+        player.sendSystemMessage(TextUtils.getTextParser().parse(rawMessage, placeholders));
     }
 
     public static void queueBoostAndNotify(ServerPlayer player, BoosterGuiDefinition<?> definition, IBoost boost) {
@@ -55,7 +56,8 @@ public final class MainMenuGui extends BaseMenuGuiTemplate {
         var definition = BoostControllerServiceManager.getGuiDefinition(boosterId);
         if (definition == null) {
             var placeholders = TextUtils.getPlaceholders();
-            player.sendSystemMessage(TextUtils.deserialize("%prefix% &cUnknown booster type: &f" + boosterId + "&c.", placeholders));
+            String message = String.format(BoostersConfig.TEXT_CONFIG.gui_mainMenu_unknownBoosterType.get(), boosterId);
+            player.sendSystemMessage(TextUtils.getTextParser().parse(message, placeholders));
             return;
         }
 
