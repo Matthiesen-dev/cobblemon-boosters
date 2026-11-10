@@ -155,7 +155,7 @@ public final class SpawnBucketBoostController implements IBoostController<SpawnB
         return BoostersConfig.getSpawnBucketEventEndEmbed();
     }
 
-    // '/boosters bucket start <common/uncommon/rare/ultra-rare> <multiplier> <duration> <seconds/minutes/hours/days>'
+    // '/boosters bucket start <common/uncommon/rare/ultra-rare/boss> <multiplier> <duration> <seconds/minutes/hours/days>'
     // '/boosters bucket stop'
     // '/boosters bucket status'
     public static final class SpawnBucketCMD implements ISubCommand {

@@ -52,7 +52,8 @@ public final class SpawnBucketBoost extends AbstractSimpleBoost {
                 "common", config.spawnBucket_common.get(),
                 "uncommon", config.spawnBucket_uncommon.get(),
                 "rare", config.spawnBucket_rare.get(),
-                "ultra-rare", config.spawnBucket_ultraRare.get()
+                "ultra-rare", config.spawnBucket_ultraRare.get(),
+                "boss", config.spawnBucket_boss.get()
         );
         return bucketDisplayNames.getOrDefault(this.bucket.toLowerCase(), this.bucket);
     }

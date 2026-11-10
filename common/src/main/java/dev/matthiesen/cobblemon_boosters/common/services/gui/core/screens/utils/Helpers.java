@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 public final class Helpers {
     public static final List<String> allowedUnits = List.of("seconds", "minutes", "hours", "days");
-    public static final List<String> allowedBuckets = List.of("common", "uncommon", "rare", "ultra-rare");
+    public static final List<String> allowedBuckets = List.of("common", "uncommon", "rare", "ultra-rare", "boss");
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean ensureModeSelected(String currentMode, Consumer<String> sendMessage) {
